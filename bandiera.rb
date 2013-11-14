@@ -12,15 +12,25 @@ class Bandiera < Sinatra::Base
     def logger
       $logger
     end
-
-    def redis
-      @redis ||= begin do
-        Redis.new
-      end
-    end
   end
 
+  get "/api/features/:group/:name" do |group, name|
+    begin
+      feature = Repository.get(group, name)
 
+      if feature
+        feature.to_api
+      else
+        error 404
+      end
+
+    rescue => e
+      puts e
+      error 500, { error: e }.to_json
+    end
+  end
 end
 
+require_relative "lib/bandiera/feature"
+require_relative "lib/bandiera/repository"
 
