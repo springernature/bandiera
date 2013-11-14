@@ -12,6 +12,12 @@ class Bandiera < Sinatra::Base
     def logger
       $logger
     end
+
+    def redis
+      @redis ||= begin do
+        Redis.new
+      end
+    end
   end
 
 

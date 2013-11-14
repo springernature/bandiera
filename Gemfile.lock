@@ -11,6 +11,7 @@ GEM
     rack (1.5.2)
     rack-protection (1.5.1)
       rack
+    redis (3.0.6)
     sinatra (1.4.4)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -26,5 +27,6 @@ DEPENDENCIES
   foreman
   newrelic_rpm
   puma
+  redis
   sinatra
   syslog-logger
