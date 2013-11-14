@@ -3,8 +3,11 @@ require "json"
 require "logger"
 
 class Bandiera < Sinatra::Base
-  configure :production, :development do
+  configure do
     set :port, ENV["PORT"]
+    enable :raise_errors
+    disable :show_exceptions
+    enable :dump_errors
     enable :logging
   end
 
@@ -15,18 +18,12 @@ class Bandiera < Sinatra::Base
   end
 
   get "/api/features/:group/:name" do |group, name|
-    begin
-      feature = Repository.get(group, name)
+    feature = Repository.get(group, name)
 
-      if feature
-        feature.to_api
-      else
-        error 404
-      end
-
-    rescue => e
-      puts e
-      error 500, { error: e }.to_json
+    if feature
+      feature.to_api
+    else
+      error 404
     end
   end
 end
