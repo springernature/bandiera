@@ -1,10 +1,10 @@
 require "spec_helper"
 
 def app
-  Bandiera.new
+  Bandiera::Server.new
 end
 
-describe Bandiera do
+describe Bandiera::Server do
   describe "GET on /api/features/:group/:name" do
     it "responds with the correct data" do
       data = {

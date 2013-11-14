@@ -16,7 +16,6 @@ class Bandiera::Feature
   end
 
   def to_api
-    raise
     JSON.generate({ type: data[:type], value: data[:value] })
   end
 

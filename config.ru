@@ -2,7 +2,7 @@ require "sinatra"
 require "newrelic_rpm"
 
 require "syslog-logger"
-require "bandiera/syslog_formatter"
+require File.expand_path("../lib/syslog_formatter.rb", __FILE__)
 
 class ::Logger::Syslog; alias_method :write, :<<; end
 
@@ -12,6 +12,6 @@ $logger.level = Logger::DEBUG
 
 use Rack::CommonLogger, $logger
 
-require File.expand_path "../bandiera.rb", __FILE__
+require File.expand_path("../lib/bandiera.rb", __FILE__)
 
-run Bandiera
+run Bandiera::Server

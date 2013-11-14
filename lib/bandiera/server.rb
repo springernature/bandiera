@@ -1,8 +1,10 @@
 require "sinatra/base"
 require "json"
-require "logger"
 
-class Bandiera < Sinatra::Base
+require_relative "feature"
+require_relative "repository"
+
+class Bandiera::Server < Sinatra::Base
   configure do
     set :port, ENV["PORT"]
     enable :raise_errors
@@ -18,7 +20,7 @@ class Bandiera < Sinatra::Base
   end
 
   get "/api/features/:group/:name" do |group, name|
-    feature = Repository.get(group, name)
+    feature = Bandiera::Repository.get(group, name)
 
     if feature
       feature.to_api
@@ -27,7 +29,3 @@ class Bandiera < Sinatra::Base
     end
   end
 end
-
-require_relative "lib/bandiera/feature"
-require_relative "lib/bandiera/repository"
-

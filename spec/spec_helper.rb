@@ -3,7 +3,7 @@ require "rack/test"
 require "fakeredis"
 require "pry"
 
-require_relative "../bandiera"
+require_relative "../lib/bandiera"
 
 ENV["RACK_ENV"] = "test"
 
