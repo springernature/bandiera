@@ -1,9 +1,3 @@
-require "sinatra/base"
-require "json"
-
-require_relative "feature"
-require_relative "repository"
-
 class Bandiera::Server < Sinatra::Base
   configure do
     set :port, ENV["PORT"]
