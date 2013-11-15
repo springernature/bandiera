@@ -1,5 +1,9 @@
 source "http://rubygems.org"
 
+platforms :rbx do
+  gem "rubysl", "~> 2.0"
+end
+
 gem "sinatra"
 gem "syslog-logger"
 gem "puma"
