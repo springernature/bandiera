@@ -1,7 +1,6 @@
 class Bandiera::Repository
   def self.get(group, id)
     data = redis.get("#{group}:#{id}")
-
     if data
       Bandiera::Feature.new(JSON.parse(data))
     end

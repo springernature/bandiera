@@ -22,4 +22,27 @@ class Bandiera::Server < Sinatra::Base
       error 404
     end
   end
+
+  get "/" do
+    erb :index
+  end
+
+  get "/new" do
+    erb :new
+  end
+
+  post "/create" do
+    data = {
+      name:        params[:feature][:name],
+      group:       params[:feature][:group],
+      description: params[:feature][:description]
+    }
+    feature = Feature.new(data)
+    Repository.set(feature)
+    redirect "/"
+  end
+
 end
+
+require_relative "lib/bandiera/feature"
+require_relative "lib/bandiera/repository"

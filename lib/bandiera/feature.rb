@@ -1,5 +1,3 @@
-require "json"
-
 class Bandiera::Feature
   attr_reader :data
 
