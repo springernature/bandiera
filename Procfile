@@ -1,2 +1,2 @@
-puma: bundle exec puma -I lib -p 5000
+puma: bundle exec puma -I lib -p $PORT
 redis: redis-server
