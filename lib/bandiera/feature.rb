@@ -1,29 +1,14 @@
-class Bandiera::Feature
-  attr_reader :data
+class Feature < Ohm::Model
+  attribute :name
+  attribute :description
+  attribute :type
+  attribute :value
 
-  def initialize(data)
-    @data = sanitize_hash(data)
-  end
+  reference :group, :Group
 
-  def key
-    [data[:group], data[:name]].join(":")
-  end
-
-  def to_json
-    JSON.generate(data)
-  end
+  index :name
 
   def to_api
-    JSON.generate({ type: data[:type], value: data[:value] })
-  end
-
-  private
-
-  def sanitize_hash(hash)
-    new_hash = {}
-    hash.each do |key,value|
-      new_hash[key.to_sym] = value
-    end
-    new_hash
+    JSON.generate({ type: type, value: value })
   end
 end

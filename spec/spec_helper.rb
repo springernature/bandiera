@@ -1,6 +1,5 @@
 require "rspec"
 require "rack/test"
-require "fakeredis"
 require "pry"
 
 require_relative "../lib/bandiera"

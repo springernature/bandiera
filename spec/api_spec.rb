@@ -5,28 +5,33 @@ def app
 end
 
 describe Bandiera::Server do
+
+  before :each do
+    Ohm.flush
+  end
+
   describe "GET on /api/features/:group/:name" do
     it "responds with the correct data" do
+      group = Group.create(name: 'pubserv')
+
       data = {
-        group: "pubserv",
+        group: group,
         name:  "show_articles_tab",
-        desc:  "Show the articles tab",
+        description:  "Show the articles tab",
         type:  "boolean",
         value: true
       }
-      feature = Bandiera::Feature.new(data)
 
-      Bandiera::Repository.set(feature)
+      feature = Feature.create(data)
 
       get "/api/features/pubserv/show_articles_tab"
 
       expect(last_response.status).to eq(200)
 
-      expected_response = { "type" => "boolean", "value" => true }
+      expected_response = { "type" => "boolean", "value" => "true" }
 
       attributes = JSON.parse(last_response.body)
       expect(attributes).to eq(expected_response)
     end
   end
 end
-
