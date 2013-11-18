@@ -1,8 +1,4 @@
-require "sinatra/base"
-require "json"
-require "logger"
-
-class Bandiera::Server < Sinatra::Base
+class Server < Sinatra::Base
   configure do
     set :port, ENV["PORT"]
     enable :raise_errors
@@ -48,8 +44,4 @@ class Bandiera::Server < Sinatra::Base
     Feature.create(params[:feature].merge({"group" => group}))
     redirect "/"
   end
-
 end
-
-require_relative "feature"
-require_relative "group"

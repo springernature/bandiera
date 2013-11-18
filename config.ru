@@ -12,6 +12,6 @@ $logger.level = Logger::DEBUG
 
 use Rack::CommonLogger, $logger
 
-require File.expand_path("../lib/bandiera.rb", __FILE__)
+require File.expand_path("../config/init.rb", __FILE__)
 
-run Bandiera::Server
+run Server

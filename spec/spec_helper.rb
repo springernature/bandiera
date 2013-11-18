@@ -2,7 +2,7 @@ require "rspec"
 require "rack/test"
 require "pry"
 
-require_relative "../lib/bandiera"
+require_relative "../config/init"
 
 ENV["RACK_ENV"] = "test"
 

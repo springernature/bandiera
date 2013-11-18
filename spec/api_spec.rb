@@ -1,10 +1,10 @@
 require "spec_helper"
 
 def app
-  Bandiera::Server.new
+  Server.new
 end
 
-describe Bandiera::Server do
+describe Server do
 
   before :each do
     Ohm.flush
