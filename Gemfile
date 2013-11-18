@@ -8,6 +8,7 @@ gem "sinatra"
 gem "syslog-logger"
 gem "puma"
 gem "redis"
+gem "ohm"
 
 gem "newrelic_rpm"
 gem "airbrake"
@@ -20,5 +21,4 @@ end
 group :test do
   gem "rspec"
   gem "rack-test"
-  gem "fakeredis"
 end
