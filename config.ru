@@ -1,6 +1,5 @@
 require "sinatra"
 require "newrelic_rpm"
-
 require "syslog-logger"
 require File.expand_path("../lib/syslog_formatter.rb", __FILE__)
 
@@ -12,6 +11,6 @@ $logger.level = Logger::DEBUG
 
 use Rack::CommonLogger, $logger
 
-require File.expand_path("../config/init.rb", __FILE__)
+require File.expand_path("../bandiera.rb", __FILE__)
 
-run Server
+run Bandiera

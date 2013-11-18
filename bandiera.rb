@@ -1,4 +1,13 @@
-class Server < Sinatra::Base
+require "sinatra/base"
+require "redis"
+require "ohm"
+require "json"
+require "logger"
+
+require_relative "lib/feature"
+require_relative "lib/group"
+
+class Bandiera < Sinatra::Base
   configure do
     set :port, ENV["PORT"]
     enable :raise_errors
