@@ -9,6 +9,7 @@ gem "syslog-logger"
 gem "puma"
 gem "redis"
 gem "ohm"
+gem 'i18n'
 
 gem "newrelic_rpm"
 gem "airbrake"
