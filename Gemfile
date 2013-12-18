@@ -6,7 +6,8 @@ gem "sequel"
 gem "mysql2"
 
 group :development, :test do
-  gem "pry"
   gem "rspec"
+  gem "database_cleaner"
+  gem "pry"
 end
 

@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     coderay (1.1.0)
+    database_cleaner (1.1.1)
     diff-lcs (1.2.5)
     method_source (0.8.2)
     mysql2 (0.3.14)
@@ -33,6 +34,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  database_cleaner
   mysql2
   pry
   rake

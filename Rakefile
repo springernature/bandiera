@@ -63,6 +63,7 @@ end
 private
 
 def run_mysql_command(db, cmd)
-  %x(echo '#{cmd}' | mysql -h #{db[:host]} -P #{db[:port]} -u #{db[:user]} --password=#{db[:password]})
+  command = "echo '#{cmd}' | mysql -h #{db[:host]} -P #{db[:port]} -u #{db[:user]} --password=#{db[:password]} 2>/dev/null"
+  system(command)
 end
 
