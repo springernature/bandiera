@@ -1,0 +1,17 @@
+defaults: &defaults
+  adapter: mysql2
+  port: 3306
+  encoding: utf8
+  username: root
+  password: ""
+
+development:
+  database: bandiera_development
+  host: localhost
+  <<: *defaults
+
+test:
+  database: bandiera_test
+  host: localhost
+  <<: *defaults
+
