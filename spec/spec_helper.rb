@@ -6,10 +6,10 @@ ENV["RACK_ENV"] = "test"
 require "rspec"
 require "pry"
 
-require_relative "../bandiera"
+require_relative "../lib/bandiera"
 
 require "database_cleaner"
-DatabaseCleaner[:sequel, { connection: BandieraConfig::DB }]
+DatabaseCleaner[:sequel, { connection: Bandiera::Db.connection }]
 DatabaseCleaner.strategy = :transaction
 
 require "rake"

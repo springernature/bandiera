@@ -1,5 +1,5 @@
 require "pry"
-require_relative "config/bandiera_config"
+require_relative "lib/bandiera"
 
 namespace :bundler do
   task :setup do
@@ -15,7 +15,7 @@ namespace :db do
   desc "Create DB"
   task :create, :env do |cmd, args|
     env = args[:env] || "development"
-    db  = BandieraConfig.db_params(env)
+    db  = Bandiera::Db.params(env)
     Rake::Task["environment"].invoke(env)
     run_mysql_command(db, "CREATE DATABASE `#{db[:database]}`")
   end
@@ -23,7 +23,7 @@ namespace :db do
   desc "Drop database"
   task :nuke, :env do |cmd, args|
     env = args[:env] || "development"
-    db  = BandieraConfig.db_params(env)
+    db  = Bandiera::Db.params(env)
     Rake::Task["environment"].invoke(env)
     run_mysql_command(db, "DROP DATABASE `#{db[:database]}`")
   end
@@ -34,7 +34,7 @@ namespace :db do
     Rake::Task["environment"].invoke(env)
 
     Sequel.extension :migration
-    Sequel::Migrator.apply(BandieraConfig::DB, "db/migrations")
+    Sequel::Migrator.apply(Bandiera::Db.connection, "db/migrations")
   end
 
   desc "Rollback the database"
@@ -43,16 +43,16 @@ namespace :db do
     Rake::Task["environment"].invoke(env)
 
     Sequel.extension :migration
-    version = (row = BandieraConfig::DB[:schema_info].first) ? row[:version] : nil
-    Sequel::Migrator.apply(BandieraConfig::DB, "db/migrations", version - 1)
+    version = (row = Bandiera::Db.connection[:schema_info].first) ? row[:version] : nil
+    Sequel::Migrator.apply(Bandiera::Db.connection, "db/migrations", version - 1)
   end
 
   desc "Drop all tables in database"
   task :drop, :env do |cmd, args|
     env = args[:env] || "development"
     Rake::Task["environment"].invoke(env)
-    BandieraConfig::DB.tables.each do |table|
-      BandieraConfig::DB.run("DROP TABLE #{table}")
+    Bandiera::Db.connection.tables.each do |table|
+      Bandiera::Db.connection.run("DROP TABLE #{table}")
     end
   end
 
