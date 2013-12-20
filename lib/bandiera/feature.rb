@@ -8,5 +8,14 @@ module Bandiera
       @description = description
       @enabled     = enabled
     end
+
+    def as_json
+      {
+        group:       group,
+        name:        name,
+        description: description,
+        enabled:     enabled
+      }
+    end
   end
 end

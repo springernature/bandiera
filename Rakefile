@@ -1,5 +1,13 @@
-require "pry"
+#!/usr/bin/env rake
+
+require "rspec/core/rake_task"
+
 require_relative "lib/bandiera"
+
+RSpec::Core::RakeTask.new
+
+task :default => :spec
+task :test    => :spec
 
 namespace :bundler do
   task :setup do

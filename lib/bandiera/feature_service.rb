@@ -6,6 +6,10 @@ module Bandiera
       @db = db
     end
 
+    def add_group(group)
+      db[:groups].insert_ignore.multi_insert([{ name: group }])
+    end
+
     def add_feature(feature)
       add_features([feature]).first
     end
@@ -59,13 +63,13 @@ module Bandiera
     end
 
     def get_groups
-      db[:groups].select_map(:name)
+      db[:groups].order("name ASC").select_map(:name)
     end
 
     def get_group_features(group)
       group_id = find_group_id(group)
 
-      db[:features].where(group_id: group_id).map do |row|
+      db[:features].where(group_id: group_id).order("name ASC").map do |row|
         build_feature_from_group_and_row(group, row)
       end
     end

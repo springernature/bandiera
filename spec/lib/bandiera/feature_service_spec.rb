@@ -4,6 +4,14 @@ describe Bandiera::FeatureService do
   let(:db) { Bandiera::Db.connection }
   subject { Bandiera::FeatureService.new }
 
+  describe "#add_group" do
+    it "adds a new group" do
+      expect(db[:groups]).to be_empty
+      subject.add_group("burgers")
+      expect(db[:groups].select_map(:name)).to eq(["burgers"])
+    end
+  end
+
   describe "#add_feature" do
     it "calls #add_features" do
       feature_hash   = { name: "name", group: "group", description: "", enabled: true }
@@ -43,6 +51,25 @@ describe Bandiera::FeatureService do
         expect(returned_features).to be_an_instance_of(Array)
         expect(returned_features.first).to be_an_instance_of(Bandiera::Feature)
         expect(returned_features.size).to eq(2)
+      end
+
+      context "when one or more of the features already exists" do
+        it "updates the existing features" do
+          pre_existing_feature = @features.first.dup
+          pre_existing_feature.delete(:group)
+          pre_existing_feature[:enabled]  = false
+          pre_existing_feature[:group_id] = db[:groups].first[:id]
+
+          db[:features] << pre_existing_feature
+
+          feature = subject.get_feature("feature_group", pre_existing_feature[:name])
+          expect(feature.enabled).to be_false
+
+          subject.add_features(@features)
+
+          feature = subject.get_feature("feature_group", pre_existing_feature[:name])
+          expect(feature.enabled).to be_true
+        end
       end
     end
 

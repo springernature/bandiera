@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     coderay (1.1.0)
-    database_cleaner (1.1.1)
+    database_cleaner (1.2.0)
     diff-lcs (1.2.5)
     method_source (0.8.2)
     mysql2 (0.3.14)
@@ -13,6 +13,8 @@ GEM
     rack (1.5.2)
     rack-protection (1.5.1)
       rack
+    rack-test (0.6.2)
+      rack (>= 1.0)
     rake (10.1.0)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
@@ -37,6 +39,7 @@ DEPENDENCIES
   database_cleaner
   mysql2
   pry
+  rack-test
   rake
   rspec
   sequel
