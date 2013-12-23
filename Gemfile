@@ -7,10 +7,14 @@ gem "mysql2"
 
 gem "sinatra"
 
-group :development, :test do
+group :development do
+  gem "shotgun"
+end
+
+group :test do
   gem "rspec"
   gem "database_cleaner"
-  gem "pry"
   gem "rack-test"
+  gem "pry"
 end
 

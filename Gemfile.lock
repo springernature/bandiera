@@ -25,6 +25,8 @@ GEM
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.4)
     sequel (4.5.0)
+    shotgun (0.9)
+      rack (>= 1.0)
     sinatra (1.4.4)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -43,4 +45,5 @@ DEPENDENCIES
   rake
   rspec
   sequel
+  shotgun
   sinatra
