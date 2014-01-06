@@ -2,7 +2,7 @@ module Bandiera
   class FeatureService
     class RecordNotFound < StandardError; end;
 
-    def initialize(db: Bandiera::Db.connection)
+    def initialize(db=Bandiera::Db.connection)
       @db = db
     end
 
