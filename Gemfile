@@ -6,6 +6,7 @@ gem "sequel"
 gem "mysql2"
 
 gem "sinatra"
+gem "typhoeus"
 
 group :development do
   gem "shotgun"
@@ -15,6 +16,7 @@ group :test do
   gem "rspec"
   gem "database_cleaner"
   gem "rack-test"
+  gem "webmock"
   gem "pry"
 end
 

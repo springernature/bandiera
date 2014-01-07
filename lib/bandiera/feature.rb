@@ -9,6 +9,10 @@ module Bandiera
       @enabled     = enabled
     end
 
+    def enabled?
+      @enabled
+    end
+
     def as_json
       {
         group:       group,

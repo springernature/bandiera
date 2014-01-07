@@ -6,6 +6,9 @@ ENV["RACK_ENV"] = "test"
 require "rspec"
 require "pry"
 
+require "webmock/rspec"
+WebMock.disable_net_connect!
+
 require_relative "../lib/bandiera"
 
 require "database_cleaner"
