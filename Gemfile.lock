@@ -11,6 +11,8 @@ GEM
       ffi (>= 1.3.0)
       mime-types (~> 1.18)
     ffi (1.9.3)
+    ffi (1.9.3-java)
+    jdbc-mysql (5.1.28)
     method_source (0.8.2)
     mime-types (1.25.1)
     mysql2 (0.3.14)
@@ -18,6 +20,11 @@ GEM
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
+    pry (0.9.12.4-java)
+      coderay (~> 1.0)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+      spoon (~> 0.0)
     rack (1.5.2)
     rack-flash3 (1.0.5)
       rack
@@ -43,6 +50,8 @@ GEM
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
     slop (3.4.7)
+    spoon (0.0.4)
+      ffi
     tilt (1.4.1)
     typhoeus (0.6.7)
       ethon (~> 0.6.2)
@@ -51,10 +60,12 @@ GEM
       crack (>= 0.3.2)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
   database_cleaner
+  jdbc-mysql
   mysql2
   pry
   rack-flash3

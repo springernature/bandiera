@@ -11,12 +11,10 @@ WebMock.disable_net_connect!
 
 require_relative "../lib/bandiera"
 
-require "database_cleaner"
-DatabaseCleaner[:sequel, { connection: Bandiera::Db.connection }]
-DatabaseCleaner.strategy = :transaction
-
 require "rake"
 load File.expand_path("../../Rakefile", __FILE__)
+
+db = Bandiera::Db.connection
 
 RSpec.configure do |config|
   config.order = "random"
@@ -25,12 +23,8 @@ RSpec.configure do |config|
     Rake::Task["db:reset"].invoke(ENV["RACK_ENV"])
   end
 
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
   config.after(:each) do
-    DatabaseCleaner.clean
+    db[:groups].delete
   end
 end
 

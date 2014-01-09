@@ -7,9 +7,12 @@ module Bandiera
   class Db
     CONFIG = YAML::load(File.open(File.join("config", "database.yml")))
 
+    def self.connection
+      @connection ||= Sequel.connect(connection_string)
+    end
+
     def self.params(env)
       {
-        adapter:      CONFIG[env]["adapter"],
         host:         CONFIG[env]["host"],
         port:         CONFIG[env]["port"],
         user:         CONFIG[env]["username"],
@@ -19,8 +22,17 @@ module Bandiera
       }
     end
 
-    def self.connection
-      @connection ||= Sequel.connect(params(ENV["RACK_ENV"]))
+    def self.connection_string
+      conn = params(ENV["RACK_ENV"])
+
+      if RUBY_PLATFORM == "java"
+        str = "jdbc:mysql://#{conn[:host]}:#{conn[:port]}/#{conn[:database]}?user=#{conn[:user]}"
+        str << "&password=#{conn[:password]}" if conn[:password]
+        str << "&useUnicode=true&characterEncoding=utf8"
+        str
+      else
+        conn.merge(adapter: "mysql2", encoding: "utf8")
+      end
     end
   end
 end
