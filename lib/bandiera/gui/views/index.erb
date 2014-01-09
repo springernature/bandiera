@@ -1,3 +1,10 @@
+<div class="container" style="padding-bottom:15px">
+  <div class="pull-right">
+    <a class="btn btn-default" href="/new/group" role="button"><span class="fa fa-plus"></span> add a group</a>
+    <a class="btn btn-default" href="/new/feature" role="button"><span class="fa fa-plus"></span> add a feature</a>
+  </div>
+</div>
+
 <% if @groups_and_features.empty? %>
   <div class="panel panel-info">
     <div class="panel-heading">
@@ -21,6 +28,7 @@
               <th>Name</th>
               <th>Description</th>
               <th>Enabled?</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -28,7 +36,11 @@
               <tr>
                 <td><%= feature.name %></td>
                 <td><%= feature.description %></td>
-                <td><%= feature.enabled %></td>
+                <td><%= feature.enabled? %></td>
+                <td style="text-align:right">
+                  <a class="btn btn-warning btn-sm" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/edit"><i class="fa fa-edit"></i> edit</a>
+                  <a class="btn btn-danger btn-sm" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/delete" data-method="delete"><i class="fa fa-trash-o"></i> delete</a>
+                </td>
               </tr>
             <% end %>
           </tbody>

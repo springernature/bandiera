@@ -62,6 +62,16 @@ module Bandiera
       raise RecordNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
     end
 
+    def update_feature(group, name, params)
+      db.transaction do
+        curr_params = get_feature(group, name).as_json
+        new_params  = curr_params.merge(params)
+
+        remove_feature(group, name)
+        add_feature(new_params)
+      end
+    end
+
     def get_groups
       db[:groups].order("name ASC").select_map(:name)
     end

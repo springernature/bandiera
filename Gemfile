@@ -6,6 +6,7 @@ gem "sequel"
 gem "mysql2"
 
 gem "sinatra"
+gem "rack-flash3"
 gem "typhoeus"
 
 group :development do

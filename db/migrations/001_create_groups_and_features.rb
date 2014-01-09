@@ -7,7 +7,7 @@ Sequel.migration do
 
     create_table(:features, engine: "InnoDB", charset: "utf8") do
       primary_key :id
-      foreign_key :group_id, :groups
+      foreign_key :group_id, :groups, on_delete: :cascade
       String :name, null: false
       String :description, text: true
       TrueClass :enabled, default: false

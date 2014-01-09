@@ -1,4 +1,6 @@
 require "typhoeus"
+require "json"
+
 require_relative "feature"
 
 module Bandiera
@@ -9,7 +11,7 @@ module Bandiera
 
     HANDLED_EXCEPTIONS = [RequestError, ServerDownError, TimeOutError]
 
-    def initialize(base_uri="http://localhost/api", logger=Logger.new)
+    def initialize(base_uri="http://localhost/api", logger=Logger.new($stdout))
       @base_uri = base_uri
       @logger   = logger
     end
