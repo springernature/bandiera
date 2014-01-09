@@ -1,6 +1,8 @@
 # Bandiera
 
-Bandiera is a simple, stand-alone feature flagging service that is not tied to any existing web framework or language as all communication is via a simple REST API.
+Bandiera is a simple, stand-alone feature flagging service that is not tied to
+any existing web framework or language as all communication is via a simple
+REST API.
 
 # Using Bandiera as a Client
 
@@ -24,15 +26,24 @@ if $bandiera.enabled?("pubserv", "show-new-search")
 end
 ```
 
-The `$bandiera.enabled?` command takes two arguments - the "feature group", and the "feature name".  This is because in Bandiera, features are organised in groups as it is intented as a service for multiple applications to use at the same time - this organisation allows separation of feature flags that are intended for different audiences.
+The `$bandiera.enabled?` command takes two arguments - the "feature group",
+and the "feature name".  This is because in Bandiera, features are organised
+in groups as it is intented as a service for multiple applications to use at
+the same time - this organisation allows separation of feature flags that are
+intended for different audiences.
 
 ## JavaScript
 
 _coming soon_
 
+## PHP
+
+_coming soon_
+
 # Running the Server
 
-The Bandiera server is written in Ruby, so you're going to need to be able to run a Ruby application within your organisation.
+The Bandiera server is written in Ruby, so you're going to need to be able to
+run a Ruby application within your organisation.
 
 1. Clone this repo.
 2. Run `bundle install --without development test`.
@@ -40,7 +51,11 @@ The Bandiera server is written in Ruby, so you're going to need to be able to ru
 4. Run `bundle exec rake db:create[production] db:migrate[production]`.
 5. Run `rackup -p 5000`
 
-You'll now see the web interface sitting on [http://localhost:5000](http://localhost:5000), and the API at [http://localhost:5000/api](http://localhost:5000/api).  Obviously in production, you'll want to run it via your favourite rack server (i.e. [Puma][puma], [Unicorn][unicorn], [Thin][thin] or [Passenger][passenger]).
+You'll now see the web interface sitting on [http://localhost:5000](http://localhost:5000),
+and the API at [http://localhost:5000/api](http://localhost:5000/api).
+Obviously in production, you'll want to run it via your favourite rack server
+(i.e. [Puma][puma], [Unicorn][unicorn], [Thin][thin] or
+[Passenger][passenger]).
 
 # Development
 
@@ -51,11 +66,12 @@ You'll now see the web interface sitting on [http://localhost:5000](http://local
 5. Run `bundle exec rake db:create[test] db:migrate[test]`.
 6. Run `shotgun -p 5000`
 
-You'll now see the web interface sitting on [http://localhost:5000](http://localhost:5000), and the API at [http://localhost:5000/api](http://localhost:5000/api).
+You'll now see the web interface sitting on [http://localhost:5000](http://localhost:5000),
+and the API at [http://localhost:5000/api](http://localhost:5000/api).
 
 # License
 
-[&copy; 2014, Nature Publishing Group](LICENSE.txt).  
+[&copy; 2014, Nature Publishing Group](LICENSE.txt).
 Bandiera is licensed under the [GNU General Public License 3.0][gpl].
 
 [gpl]: http://www.gnu.org/licenses/gpl-3.0.html
@@ -63,3 +79,4 @@ Bandiera is licensed under the [GNU General Public License 3.0][gpl].
 [unicorn]: http://unicorn.bogomips.org
 [thin]: http://code.macournoyer.com/thin/
 [passenger]: https://www.phusionpassenger.com/
+
