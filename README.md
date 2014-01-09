@@ -37,9 +37,8 @@ The Bandiera server is written in Ruby, so you're going to need to be able to ru
 1. Clone this repo.
 2. Run `bundle install --without development test`.
 3. Create a `config/database.yml` file with your database connection details (use `config/database.yml.sample` as a guide).
-4. Run `bundle exec rake db:create[production]`.
-5. Run `bundle exec rake db:migrate[production]`.
-6. Run `rackup -p 5000`
+4. Run `bundle exec rake db:create[production] db:migrate[production]`.
+5. Run `rackup -p 5000`
 
 You'll now see the web interface sitting on [http://localhost:5000](http://localhost:5000), and the API at [http://localhost:5000/api](http://localhost:5000/api).  Obviously in production, you'll want to run it via your favourite rack server (i.e. [Puma][puma], [Unicorn][unicorn], [Thin][thin] or [Passenger][passenger]).
 
@@ -48,8 +47,8 @@ You'll now see the web interface sitting on [http://localhost:5000](http://local
 1. Fork this repo.
 2. Run `bundle install`
 3. Create a `config/database.yml` file with your database connection details (use `config/database.yml.sample` as a guide).
-4. Run `bundle exec rake db:create[production]`.
-5. Run `bundle exec rake db:migrate[production]`.
+4. Run `bundle exec rake db:create[development] db:migrate[development]`.
+5. Run `bundle exec rake db:create[test] db:migrate[test]`.
 6. Run `shotgun -p 5000`
 
 You'll now see the web interface sitting on [http://localhost:5000](http://localhost:5000), and the API at [http://localhost:5000/api](http://localhost:5000/api).
