@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem "rubysl", platform: :rbx
+
 gem "rake"
 
 gem "sequel"
