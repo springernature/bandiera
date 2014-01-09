@@ -1,13 +1,14 @@
 require "spec_helper"
 
 describe Bandiera::Client do
-  let(:base_uri)  { "http://bandiera.com/api" }
+  let(:base_uri)  { "http://bandiera.com" }
+  let(:api_uri)   { "#{base_uri}/api" }
   let(:logger)    { double }
-  subject         { Bandiera::Client.new(base_uri, logger) }
+  subject         { Bandiera::Client.new(api_uri, logger) }
 
   describe "#get_all" do
     before do
-      @url = "#{base_uri}/v1/all"
+      @url = "#{api_uri}/v1/all"
     end
 
     context "all is ok" do
@@ -60,7 +61,7 @@ describe Bandiera::Client do
   describe "#get_features_for_group" do
     before do
       @group = "pubserv"
-      @url   = "#{base_uri}/v1/groups/#{@group}/features"
+      @url   = "#{api_uri}/v1/groups/#{@group}/features"
     end
 
     context "all is ok" do
@@ -129,7 +130,7 @@ describe Bandiera::Client do
     before do
       @group   = "pubserv"
       @feature = "log-stats"
-      @url     = "#{base_uri}/v1/groups/#{@group}/features/#{@feature}"
+      @url     = "#{api_uri}/v1/groups/#{@group}/features/#{@feature}"
     end
 
     context "all is ok" do

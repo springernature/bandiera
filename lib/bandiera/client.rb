@@ -11,9 +11,11 @@ module Bandiera
 
     HANDLED_EXCEPTIONS = [RequestError, ServerDownError, TimeOutError]
 
-    def initialize(base_uri="http://localhost/api", logger=Logger.new($stdout))
+    def initialize(base_uri="http://localhost", logger=Logger.new($stdout))
       @base_uri = base_uri
       @logger   = logger
+
+      @base_uri << "/api" unless @base_uri.match(/\/api$/)
     end
 
     def enabled?(group, feature)

@@ -5,6 +5,11 @@ defaults: &defaults
   username: root
   password: ""
 
+production:
+  database: bandiera_production
+  host: localhost
+  <<: *defaults
+
 development:
   database: bandiera_development
   host: localhost

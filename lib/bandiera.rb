@@ -1,6 +1,7 @@
 module Bandiera
 end
 
+require_relative "bandiera/version"
 require_relative "bandiera/db"
 require_relative "bandiera/client"
 require_relative "bandiera/feature"

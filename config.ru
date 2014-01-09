@@ -1,4 +1,4 @@
-$:.unshift File.join(__FILE__, "../lib")
+$LOAD_PATH.unshift File.join(__FILE__, "../lib")
 
 require "bandiera"
 
