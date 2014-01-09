@@ -11,9 +11,12 @@ module Bandiera
 
     HANDLED_EXCEPTIONS = [RequestError, ServerDownError, TimeOutError]
 
+    attr_accessor :timeout
+
     def initialize(base_uri="http://localhost", logger=Logger.new($stdout))
       @base_uri = base_uri
       @logger   = logger
+      @timeout  = 0.02 # 20ms default timeout
 
       @base_uri << "/api" unless @base_uri.match(/\/api$/)
     end
@@ -71,7 +74,7 @@ module Bandiera
 
     def get(path)
       url     = "#{@base_uri}#{path}"
-      request = Typhoeus::Request.new(url)
+      request = Typhoeus::Request.new(url, timeout: timeout, connecttimeout: timeout)
 
       request.on_complete do |response|
         if response.success?
