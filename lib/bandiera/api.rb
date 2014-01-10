@@ -5,6 +5,8 @@ module Bandiera
   class API < Sinatra::Base
     class InvalidParams < StandardError; end;
 
+    enable :logging
+
     helpers do
       def feature_service
         @feature_service ||= FeatureService.new
