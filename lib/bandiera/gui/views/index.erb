@@ -13,7 +13,7 @@
   </div>
 <% else %>
   <% @groups_and_features.each do |group| %>
-    <div class="panel panel-info">
+    <div class="panel panel-info bandiera-feature-group">
       <div class="panel-heading">
         <h3 class="panel-title"><%= group[:name] %></h3>
       </div>
@@ -33,13 +33,13 @@
           </thead>
           <tbody>
             <% group[:features].each do |feature| %>
-              <tr>
+              <tr class="bandiera-feature">
                 <td><%= feature.name %></td>
                 <td><%= feature.description %></td>
                 <td><%= feature.enabled? %></td>
                 <td style="text-align:right">
-                  <a class="btn btn-warning btn-sm" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/edit"><i class="fa fa-edit"></i> edit</a>
-                  <a class="btn btn-danger btn-sm" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/delete" data-method="delete"><i class="fa fa-trash-o"></i> delete</a>
+                  <a class="btn btn-warning btn-sm bandiera-edit-feature" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/edit"><i class="fa fa-edit"></i> edit</a>
+                  <a class="btn btn-danger btn-sm bandiera-delete-feature" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/delete" data-method="delete"><i class="fa fa-trash-o"></i> delete</a>
                 </td>
               </tr>
             <% end %>
