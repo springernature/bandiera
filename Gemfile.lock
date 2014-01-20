@@ -26,6 +26,8 @@ GEM
     mysql2 (0.3.14)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
+    nokogiri (1.6.1-java)
+      mini_portile (~> 0.5.0)
     pry (0.9.12.4)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -35,6 +37,10 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
       spoon (~> 0.0)
+    puma (2.7.1)
+      rack (>= 1.1, < 2.0)
+    puma (2.7.1-java)
+      rack (>= 1.1, < 2.0)
     rack (1.5.2)
     rack-flash3 (1.0.5)
       rack
@@ -287,6 +293,7 @@ DEPENDENCIES
   jdbc-mysql
   mysql2
   pry
+  puma
   rack-flash3
   rack-test
   rake

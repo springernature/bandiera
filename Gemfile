@@ -12,6 +12,8 @@ gem "sinatra"
 gem "rack-flash3"
 gem "typhoeus"
 
+gem "puma"
+
 group :development do
   gem "shotgun"
 end
