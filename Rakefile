@@ -16,56 +16,44 @@ namespace :bundler do
 end
 
 task :environment, [:env] => "bundler:setup" do |cmd, args|
-  ENV["RACK_ENV"] = args[:env] || "development"
+  ENV["RACK_ENV"] ||= ENV["RAILS_ENV"] || args[:env] || "development"
 end
 
 namespace :db do
   desc "Create DB"
-  task :create, :env do |cmd, args|
-    env = args[:env] || "development"
-    db  = Bandiera::Db.params(env)
-    Rake::Task["environment"].invoke(env)
+  task :create => :environment  do |cmd, args|
+    db = Bandiera::Db.params(ENV["RACK_ENV"])
     run_mysql_command(db, "CREATE DATABASE `#{db[:database]}`")
   end
 
   desc "Drop database"
-  task :nuke, :env do |cmd, args|
-    env = args[:env] || "development"
-    db  = Bandiera::Db.params(env)
-    Rake::Task["environment"].invoke(env)
+  task :nuke => :environment do |cmd, args|
+    db = Bandiera::Db.params(ENV["RACK_ENV"])
     run_mysql_command(db, "DROP DATABASE `#{db[:database]}`")
   end
 
   desc "Run database migrations"
-  task :migrate, :env do |cmd, args|
-    env = args[:env] || "development"
-    Rake::Task["environment"].invoke(env)
-
+  task :migrate => :environment do |cmd, args|
     Sequel.extension :migration
     Sequel::Migrator.apply(Bandiera::Db.connection, "db/migrations")
   end
 
   desc "Rollback the database"
-  task :rollback, :env do |cmd, args|
-    env = args[:env] || "development"
-    Rake::Task["environment"].invoke(env)
-
+  task :rollback => :environment do |cmd, args|
     Sequel.extension :migration
     version = (row = Bandiera::Db.connection[:schema_info].first) ? row[:version] : nil
     Sequel::Migrator.apply(Bandiera::Db.connection, "db/migrations", version - 1)
   end
 
   desc "Drop all tables in database"
-  task :drop, :env do |cmd, args|
-    env = args[:env] || "development"
-    Rake::Task["environment"].invoke(env)
+  task :drop => :environment do |cmd, args|
     Bandiera::Db.connection.tables.each do |table|
       Bandiera::Db.connection.run("DROP TABLE #{table}")
     end
   end
 
   desc "Clean Slate"
-  task :reset, [:env] => [:nuke, :create, :drop, :migrate]
+  task :reset  => [:nuke, :create, :drop, :migrate]
 end
 
 private
