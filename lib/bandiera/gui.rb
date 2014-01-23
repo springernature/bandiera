@@ -3,16 +3,22 @@ require "rack-flash"
 
 module Bandiera
   class GUI < Sinatra::Base
-    set :root, Proc.new { File.join( File.dirname(__FILE__), 'gui' ) }
+    configure do
+      set :root, Proc.new { File.join( File.dirname(__FILE__), 'gui' ) }
 
-    enable :sessions
-    enable :logging
+      enable :sessions
+      enable :logging
+    end
 
     use Rack::Flash
 
     helpers do
       def feature_service
         @feature_service ||= FeatureService.new
+      end
+
+      def logger
+        env['bandiera-logger']
       end
     end
 

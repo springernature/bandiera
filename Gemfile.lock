@@ -275,6 +275,7 @@ GEM
     slop (3.4.7)
     spoon (0.0.4)
       ffi
+    syslog-logger (1.6.8)
     tilt (1.4.1)
     typhoeus (0.6.7)
       ethon (~> 0.6.2)
@@ -302,5 +303,6 @@ DEPENDENCIES
   sequel
   shotgun
   sinatra
+  syslog-logger
   typhoeus
   webmock
