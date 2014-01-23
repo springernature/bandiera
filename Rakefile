@@ -1,13 +1,16 @@
 #!/usr/bin/env rake
 
-require "rspec/core/rake_task"
-
 require_relative "lib/bandiera"
 
-RSpec::Core::RakeTask.new
+begin
+  require "rspec/core/rake_task"
 
-task :default => :spec
-task :test    => :spec
+  RSpec::Core::RakeTask.new
+
+  task :default => :spec
+  task :test    => :spec
+rescue LoadError
+end
 
 namespace :bundler do
   task :setup do
