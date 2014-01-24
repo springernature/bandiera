@@ -10,7 +10,6 @@ gem "jdbc-mysql", platform: :jruby
 
 gem "sinatra"
 gem "rack-flash3"
-gem "typhoeus"
 
 gem "puma"
 gem "syslog-logger"
