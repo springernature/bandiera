@@ -153,7 +153,7 @@ describe Bandiera::GUI do
         it "shows validation errors" do
           within("form") do
             select "", from: "feature_group"
-            click_button "Create"
+            click_button "Update"
           end
 
           check_error_flash("You must select a group")
@@ -168,7 +168,7 @@ describe Bandiera::GUI do
 
           within("form") do
             select new_group, from: "feature_group"
-            click_button "Create"
+            click_button "Update"
           end
 
           expect(@service.get_feature(new_group, @feature_name)).to be_an_instance_of(Bandiera::Feature)
@@ -181,7 +181,7 @@ describe Bandiera::GUI do
         it "shows validation errors" do
           within("form") do
             fill_in "feature_name", with: "bob flemming"
-            click_button "Create"
+            click_button "Update"
           end
 
           check_error_flash("You must enter a feature name without spaces")
@@ -194,7 +194,7 @@ describe Bandiera::GUI do
 
           within("form") do
             fill_in "feature_name", with: "bob-flemming"
-            click_button "Create"
+            click_button "Update"
           end
 
           check_success_flash("Feature updated")
