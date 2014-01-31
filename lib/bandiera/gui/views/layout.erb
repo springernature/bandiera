@@ -18,7 +18,7 @@
   </head>
   <body>
     <header>
-      <div role="banner" class="header">
+      <div id="header" role="banner">
         <div class="container">
           <h1>
             <a href="/">Bandiera</a> <span class="h3">simple feature flagging</span>
@@ -46,6 +46,26 @@
     <div class="container">
       <%= yield %>
     </div>
+
+    <footer>
+      <div id="footer" role="contentinfo">
+        <div class="container">
+          <div class="col-md-5">
+            <small>
+              &copy; <%= Time.now.year %> Nature Publishing Group.<br/>
+              Bandiera is licensed under the GNU General Public License 3.0.<br/>
+              Version <%= Bandiera::VERSION %>
+            </small>
+          </div>
+          <div class="col-md-7">
+            <ul class="nav nav-pills pull-right">
+              <li><a href="https://github.com/nature/bandiera">GitHub Repo</a></li>
+              <li><a href="https://github.com/nature/bandiera/issues">Bug Tracker</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
 
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
