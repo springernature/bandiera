@@ -1,0 +1,50 @@
+<h2><code>GET /v1/all</code> - Fetching All Data Within Bandiera</h2>
+
+<hr />
+
+<pre>http://<%= request.host %>/api/v1/all</pre>
+
+<p>
+  This endpoint returns <b>all</b> group and feature data within Bandiera.
+</p>
+
+<h4>Example</h4>
+
+<pre>curl 'http://<%= request.host %>/api/v1/all'</pre>
+<p>Or, try it now: <a href="http://<%= request.host %>/api/v1/all">http://<%= request.host %>/api/v1/all</a></p>
+
+<h4>Example Response</h4>
+<pre>
+{
+    "groups": [
+        {
+            "features": [
+                {
+                    "description": "Show article level metrics?",
+                    "enabled": true,
+                    "group": "pubserv",
+                    "name": "show-article-metrics"
+                },
+                {
+                    "description": "Show the new search feature?",
+                    "enabled": false,
+                    "group": "pubserv",
+                    "name": "show-new-search"
+                }
+            ],
+            "name": "pubserv"
+        },
+        {
+            "features": [
+                {
+                    "description": "Enable themes?",
+                    "enabled": false,
+                    "group": "shunter",
+                    "name": "themes"
+                }
+            ],
+            "name": "shunter"
+        }
+    ]
+}
+</pre>

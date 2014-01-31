@@ -1,0 +1,77 @@
+<h2>The Bandiera API</h2>
+
+<hr />
+
+<p>
+  Bandiera has a <b>very</b> simple JSON API for interacting with the service.
+  Here you shall find a quick overview of how the service works and it's endpoints.
+</p>
+
+<hr />
+
+<% curr_ver = "v1" %>
+
+<dl class="dl-horizontal">
+  <dt>API Versioning</dt>
+  <dd>
+    <p>
+      The current API version is <%= curr_ver %>. This is the version you should use in production.
+    </p>
+
+    <p>
+      All calls need to be versioned to avoid future API releases breaking client code.
+      You can specify which version of the API to use by changing the base URL for your
+      calls e.g. to use <%= curr_ver %> it should be:
+    </p>
+
+    <pre>http://<%= request.host %>/api/<%= curr_ver %>/</pre>
+
+    <p>
+      and your actual calls should look like:
+    </p>
+
+    <pre>http://<%= request.host %>/api/<%= curr_ver %>/groups
+http://<%= request.host %>/api/<%= curr_ver %>/groups/pubserv/features</pre>
+  </dd>
+
+  <dt>Response Codes</dt>
+  <dd>
+    <p>
+      When debugging queries that aren't returning what you expect it can be useful to check the HTTP
+      status code being returned by the API.
+    </p>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>200</td>
+          <td>Success. The body of the response should contain the data you requested.</td>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Not found. Bandiera doesn't have any information for the feature/group you requested.</td>
+        </tr>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<hr />
+
+<h3>The API Endpoints</h3>
+
+<ul>
+  <li><code>GET /v1/all</code> - fetch all data within Bandiera. <small>&nbsp;&nbsp;<a href="/docs/api/v1/all">more&raquo;</a></small></li>
+  <li><code>GET /v1/groups</code> - fetch all groups within Bandiera. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
+  <li><code>POST /v1/groups</code> - create a new group. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
+  <li><code>GET /v1/groups/{group_name}/features</code> - fetch all features for a group. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
+  <li><code>POST /v1/groups/{group_name}/features</code> - create a new feature within a group. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
+  <li><code>GET /v1/groups/{group_name}/features/{feature_name}</code> - fetch information about a specific feature. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
+  <li><code>PUT /v1/groups/{group_name}/features/{feature_name}</code> - update a specific feature. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
+</ul>
+
