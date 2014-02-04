@@ -1,0 +1,86 @@
+<%= erb :"docs/api/_breadcrumb", locals: { current_title: "Fetch Information about a Specific Feature" } %>
+
+<code>GET /v1/groups/{group_name}/features/{feature_name}</code>
+<h2>Fetch Information about a Specific Feature</h2>
+
+<hr />
+
+<pre>http://<%= request.host %>/api/v1/groups/{group_name}/features/{feature_name}</pre>
+
+<p>
+  This endpoint returns the deatils of a given feature. <b>Please note</b> the special use
+  case of this endpoint detailed after the initial examples.
+</p>
+
+<%
+  groups        = feature_service.get_groups
+  first_group   = nil
+  first_feature = nil
+
+  if groups.first
+    first_group = groups.first
+    features    = feature_service.get_group_features(first_group)
+
+    if !features.empty?
+      first_feature = features.first.name
+    else
+      first_feature = "my-new-feature"
+    end
+  else
+    first_group   = "pubserv"
+    first_feature = "my-new-feature"
+  end
+%>
+
+<h4>Example Request</h4>
+<pre>curl 'http://<%= request.host %>/api/v1/groups/<%= first_group %>/features/<%= first_feature %>'</pre>
+<p>Or, try it now: <a href="http://<%= request.host %>/api/v1/groups/<%= first_group %>/features/<%= first_feature %>">http://<%= request.host %>/api/v1/groups/<%= first_group %>/features/<%= first_feature %></a></p>
+
+<h4>Example Response</h4>
+<pre>
+{
+    "feature": {
+        "description": "Show article level metrics?",
+        "enabled": true,
+        "group": "pubserv",
+        "name": "show-article-metrics"
+    }
+}
+</pre>
+
+<hr />
+
+<h4>When a Group or Feature Does Not Exist...</h4>
+<p>
+  Unlike all the other Bandiera API endpoints, this endpoint will <b>NEVER</b> return a
+  not found (404) response.  If you request infomation for groups or features that do not
+  exist, Bandiera will return a default feature object that is <b>disabled</b> along with
+  a warning.
+</p>
+
+<p>This is an example response for a group that does not exist:</p>
+<pre>
+{
+    "feature": {
+        "description": null,
+        "enabled": false,
+        "group": "i-do-not-exist",
+        "name": "my-new-feature"
+    },
+    "warning": "This group does not exist in the bandiera database."
+}
+</pre>
+
+<p>This is an example response for a feature that does not exist:</p>
+<pre>
+{
+    "feature": {
+        "description": null,
+        "enabled": false,
+        "group": "pubserv",
+        "name": "my-new-feature"
+    },
+    "warning": "This feature does not exist in the bandiera database."
+}
+</pre>
+
