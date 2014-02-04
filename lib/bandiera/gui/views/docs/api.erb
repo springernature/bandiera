@@ -1,3 +1,9 @@
+<ol class="breadcrumb">
+  <li><a href="/"><i class="fa fa-home"></i></a></li>
+  <li><a href="/docs">Documentation</a></li>
+  <li class="active">API</li>
+</ol>
+
 <h2>The Bandiera API</h2>
 
 <hr />
@@ -66,12 +72,12 @@ http://<%= request.host %>/api/<%= curr_ver %>/groups/pubserv/features</pre>
 <h3>The API Endpoints</h3>
 
 <ul>
-  <li><code>GET /v1/all</code> - fetch all data within Bandiera. <small>&nbsp;&nbsp;<a href="/docs/api/v1/all">more&raquo;</a></small></li>
-  <li><code>GET /v1/groups</code> - fetch all groups within Bandiera. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
-  <li><code>POST /v1/groups</code> - create a new group. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
-  <li><code>GET /v1/groups/{group_name}/features</code> - fetch all features for a group. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
-  <li><code>POST /v1/groups/{group_name}/features</code> - create a new feature within a group. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
-  <li><code>GET /v1/groups/{group_name}/features/{feature_name}</code> - fetch information about a specific feature. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
-  <li><code>PUT /v1/groups/{group_name}/features/{feature_name}</code> - update a specific feature. <small>&nbsp;&nbsp;<a href="">more&raquo;</a></small></li>
+  <li><code>GET /v1/all</code> - fetch all data. <small>&nbsp;&nbsp;<a href="/docs/api/v1/all">more&raquo;</a></small></li>
+  <li><code>GET /v1/groups</code> - fetch all groups. <small>&nbsp;&nbsp;<a href="/docs/api/v1/groups">more&raquo;</a></small></li>
+  <li><code>POST /v1/groups</code> - create a new group. <small>&nbsp;&nbsp;<a href="/docs/api/v1/groups-post">more&raquo;</a></small></li>
+  <li><code>GET /v1/groups/{group_name}/features</code> - fetch all features for a group. <small>&nbsp;&nbsp;<a href="/docs/api/v1/groups-features">more&raquo;</a></small></li>
+  <li><code>POST /v1/groups/{group_name}/features</code> - create a new feature within a group. <small>&nbsp;&nbsp;<a href="/docs/api/v1/groups-features-post">more&raquo;</a></small></li>
+  <li><code>GET /v1/groups/{group_name}/features/{feature_name}</code> - fetch information about a specific feature. <small>&nbsp;&nbsp;<a href="/docs/api/v1/groups-features-feature">more&raquo;</a></small></li>
+  <li><code>PUT /v1/groups/{group_name}/features/{feature_name}</code> - update a specific feature. <small>&nbsp;&nbsp;<a href="/docs/api/v1/groups-features-feature-put">more&raquo;</a></small></li>
 </ul>
 

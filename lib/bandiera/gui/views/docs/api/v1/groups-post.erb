@@ -1,0 +1,26 @@
+<%= erb :"docs/api/_breadcrumb", locals: { current_title: "Create a New Group" } %>
+
+<code>POST /v1/groups</code>
+<h2>Create A New Group</h2>
+
+<hr />
+
+<pre>http://<%= request.host %>/api/v1/groups</pre>
+
+<p>
+  POSTing a request to this endpoint allows you to create a new feature group within Bandiera, it will then return
+  you an object representing your newly created group.
+</p>
+
+<h4>Example Request</h4>
+<p>The following curl request will create a new group in Bandiera called "new-group".</p>
+<pre>curl -X POST -d 'group[name]=new-group' 'http://<%= request.host %>/api/v1/groups'</pre>
+
+<h4>Example Response</h4>
+<pre>
+{
+    "group": {
+        "name": "new-group"
+    }
+}
+</pre>
