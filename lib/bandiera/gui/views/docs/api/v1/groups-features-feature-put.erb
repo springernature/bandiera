@@ -1,0 +1,51 @@
+<%= erb :"docs/api/_breadcrumb", locals: { current_title: "Update a Specific Feature" } %>
+
+<code>PUT /v1/groups/{group_name}/features/{feature_name}</code>
+<h2>Update a Specific Feature</h2>
+
+<hr />
+
+<pre>http://<%= request.host %>/api/v1/groups/{group_name}/features/{feature_name}</pre>
+
+<p>
+  PUTing a request to this endpoint allows you to update a feature.  Upon success,
+  it will return a representation of the feature you have just updated.
+</p>
+
+<%
+  groups        = feature_service.get_groups
+  first_group   = nil
+  first_feature = nil
+
+  if groups.first
+    first_group   = groups.first
+    features      = feature_service.get_group_features(first_group)
+    first_feature = features.empty? ? "my-new-feature" : features.first.name
+  else
+    first_group   = "pubserv"
+    first_feature = "my-new-feature"
+  end
+%>
+
+<h4>Example Request</h4>
+
+<p>The following curl request would update the feature &quot;<%= first_feature %>&quot; (in the group &quot;<%= first_group %>&quot;):</p>
+
+<pre>
+curl -X PUT -d 'feature[group]=<%= first_group %>&feature[name]=<%= first_feature %>&feature[description]=Updated+feature+desc&feature[enabled]=false' \
+  http://<%= request.host %>/api/v1/groups/<%= first_group %>/features/<%= first_feature %>
+</pre>
+
+<h4>Example Response</h4>
+
+<pre>
+{
+    "feature": {
+        "description": "Show new feature?",
+        "enabled": false,
+        "group": "pubserv",
+        "name": "show-new-feature"
+    }
+}
+</pre>
+

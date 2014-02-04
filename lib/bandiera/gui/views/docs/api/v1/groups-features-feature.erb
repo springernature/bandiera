@@ -18,14 +18,9 @@
   first_feature = nil
 
   if groups.first
-    first_group = groups.first
-    features    = feature_service.get_group_features(first_group)
-
-    if !features.empty?
-      first_feature = features.first.name
-    else
-      first_feature = "my-new-feature"
-    end
+    first_group   = groups.first
+    features      = feature_service.get_group_features(first_group)
+    first_feature = features.empty? ? "my-new-feature" : features.first.name
   else
     first_group   = "pubserv"
     first_feature = "my-new-feature"

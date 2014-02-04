@@ -92,6 +92,10 @@ module Bandiera
       redirect "/"
     end
 
+    get "/docs" do
+      erb :docs
+    end
+
     get "/docs/*" do |file|
       erb :"docs/#{params[:splat].first}"
     end
