@@ -32,8 +32,8 @@
 <p>The following curl request would update the feature &quot;<%= first_feature %>&quot; (in the group &quot;<%= first_group %>&quot;):</p>
 
 <pre>
-curl -X PUT -d 'feature[group]=<%= first_group %>&feature[name]=<%= first_feature %>&feature[description]=Updated+feature+desc&feature[enabled]=false' \
-  http://<%= request.host %>/api/v1/groups/<%= first_group %>/features/<%= first_feature %>
+curl -d 'feature[group]=<%= first_group %>&feature[name]=<%= first_feature %>&feature[description]=Updated+feature+desc&feature[enabled]=false' \
+  -X PUT http://<%= request.host %>/api/v1/groups/<%= first_group %>/features/<%= first_feature %>
 </pre>
 
 <h4>Example Response</h4>
