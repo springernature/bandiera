@@ -31,7 +31,7 @@ module Bandiera
         str << "&useUnicode=true&characterEncoding=utf8"
         str
       else
-        conn.merge(adapter: "mysql2", encoding: "utf8")
+        conn.merge(adapter: "mysql2", encoding: "utf8", max_connections: 10)
       end
     end
   end

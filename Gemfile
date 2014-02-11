@@ -11,7 +11,7 @@ gem "jdbc-mysql", platform: :jruby
 gem "sinatra"
 gem "rack-flash3"
 
-gem "puma"
+gem "unicorn"
 gem "syslog-logger"
 
 group :development do
