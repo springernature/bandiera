@@ -34,7 +34,7 @@ describe Bandiera::GUI do
       all(".bandiera-feature-group").each do |div|
         group_name = div.find("h3").text
         features   = div.all("tr.bandiera-feature").map do |tr|
-          tr.first("td").text
+          tr.all("td")[1].text
         end
 
         groups[group_name] = features
@@ -143,7 +143,7 @@ describe Bandiera::GUI do
       visit("/")
 
       row           = first("tr.bandiera-feature")
-      @feature_name = row.first("td").text
+      @feature_name = row.all("td")[1].text
 
       row.find(".bandiera-edit-feature").click
     end
