@@ -26,5 +26,7 @@ group :test do
   gem "capybara"
   gem "webmock"
   gem "pry"
+  gem "simplecov", "~> 0.7.1"
+  gem "simplecov-rcov"
 end
 
