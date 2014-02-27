@@ -7,7 +7,7 @@ REST API.
 # Bandiera Client Libraries
 
 * **Ruby** - [https://github.com/nature/bandiera-client-ruby](https://github.com/nature/bandiera-client-ruby)
-* **JavaScript** - _coming soon_
+* **Node** - [https://github.com/nature/bandiera-client-node](https://github.com/nature/bandiera-client-node)
 * **PHP** - _coming soon_
 
 # Documentation
