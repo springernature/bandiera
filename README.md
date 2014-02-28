@@ -8,7 +8,7 @@ REST API.
 
 * **Ruby** - [https://github.com/nature/bandiera-client-ruby](https://github.com/nature/bandiera-client-ruby)
 * **Node** - [https://github.com/nature/bandiera-client-node](https://github.com/nature/bandiera-client-node)
-* **PHP** - _coming soon_
+* **PHP** - [https://github.com/nature/bandiera-client-php](https://github.com/nature/bandiera-client-php)
 
 # Documentation
 
