@@ -192,7 +192,7 @@ describe Bandiera::GUI do
 
       context "with a new valid name" do
         it "updates the feature flag" do
-          curr_group = find_field("feature_group").value
+          find_field("feature_group").select("laserwolf")
 
           within("form") do
             fill_in "feature_name", with: "bob-flemming"
@@ -200,7 +200,7 @@ describe Bandiera::GUI do
           end
 
           check_success_flash("Feature updated")
-          expect(service.get_feature(curr_group, "bob-flemming")).to be_an_instance_of(Bandiera::Feature)
+          expect(service.get_feature("laserwolf", "bob-flemming")).to be_an_instance_of(Bandiera::Feature)
         end
       end
     end
