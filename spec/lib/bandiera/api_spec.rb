@@ -8,6 +8,11 @@ describe Bandiera::API do
     Bandiera::API
   end
 
+  def assert_expected_data_output(expected_data)
+    data = JSON.parse(last_response.body)
+    expect(data).to eq(expected_data)
+  end
+
   before do
     service = Bandiera::FeatureService.new
     service.add_features([
@@ -20,77 +25,99 @@ describe Bandiera::API do
   end
 
   describe "GET /v1/groups" do
-    it "returns an array of group names" do
+    before do
       get "/v1/groups"
-      expect(last_response.status).to eq(200)
+    end
 
+    it "returns a 200 status" do
+      expect(last_response.status).to eq(200)
+    end
+
+    it "returns an array of group names" do
       expected_data = {
         "groups" => [
           { "name" => "laserwolf" },
           { "name" => "pubserv" },
-          { "name" => "shunter" }
-        ]
+          { "name" => "shunter" } ]
       }
 
-      data = JSON.parse(last_response.body)
-      expect(data).to eq(expected_data)
+      assert_expected_data_output(expected_data)
     end
   end
 
   describe "POST /v1/groups" do
     context "with valid params" do
-      it "creates a new group" do
+      before do
         post "/v1/groups", group: { name: "wibble" }
-        expect(last_response.status).to eq(201)
+      end
 
+      it "return status 200" do
+        expect(last_response.status).to eq(201)
+      end
+
+      it "creates a new group" do
         expected_data = { "group" => { "name" => "wibble" } }
 
-        data = JSON.parse(last_response.body)
-        expect(data).to eq(expected_data)
+        assert_expected_data_output(expected_data)
       end
     end
 
     context "with invalid params" do
-      it "returns an error" do
+      before do
         post "/v1/groups", params: { wee: "woo" }
-        expect(last_response.status).to eq(400)
+      end
 
+      it "returns status 400" do
+        expect(last_response.status).to eq(400)
+      end
+
+      it "returns an error" do
         expected_data = { "error" => "Invalid parameters, required params are { 'group' => { 'name' => 'YOUR GROUP NAME' }  }" }
 
-        data = JSON.parse(last_response.body)
-        expect(data).to eq(expected_data)
+        assert_expected_data_output(expected_data)
       end
     end
   end
 
   describe "GET /v1/groups/:group_name/features" do
     context "when the group exists" do
-      it "returns an array of features for the group" do
+      before do
         get "/v1/groups/shunter/features"
+      end
 
+      it "returns status 200" do
         expect(last_response.status).to eq(200)
+      end
 
-        data = JSON.parse(last_response.body)
-        expect(data).to be_an_instance_of(Hash)
-        expect(data["features"]).to be_an_instance_of(Array)
-        expect(data["features"].size).to be(1)
-        expect(data["features"].first).to eq({
-          "group"       => "shunter",
-          "name"        => "stats_logging",
-          "description" => "Log stats",
-          "enabled"     => true
-        })
+      it "returns an array of features for the group" do
+        expected_data = {
+          "features" => [{
+            "group"       => "shunter",
+            "name"        => "stats_logging",
+            "description" => "Log stats",
+            "enabled"     => true
+          }]
+        }
+
+        assert_expected_data_output(expected_data)
       end
     end
 
     context "when the group doesn't exist" do
-      it "returns a 404" do
+      before do
         get "/v1/groups/non_existent/features"
-        expect(last_response.status).to eq(404)
+      end
 
-        data = JSON.parse(last_response.body)
-        expect(data).to be_an_instance_of(Hash)
-        expect(data["error"]).to eq("Cannot find group 'non_existent'")
+      it "returns a 404" do
+        expect(last_response.status).to eq(404)
+      end
+
+      it "returns error data" do
+        expected_data = {
+          "error" => "Cannot find group 'non_existent'"
+        }
+
+        assert_expected_data_output(expected_data)
       end
     end
   end
@@ -98,118 +125,139 @@ describe Bandiera::API do
   describe "POST /v1/groups/:group_name/features" do
     context "when the group exists" do
       context "with valid params" do
-        it "creates a new feature for the group" do
-          feature_params = {
-            "name"        => "new_feature",
-            "description" => "A new new feature",
-            "enabled"     => true
-          }
+        let(:feature_params) { {
+          "name"        => "new_feature",
+          "description" => "A new new feature",
+          "enabled"     => true
+        } }
 
+        before do
           post "/v1/groups/shunter/features", { feature: feature_params }
-          expect(last_response.status).to eq(201)
+        end
 
+        it "returns a 201 status" do
+          expect(last_response.status).to eq(201)
+        end
+
+        it "creates a new feature for the group" do
           expected_data = { "feature" => feature_params.merge({ "group" => "shunter" }) }
 
-          data = JSON.parse(last_response.body)
-          expect(data).to eq(expected_data)
+          assert_expected_data_output(expected_data)
         end
       end
 
       context "with invalid params" do
-        it "returns an error" do
-          feature_params = {
-            "feature_name" => "new_feature",
-            "enabled"      => true
-          }
+        let(:feature_params) {{
+          "feature_name" => "new_feature",
+          "enabled"      => true
+        }}
 
+        before do
           post "/v1/groups/shunter/features", { feature: feature_params }
-          expect(last_response.status).to eq(400)
+        end
 
+        it "returns a 400 status code" do
+          expect(last_response.status).to eq(400)
+        end
+
+        it "returns an error" do
           expected_data = { "error" => "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }" }
 
-          data = JSON.parse(last_response.body)
-          expect(data).to eq(expected_data)
+          assert_expected_data_output(expected_data)
         end
       end
     end
 
     context "when the group doesn't exist" do
-      it "creates the group and the new feature" do
-        feature_params = {
-          "name"        => "test-feature",
-          "description" => "A NEW TEST FEATURE",
-          "enabled"     => false
-        }
+      let(:feature_params) { {
+        "name"        => "test-feature",
+        "description" => "A NEW TEST FEATURE",
+        "enabled"     => false
+      } }
 
+      before do
         post "/v1/groups/wibble/features", { feature: feature_params }
-        expect(last_response.status).to eq(201)
+      end
 
+      it "returns a 201 status code" do
+        expect(last_response.status).to eq(201)
+      end
+
+      it "creates the group and the new feature" do
         expected_data = { "feature" => feature_params.merge({ "group" => "wibble" }) }
 
-        data = JSON.parse(last_response.body)
-        expect(data).to eq(expected_data)
+        assert_expected_data_output(expected_data)
       end
     end
   end
 
   describe "GET /v1/groups/:group_name/features/:feature_name" do
     context "when both the group and the feature exists" do
-      it "returns the feature" do
+      before do
         get "/v1/groups/pubserv/features/show_search"
+      end
 
+      it "returns a 200 status code" do
         expect(last_response.status).to eq(200)
+      end
 
-        data = JSON.parse(last_response.body)
-        expect(data).to be_an_instance_of(Hash)
-        expect(data.keys).to include("feature")
-        expect(data["feature"]).to eq({
-          "group"       => "pubserv",
-          "name"        => "show_search",
-          "description" => "Show the search bar",
-          "enabled"     => true
-        })
+      it "returns the feature" do
+        expected_data = {
+          "feature" => {
+            "group"       => "pubserv",
+            "name"        => "show_search",
+            "description" => "Show the search bar",
+            "enabled"     => true
+          }
+        }
+
+        assert_expected_data_output(expected_data)
       end
     end
 
     context "when the group doesn't exist" do
-      it "returns a valid feature object, but set to false (with a warning message)" do
+      before do
         get "/v1/groups/non_existent/features/wibble"
+      end
+
+      it "returns a 200 status code" do
         expect(last_response.status).to eq(200)
+      end
 
-        data = JSON.parse(last_response.body)
-        expect(data).to be_an_instance_of(Hash)
-        expect(data.keys).to include("feature")
-        expect(data.keys).to include("warning")
+      it "returns a valid feature object, but set to false (with a warning message)" do
+        expected_data = {
+          "feature" => {
+            "group"       => "non_existent",
+            "name"        => "wibble",
+            "description" => nil,
+            "enabled"     => false
+          }, "warning" => "This group does not exist in the bandiera database."
+        }
 
-        expect(data["feature"]).to eq({
-          "group"       => "non_existent",
-          "name"        => "wibble",
-          "description" => nil,
-          "enabled"     => false
-        })
-
-        expect(data["warning"]).to eq("This group does not exist in the bandiera database.")
+        assert_expected_data_output(expected_data)
       end
     end
 
     context "when the group exists, but the feature doesn't" do
-      it "returns a valid feature object, but set to false (with a warning message)" do
+      before do
         get "/v1/groups/laserwolf/features/non_existent"
+      end
+
+      it "returns a 200 status code" do
         expect(last_response.status).to eq(200)
+      end
 
-        data = JSON.parse(last_response.body)
-        expect(data).to be_an_instance_of(Hash)
-        expect(data.keys).to include("feature")
-        expect(data.keys).to include("warning")
+      it "returns a valid feature object, but set to false (with a warning message)" do
+        expected_data = {
+          "feature" => {
+            "group"       => "laserwolf",
+            "name"        => "non_existent",
+            "description" => nil,
+            "enabled"     => false
+          }, "warning" => "This feature does not exist in the bandiera database."
+        }
 
-        expect(data["feature"]).to eq({
-          "group"       => "laserwolf",
-          "name"        => "non_existent",
-          "description" => nil,
-          "enabled"     => false
-        })
-
-        expect(data["warning"]).to eq("This feature does not exist in the bandiera database.")
+        assert_expected_data_output(expected_data)
       end
     end
   end
@@ -217,61 +265,58 @@ describe Bandiera::API do
   describe "PUT /v1/groups/:group_name/features/:feature_name" do
     context "when both the group and the feature exists" do
       context "with valid params" do
-        it "updates the feature" do
+        before do
           get "/v1/groups/shunter/features/stats_logging"
-          before = JSON.parse(last_response.body)["feature"]
+        end
 
-          put "/v1/groups/shunter/features/stats_logging", { feature: before.dup.merge({ "group" => "laserwolf" }) }
-          expect(last_response.status).to eq(200)
-          after1 = JSON.parse(last_response.body)["feature"]
+        it "updates the feature" do
+          feature = JSON.parse(last_response.body)["feature"].dup.merge({"group" => "laserwolf"})
 
-          get "/v1/groups/laserwolf/features/stats_logging"
-          after2 = JSON.parse(last_response.body)["feature"]
-
-          expect(before).to_not eq(after1)
-          expect(before).to_not eq(after2)
-          expect(after1).to eq(after2)
+          expect {
+            put "/v1/groups/shunter/features/stats_logging", { feature: feature }
+            get "/v1/groups/laserwolf/features/stats_logging"
+          }.to change{JSON.parse(last_response.body)["feature"]}
         end
       end
 
       context "with invalid params" do
-        it "returns an error" do
-          feature_params = {
-            "feature_name" => "new_feature_name"
-          }
+        let(:feature_params) { {"feature_name" => "new_feature_name"} }
 
+        before do
           put "/v1/groups/shunter/features/stats_logging", { feature: feature_params }
-          expect(last_response.status).to eq(400)
+        end
 
+        it "returns a 400 status code" do
+          expect(last_response.status).to eq(400)
+        end
+
+        it "returns an error" do
           expected_data = { "error" => "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }, optional params are { 'feature' => { 'group' => 'GROUP NAME' } }" }
 
-          data = JSON.parse(last_response.body)
-          expect(data).to eq(expected_data)
+          assert_expected_data_output(expected_data)
         end
       end
     end
 
     context "when the" do
-      before do
-        @params = {
-          feature: {
-            name:         "wibble_logging",
-            description:  "Log me some wibble",
-            enabled:      true
-          }
+      let(:params) { {
+        feature: {
+          name:         "wibble_logging",
+          description:  "Log me some wibble",
+          enabled:      true
         }
-      end
+      } }
 
       context "group doesn't exist" do
         it "returns a 404" do
-          put "/v1/groups/wibble/features/wibble_logging", @params
+          put "/v1/groups/wibble/features/wibble_logging", params
           expect(last_response.status).to eq(404)
         end
       end
 
       context "feature doesn't exist" do
         it "returns a 404" do
-          put "/v1/groups/shunter/features/wibble_logging", @params
+          put "/v1/groups/shunter/features/wibble_logging", params
           expect(last_response.status).to eq(404)
         end
       end
@@ -279,35 +324,40 @@ describe Bandiera::API do
   end
 
   describe "GET /v1/all" do
-    it "returns all features in the database grouped by group" do
-      expected_data = {
-        "groups" => [
-          {
-            "name" => "laserwolf",
-            "features" => [
-              { "group" => "laserwolf", "name" => "enable_caching", "description" => "Enable caching", "enabled" => false }
-            ]
-          },
-          {
-            "name" => "pubserv",
-            "features" => [
-              { "group" => "pubserv", "name" => "show_search", "description" => "Show the search bar", "enabled" => true },
-              { "group" => "pubserv", "name" => "show_subjects", "description" => "Show all subject related features", "enabled" => false },
-              { "group" => "pubserv", "name" => "xmas_mode", "description" => "Xmas mode: SNOWFLAKES!", "enabled" => false }
-            ]
-          },
-          {
-            "name" => "shunter",
-            "features" => [
-              { "group" => "shunter", "name" => "stats_logging", "description" => "Log stats", "enabled" => true },
-            ]
-          }
-        ]
-      }
+    let(:expected_data) { {
+      "groups" => [
+        {
+          "name" => "laserwolf",
+          "features" => [
+            { "group" => "laserwolf", "name" => "enable_caching", "description" => "Enable caching", "enabled" => false }
+          ]
+        },
+        {
+          "name" => "pubserv",
+          "features" => [
+            { "group" => "pubserv", "name" => "show_search", "description" => "Show the search bar", "enabled" => true },
+            { "group" => "pubserv", "name" => "show_subjects", "description" => "Show all subject related features", "enabled" => false },
+            { "group" => "pubserv", "name" => "xmas_mode", "description" => "Xmas mode: SNOWFLAKES!", "enabled" => false }
+          ]
+        },
+        {
+          "name" => "shunter",
+          "features" => [
+            { "group" => "shunter", "name" => "stats_logging", "description" => "Log stats", "enabled" => true },
+          ]
+        }
+      ]
+    } }
 
+    before do
       get "/v1/all"
-      expect(last_response.status).to eq(200)
+    end
 
+    it "returns a 200 status code" do
+      expect(last_response.status).to eq(200)
+    end
+
+    it "returns all features in the database grouped by group" do
       data = JSON.parse(last_response.body)
 
       data["groups"].each_index do |index|

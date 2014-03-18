@@ -4,10 +4,12 @@ require "capybara/dsl"
 describe Bandiera::GUI do
   include Capybara::DSL
 
+  let(:service) { Bandiera::FeatureService.new }
+
   before do
     Capybara.app = Bandiera::GUI.new
-    @service     = Bandiera::FeatureService.new
-    @service.add_features([
+
+    service.add_features([
       { group: "pubserv",   name: "show_subjects",  description: "Show all subject related features", enabled: false },
       { group: "pubserv",   name: "show_search",    description: "Show the search bar",               enabled: true  },
       { group: "laserwolf", name: "enable_caching", description: "Enable caching",                    enabled: false },
@@ -59,7 +61,7 @@ describe Bandiera::GUI do
         end
 
         check_success_flash("Group created")
-        expect(@service.get_groups).to include("TEST")
+        expect(service.get_groups).to include("TEST")
       end
     end
 
@@ -91,7 +93,7 @@ describe Bandiera::GUI do
         end
 
         check_success_flash("Feature created")
-        expect(@service.get_feature("pubserv", "TEST-FEATURE")).to be_an_instance_of(Bandiera::Feature)
+        expect(service.get_feature("pubserv", "TEST-FEATURE")).to be_an_instance_of(Bandiera::Feature)
       end
     end
 
@@ -163,7 +165,7 @@ describe Bandiera::GUI do
       context "choosing another group" do
         it "moves the feature to the new group" do
           curr_group    = find_field("feature_group").value
-          other_groups  = @service.get_groups - [curr_group]
+          other_groups  = service.get_groups - [curr_group]
           new_group     = other_groups.sample
 
           within("form") do
@@ -171,7 +173,7 @@ describe Bandiera::GUI do
             click_button "Update"
           end
 
-          expect(@service.get_feature(new_group, @feature_name)).to be_an_instance_of(Bandiera::Feature)
+          expect(service.get_feature(new_group, @feature_name)).to be_an_instance_of(Bandiera::Feature)
         end
       end
     end
@@ -190,7 +192,7 @@ describe Bandiera::GUI do
 
       context "with a new valid name" do
         it "updates the feature flag" do
-          curr_group = find_field("feature_group").value
+          find_field("feature_group").select("laserwolf")
 
           within("form") do
             fill_in "feature_name", with: "bob-flemming"
@@ -198,7 +200,7 @@ describe Bandiera::GUI do
           end
 
           check_success_flash("Feature updated")
-          expect(@service.get_feature(curr_group, "bob-flemming")).to be_an_instance_of(Bandiera::Feature)
+          expect(service.get_feature("laserwolf", "bob-flemming")).to be_an_instance_of(Bandiera::Feature)
         end
       end
     end
@@ -217,7 +219,7 @@ describe Bandiera::GUI do
 
       check_success_flash("Feature deleted")
       expect {
-        @service.get_feature(group_name, feature_name)
+        service.get_feature(group_name, feature_name)
       }.to raise_error(Bandiera::FeatureService::RecordNotFound)
     end
   end
