@@ -11,7 +11,9 @@ gem "jdbc-mysql", platform: :jruby
 gem "sinatra"
 gem "rack-flash3"
 
-gem "unicorn"
+gem "unicorn", require: nil, platform: :ruby
+gem "trinidad", require: nil, platform: :jruby
+
 gem "syslog-logger"
 
 group :development do
