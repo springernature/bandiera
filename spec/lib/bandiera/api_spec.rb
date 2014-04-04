@@ -8,7 +8,7 @@ describe Bandiera::API do
     Bandiera::API
   end
 
-  def assert_expected_data_output(expected_data)
+  def assert_last_response_matches(expected_data)
     data = JSON.parse(last_response.body)
     expect(data).to eq(expected_data)
   end
@@ -38,10 +38,11 @@ describe Bandiera::API do
         "groups" => [
           { "name" => "laserwolf" },
           { "name" => "pubserv" },
-          { "name" => "shunter" } ]
+          { "name" => "shunter" }
+        ]
       }
 
-      assert_expected_data_output(expected_data)
+      assert_last_response_matches(expected_data)
     end
   end
 
@@ -58,7 +59,7 @@ describe Bandiera::API do
       it "creates a new group" do
         expected_data = { "group" => { "name" => "wibble" } }
 
-        assert_expected_data_output(expected_data)
+        assert_last_response_matches(expected_data)
       end
     end
 
@@ -74,7 +75,7 @@ describe Bandiera::API do
       it "returns an error" do
         expected_data = { "error" => "Invalid parameters, required params are { 'group' => { 'name' => 'YOUR GROUP NAME' }  }" }
 
-        assert_expected_data_output(expected_data)
+        assert_last_response_matches(expected_data)
       end
     end
   end
@@ -99,7 +100,7 @@ describe Bandiera::API do
           }]
         }
 
-        assert_expected_data_output(expected_data)
+        assert_last_response_matches(expected_data)
       end
     end
 
@@ -117,7 +118,7 @@ describe Bandiera::API do
           "error" => "Cannot find group 'non_existent'"
         }
 
-        assert_expected_data_output(expected_data)
+        assert_last_response_matches(expected_data)
       end
     end
   end
@@ -142,15 +143,14 @@ describe Bandiera::API do
         it "creates a new feature for the group" do
           expected_data = { "feature" => feature_params.merge({ "group" => "shunter" }) }
 
-          assert_expected_data_output(expected_data)
+          assert_last_response_matches(expected_data)
         end
       end
 
       context "with invalid params" do
-        let(:feature_params) {{
-          "feature_name" => "new_feature",
-          "enabled"      => true
-        }}
+        let(:feature_params) do
+          { "feature_name" => "new_feature", "enabled" => true }
+        end
 
         before do
           post "/v1/groups/shunter/features", { feature: feature_params }
@@ -163,17 +163,19 @@ describe Bandiera::API do
         it "returns an error" do
           expected_data = { "error" => "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }" }
 
-          assert_expected_data_output(expected_data)
+          assert_last_response_matches(expected_data)
         end
       end
     end
 
     context "when the group doesn't exist" do
-      let(:feature_params) { {
-        "name"        => "test-feature",
-        "description" => "A NEW TEST FEATURE",
-        "enabled"     => false
-      } }
+      let(:feature_params) do
+        {
+          "name"        => "test-feature",
+          "description" => "A NEW TEST FEATURE",
+          "enabled"     => false
+        }
+      end
 
       before do
         post "/v1/groups/wibble/features", { feature: feature_params }
@@ -186,7 +188,7 @@ describe Bandiera::API do
       it "creates the group and the new feature" do
         expected_data = { "feature" => feature_params.merge({ "group" => "wibble" }) }
 
-        assert_expected_data_output(expected_data)
+        assert_last_response_matches(expected_data)
       end
     end
   end
@@ -211,7 +213,7 @@ describe Bandiera::API do
           }
         }
 
-        assert_expected_data_output(expected_data)
+        assert_last_response_matches(expected_data)
       end
     end
 
@@ -234,7 +236,7 @@ describe Bandiera::API do
           }, "warning" => "This group does not exist in the bandiera database."
         }
 
-        assert_expected_data_output(expected_data)
+        assert_last_response_matches(expected_data)
       end
     end
 
@@ -254,10 +256,11 @@ describe Bandiera::API do
             "name"        => "non_existent",
             "description" => nil,
             "enabled"     => false
-          }, "warning" => "This feature does not exist in the bandiera database."
+          },
+          "warning" => "This feature does not exist in the bandiera database."
         }
 
-        assert_expected_data_output(expected_data)
+        assert_last_response_matches(expected_data)
       end
     end
   end
@@ -265,22 +268,24 @@ describe Bandiera::API do
   describe "PUT /v1/groups/:group_name/features/:feature_name" do
     context "when both the group and the feature exists" do
       context "with valid params" do
-        before do
-          get "/v1/groups/shunter/features/stats_logging"
-        end
-
         it "updates the feature" do
-          feature = JSON.parse(last_response.body)["feature"].dup.merge({"group" => "laserwolf"})
+          get "/v1/groups/shunter/features/stats_logging"
 
-          expect {
-            put "/v1/groups/shunter/features/stats_logging", { feature: feature }
-            get "/v1/groups/laserwolf/features/stats_logging"
-          }.to change{JSON.parse(last_response.body)["feature"]}
+          feature = JSON.parse(last_response.body)["feature"]
+
+          put "/v1/groups/shunter/features/stats_logging", { feature: feature.merge({ "group" => "laserwolf" }) }
+          get "/v1/groups/laserwolf/features/stats_logging"
+
+          updated_feature = JSON.parse(last_response.body)["feature"]
+
+          expect(feature).to_not eq(updated_feature)
         end
       end
 
       context "with invalid params" do
-        let(:feature_params) { {"feature_name" => "new_feature_name"} }
+        let(:feature_params) do
+          { "feature_name" => "new_feature_name" }
+        end
 
         before do
           put "/v1/groups/shunter/features/stats_logging", { feature: feature_params }
@@ -293,19 +298,21 @@ describe Bandiera::API do
         it "returns an error" do
           expected_data = { "error" => "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }, optional params are { 'feature' => { 'group' => 'GROUP NAME' } }" }
 
-          assert_expected_data_output(expected_data)
+          assert_last_response_matches(expected_data)
         end
       end
     end
 
     context "when the" do
-      let(:params) { {
-        feature: {
-          name:         "wibble_logging",
-          description:  "Log me some wibble",
-          enabled:      true
+      let(:params) do
+        {
+          feature: {
+            name:         "wibble_logging",
+            description:  "Log me some wibble",
+            enabled:      true
+          }
         }
-      } }
+      end
 
       context "group doesn't exist" do
         it "returns a 404" do
@@ -324,30 +331,32 @@ describe Bandiera::API do
   end
 
   describe "GET /v1/all" do
-    let(:expected_data) { {
-      "groups" => [
-        {
-          "name" => "laserwolf",
-          "features" => [
-            { "group" => "laserwolf", "name" => "enable_caching", "description" => "Enable caching", "enabled" => false }
-          ]
-        },
-        {
-          "name" => "pubserv",
-          "features" => [
-            { "group" => "pubserv", "name" => "show_search", "description" => "Show the search bar", "enabled" => true },
-            { "group" => "pubserv", "name" => "show_subjects", "description" => "Show all subject related features", "enabled" => false },
-            { "group" => "pubserv", "name" => "xmas_mode", "description" => "Xmas mode: SNOWFLAKES!", "enabled" => false }
-          ]
-        },
-        {
-          "name" => "shunter",
-          "features" => [
-            { "group" => "shunter", "name" => "stats_logging", "description" => "Log stats", "enabled" => true },
-          ]
-        }
-      ]
-    } }
+    let(:expected_data) do
+      {
+        "groups" => [
+          {
+            "name" => "laserwolf",
+            "features" => [
+              { "group" => "laserwolf", "name" => "enable_caching", "description" => "Enable caching", "enabled" => false }
+            ]
+          },
+          {
+            "name" => "pubserv",
+            "features" => [
+              { "group" => "pubserv", "name" => "show_search", "description" => "Show the search bar", "enabled" => true },
+              { "group" => "pubserv", "name" => "show_subjects", "description" => "Show all subject related features", "enabled" => false },
+              { "group" => "pubserv", "name" => "xmas_mode", "description" => "Xmas mode: SNOWFLAKES!", "enabled" => false }
+            ]
+          },
+          {
+            "name" => "shunter",
+            "features" => [
+              { "group" => "shunter", "name" => "stats_logging", "description" => "Log stats", "enabled" => true },
+            ]
+          }
+        ]
+      }
+    end
 
     before do
       get "/v1/all"
