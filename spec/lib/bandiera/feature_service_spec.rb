@@ -103,6 +103,45 @@ describe Bandiera::FeatureService do
           .to(2)
       end
     end
+
+    context 'creating features configured for specific user groups' do
+      let(:user_groups) do
+        { list: %w(admin editor), regex: '.*admin.*' }
+      end
+
+      let(:features) do
+        [{
+          name:         'feat',
+          group:        'wibble',
+          description:  'cheese',
+          enabled:      true,
+          user_groups:  user_groups
+        }]
+      end
+
+      it 'creates features' do
+        expect { subject.add_features(features) }
+          .to change { db[:features].count }
+          .from(0)
+          .to(1)
+      end
+
+      it 'populates the user_groups_data field correctly' do
+        subject.add_features(features)
+
+        expected = JSON.generate(user_groups)
+        target   = db[:features].first
+
+        expect(target[:user_groups]).to eq(expected)
+      end
+
+      it 'returns correctly constructed features' do
+        target = subject.add_features(features).first
+
+        expect(target.user_groups).to_not be_empty
+        expect(target.user_groups).to eq(user_groups)
+      end
+    end
   end
 
   describe '#remove_feature' do
