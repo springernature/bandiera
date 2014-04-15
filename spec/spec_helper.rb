@@ -22,7 +22,7 @@ end
 SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
 
 SimpleCov.start do
-  load_adapter    "test_frameworks"
+  load_profile    "test_frameworks"
   merge_timeout   3600
   add_group       "Lib", "lib"
 end
