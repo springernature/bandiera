@@ -4,7 +4,7 @@ require 'rack-flash'
 module Bandiera
   class GUI < Sinatra::Base
     configure do
-      set :root, proc { File.join(File.dirname(__FILE__), 'gui') }
+      set :root, File.join(File.dirname(__FILE__), 'gui')
 
       enable :sessions
       enable :logging
