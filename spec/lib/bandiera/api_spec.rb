@@ -16,11 +16,11 @@ describe Bandiera::API do
   before do
     service = Bandiera::FeatureService.new
     service.add_features([
-      { group: 'pubserv',  name: 'show_subjects', description: 'Show all subject related features', enabled: false },
-      { group: 'pubserv',  name: 'show_search',   description: 'Show the search bar',              enabled: true  },
-      { group: 'pubserv',  name: 'xmas_mode',     description: 'Xmas mode: SNOWFLAKES!',           enabled: false },
-      { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                   enabled: false },
-      { group: 'shunter',  name: 'stats_logging', description: 'Log stats',                        enabled: true  }
+      { group: 'pubserv',   name: 'show_subjects',  description: 'Show all subject related features', enabled: false },
+      { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               enabled: true  },
+      { group: 'pubserv',   name: 'xmas_mode',      description: 'Xmas mode: SNOWFLAKES!',            enabled: false },
+      { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    enabled: false },
+      { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         enabled: true  }
     ])
   end
 
@@ -130,7 +130,7 @@ describe Bandiera::API do
           {
             'name'        => 'new_feature',
             'description' => 'A new new feature',
-            'enabled'     => true
+            'enabled'     => false
           }
         end
 
@@ -276,7 +276,10 @@ describe Bandiera::API do
 
           feature = JSON.parse(last_response.body)['feature']
 
-          put '/v1/groups/shunter/features/stats_logging', feature: feature.merge('group' => 'laserwolf')
+          put '/v1/groups/shunter/features/stats_logging', feature: feature.merge('group' => 'laserwolf', 'enabled' => 'false')
+
+          expect(last_response).to be_successful
+
           get '/v1/groups/laserwolf/features/stats_logging'
 
           updated_feature = JSON.parse(last_response.body)['feature']

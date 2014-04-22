@@ -90,9 +90,9 @@ module Bandiera
       feature_group  = feature_params.fetch('group', group_name)
       feature_name   = feature_params['name']
       feature_desc   = feature_params['description']
-      feature_enable = feature_params['enabled'] == 'true' ? true : false
+      feature_enable = feature_params['enabled'] == 'true'
 
-      if feature_name && feature_desc && feature_enable
+      if feature_name && feature_desc && !feature_enable.nil?
         args = { group: feature_group, name: feature_name, description: feature_desc, enabled: feature_enable }
         feature = feature_service.add_feature(args)
         status 200
