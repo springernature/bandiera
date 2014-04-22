@@ -1,14 +1,14 @@
-require "bundler"
+require 'bundler'
 Bundler.setup(:default, :test)
 
-ENV["RACK_ENV"] = "test"
+ENV['RACK_ENV'] = 'test'
 
-require "rspec"
-require "rake"
-require "pry"
-require "webmock/rspec"
-require "simplecov"
-require "simplecov-rcov"
+require 'rspec'
+require 'rake'
+require 'pry'
+require 'webmock/rspec'
+require 'simplecov'
+require 'simplecov-rcov'
 
 WebMock.disable_net_connect!
 
@@ -22,26 +22,25 @@ end
 SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
 
 SimpleCov.start do
-  load_profile    "test_frameworks"
-  merge_timeout   3600
-  add_group       "Lib", "lib"
+  load_profile 'test_frameworks'
+  merge_timeout 3600
+  add_group 'Lib', 'lib'
 end
 
-load File.expand_path("../../Rakefile", __FILE__)
+load File.expand_path('../../Rakefile', __FILE__)
 
-require_relative "../lib/bandiera"
+require_relative '../lib/bandiera'
 
 db = Bandiera::Db.connection
 
 RSpec.configure do |config|
-  config.order = "random"
+  config.order = 'random'
 
   config.before(:suite) do
-    Rake::Task["db:reset"].invoke(ENV["RACK_ENV"])
+    Rake::Task['db:reset'].invoke(ENV['RACK_ENV'])
   end
 
   config.after(:each) do
     db[:groups].delete
   end
 end
-

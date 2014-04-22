@@ -1,8 +1,8 @@
 module Bandiera
   class FeatureService
-    class RecordNotFound < StandardError; end;
+    class RecordNotFound < StandardError; end
 
-    def initialize(db=Bandiera::Db.connection)
+    def initialize(db = Bandiera::Db.connection)
       @db = db
     end
 
@@ -59,7 +59,7 @@ module Bandiera
     def remove_feature(group, name)
       group_id      = find_group_id(group)
       affected_rows = db[:features].where(group_id: group_id, name: name).delete
-      raise RecordNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
+      fail RecordNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
     end
 
     def update_feature(group, name, params)
@@ -73,13 +73,13 @@ module Bandiera
     end
 
     def get_groups
-      db[:groups].order("name ASC").select_map(:name)
+      db[:groups].order('name ASC').select_map(:name)
     end
 
     def get_group_features(group)
       group_id = find_group_id(group)
 
-      db[:features].where(group_id: group_id).order("name ASC").map do |row|
+      db[:features].where(group_id: group_id).order('name ASC').map do |row|
         build_feature_from_group_and_row(group, row)
       end
     end
@@ -87,7 +87,7 @@ module Bandiera
     def get_feature(group, name)
       group_id = find_group_id(group)
       row      = db[:features].first(group_id: group_id, name: name)
-      raise RecordNotFound, "Cannot find feature '#{name}'" unless row
+      fail RecordNotFound, "Cannot find feature '#{name}'" unless row
 
       build_feature_from_group_and_row(group, row)
     end
@@ -100,7 +100,7 @@ module Bandiera
 
     def find_group_id(name)
       group_id = db[:groups].where(name: name).get(:id)
-      raise RecordNotFound, "Cannot find group '#{name}'" unless group_id
+      fail RecordNotFound, "Cannot find group '#{name}'" unless group_id
       group_id
     end
 
