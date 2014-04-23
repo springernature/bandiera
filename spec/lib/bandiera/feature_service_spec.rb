@@ -36,10 +36,12 @@ describe Bandiera::FeatureService do
   end
 
   describe '#add_features' do
-    let(:features) do[
-      { name: 'feature_name', group: 'feature_group', description: '', enabled: true },
-      { name: 'feature_name2', group: 'feature_group', description: '', enabled: true }
-    ]end
+    let(:features) do
+      [
+        { name: 'feature_name', group: 'feature_group', description: '', enabled: true },
+        { name: 'feature_name2', group: 'feature_group', description: '', enabled: true }
+      ]
+    end
 
     context 'when a group exists' do
       before do

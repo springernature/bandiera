@@ -357,7 +357,7 @@ describe Bandiera::API do
           {
             'name' => 'shunter',
             'features' => [
-              { 'group' => 'shunter', 'name' => 'stats_logging', 'description' => 'Log stats', 'enabled' => true },
+              { 'group' => 'shunter', 'name' => 'stats_logging', 'description' => 'Log stats', 'enabled' => true }
             ]
           }
         ]

@@ -218,9 +218,7 @@ describe Bandiera::GUI do
       feature_row.find('.bandiera-delete-feature').click
 
       check_success_flash('Feature deleted')
-      expect {
-        service.get_feature(group_name, feature_name)
-      }.to raise_error(Bandiera::FeatureService::RecordNotFound)
+      expect { service.get_feature(group_name, feature_name) }.to raise_error
     end
   end
 end

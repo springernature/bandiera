@@ -69,9 +69,9 @@ module Bandiera
         feature = feature_service.get_feature(group_name, feature_name)
       rescue Bandiera::FeatureService::RecordNotFound => e
         thing = case e.message
-        when /group/ then 'group'
-        when /feature/ then 'feature'
-        end
+                when /group/ then 'group'
+                when /feature/ then 'feature'
+                end
 
         feature = Bandiera::Feature.new(feature_name, group_name, nil, false)
         warning = "This #{thing} does not exist in the bandiera database."
