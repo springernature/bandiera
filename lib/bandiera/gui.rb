@@ -18,7 +18,7 @@ module Bandiera
       end
 
       def logger
-        env['bandiera-logger']
+        request.logger
       end
     end
 
@@ -58,7 +58,7 @@ module Bandiera
     end
 
     post '/create/feature' do
-      feature = setup_feature_params(params[:feature])
+      feature = process_feature_params(params[:feature])
 
       with_valid_feature_params(feature, '/new/feature') do
         feature_service.add_feature(feature)
@@ -77,7 +77,7 @@ module Bandiera
     post '/update/feature' do
       prev_group  = params[:feature][:previous_group]
       prev_name   = params[:feature][:previous_name]
-      new_feature = setup_feature_params(params[:feature])
+      new_feature = process_feature_params(params[:feature])
 
       with_valid_feature_params(new_feature, "/groups/#{prev_group}/features/#{prev_name}/edit") do
         feature_service.update_feature(prev_group, prev_name, new_feature)
@@ -94,12 +94,19 @@ module Bandiera
 
     private
 
-    def setup_feature_params(feature_params)
+    def process_feature_params(params)
+      user_group_params = params.fetch('user_groups', {}).symbolize_keys
+      user_groups       = {
+        list:   user_group_params.fetch(:list, '').split("\n").map(&:strip),
+        regex:  user_group_params.fetch(:regex, '')
+      }
+
       {
-        group:        feature_params[:group],
-        name:         feature_params[:name],
-        description:  feature_params[:description],
-        enabled:      feature_params[:enabled] == 'true'
+        group:        params['group'],
+        name:         params['name'],
+        description:  params['description'],
+        enabled:      params['enabled'] == 'true',
+        user_groups:  user_groups
       }
     end
 

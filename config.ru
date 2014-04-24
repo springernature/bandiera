@@ -15,7 +15,7 @@ class BandieraLoggerMiddleware
   end
 
   def call(env)
-    env['bandiera-logger'] = @logger
+    env['rack.logger'] = @logger
     @app.call(env)
   end
 end

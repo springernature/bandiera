@@ -15,7 +15,7 @@ module Bandiera
       end
 
       def logger
-        env['bandiera-logger']
+        request.logger
       end
     end
 
