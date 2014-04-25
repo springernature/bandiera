@@ -1,26 +1,13 @@
-require 'sinatra/base'
 require 'rack-flash'
 
 module Bandiera
-  class GUI < Sinatra::Base
+  class GUI < WebAppBase
     configure do
       set :root, File.join(File.dirname(__FILE__), 'gui')
-
       enable :sessions
-      enable :logging
     end
 
     use Rack::Flash
-
-    helpers do
-      def feature_service
-        @feature_service ||= FeatureService.new
-      end
-
-      def logger
-        request.logger
-      end
-    end
 
     get '/' do
       @groups_and_features = feature_service.get_groups.map do |group_name|
@@ -58,7 +45,7 @@ module Bandiera
     end
 
     post '/create/feature' do
-      feature = process_feature_params(params[:feature])
+      feature = process_v2_feature_params(params[:feature])
 
       with_valid_feature_params(feature, '/new/feature') do
         feature_service.add_feature(feature)
@@ -77,7 +64,7 @@ module Bandiera
     post '/update/feature' do
       prev_group  = params[:feature][:previous_group]
       prev_name   = params[:feature][:previous_name]
-      new_feature = process_feature_params(params[:feature])
+      new_feature = process_v2_feature_params(params[:feature])
 
       with_valid_feature_params(new_feature, "/groups/#{prev_group}/features/#{prev_name}/edit") do
         feature_service.update_feature(prev_group, prev_name, new_feature)
@@ -94,24 +81,8 @@ module Bandiera
 
     private
 
-    def process_feature_params(params)
-      user_group_params = params.fetch('user_groups', {}).symbolize_keys
-      user_groups       = {
-        list:   user_group_params.fetch(:list, '').split("\n").map(&:strip),
-        regex:  user_group_params.fetch(:regex, '')
-      }
-
-      {
-        group:        params['group'],
-        name:         params['name'],
-        description:  params['description'],
-        enabled:      params['enabled'] == 'true',
-        user_groups:  user_groups
-      }
-    end
-
     def with_valid_feature_params(feature, on_error_url, &block)
-      if param_present?(feature[:name]) && param_present?(feature[:group]) && !feature[:name].include?(' ')
+      if valid_params?(feature)
         yield
       else
         errors = []

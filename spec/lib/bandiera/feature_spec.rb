@@ -4,26 +4,30 @@ describe Bandiera::Feature do
   let(:name)        { "show-stuff" }
   let(:group)       { "group_name" }
   let(:description) { "feature description" }
-  let(:enabled)     { true }
+  let(:active)      { true }
 
   describe "a plain on/off feature flag" do
-    subject { Bandiera::Feature.new(name, group, description, enabled) }
+    subject { Bandiera::Feature.new(name, group, description, active) }
 
-    it "responds to .enabled?" do
+    it "responds to #enabled?" do
       expect(subject.respond_to?(:enabled?)).to be_true
     end
 
-    context "when @enabled is true" do
-      it "returns true to .enabled?" do
-        expect(subject.enabled?).to be_true
+    context "when @active is true" do
+      describe '#enabled?' do
+        it "returns true" do
+          expect(subject.enabled?).to be_true
+        end
       end
     end
 
-    context "when @enabled is false" do
-      let(:enabled) { false }
+    context "when @active is false" do
+      let(:active) { false }
 
-      it "returns false to .enabled?" do
-        expect(subject.enabled?).to be_false
+      describe "#enabled?" do
+        it 'returns false' do
+          expect(subject.enabled?).to be_false
+        end
       end
     end
   end
@@ -35,9 +39,9 @@ describe Bandiera::Feature do
         { list: %w(admin editor) }
       end
 
-      subject { Bandiera::Feature.new(name, group, description, enabled, user_groups) }
+      subject { Bandiera::Feature.new(name, group, description, active, user_groups) }
 
-      context "when @enabled is true" do
+      context "when @active is true" do
         describe "#enabled?" do
           context "returns true" do
             it "if the user_group is in the list" do
@@ -59,8 +63,8 @@ describe Bandiera::Feature do
         end
       end
 
-      context "when @enabled is false" do
-        let(:enabled) { false }
+      context "when @active is false" do
+        let(:active) { false }
 
         describe "#enabled?" do
           it "always returns false" do
@@ -76,9 +80,9 @@ describe Bandiera::Feature do
         { regex: '.*admin.*' }
       end
 
-      subject { Bandiera::Feature.new(name, group, description, enabled, user_groups) }
+      subject { Bandiera::Feature.new(name, group, description, active, user_groups) }
 
-      context "when @enabled is true" do
+      context "when @active is true" do
         describe "#enabled?" do
           context "returns true" do
             it "if the user_group matches the regex" do
@@ -96,8 +100,8 @@ describe Bandiera::Feature do
         end
       end
 
-      context "when @enabled is false" do
-        let(:enabled) { false }
+      context "when @active is false" do
+        let(:active) { false }
 
         describe "#enabled?" do
           it "always returns false" do
@@ -112,9 +116,9 @@ describe Bandiera::Feature do
         { list: %w(editor), regex: '.*admin' }
       end
 
-      subject { Bandiera::Feature.new(name, group, description, enabled, user_groups) }
+      subject { Bandiera::Feature.new(name, group, description, active, user_groups) }
 
-      context 'when @enabled is true' do
+      context 'when @active is true' do
         describe '#enabled?' do
           context 'returns true' do
             it 'if the user_group is in the exact match list but does not match the regex' do
@@ -134,8 +138,8 @@ describe Bandiera::Feature do
         end
       end
 
-      context 'when @enabled is false' do
-        let(:enabled) { false }
+      context 'when @active is false' do
+        let(:active) { false }
 
         describe '#enabled?' do
           it 'always returns false' do
@@ -149,7 +153,7 @@ describe Bandiera::Feature do
   describe '#user_groups_configured?' do
     let(:user_groups) { Hash.new }
 
-    subject { Bandiera::Feature.new(name, group, description, enabled, user_groups) }
+    subject { Bandiera::Feature.new(name, group, description, active, user_groups) }
 
     context 'if a user_group list have been configured' do
       let(:user_groups) { { list: %w(boo bar) } }

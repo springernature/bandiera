@@ -10,10 +10,10 @@ describe Bandiera::GUI do
     Capybara.app = Bandiera::GUI.new
 
     service.add_features([
-      { group: 'pubserv',   name: 'show_subjects',  description: 'Show all subject related features', enabled: false },
-      { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               enabled: true  },
-      { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    enabled: false },
-      { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         enabled: true  }
+      { group: 'pubserv',   name: 'show_subjects',  description: 'Show all subject related features', active: false },
+      { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
+      { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    active: false },
+      { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         active: true  }
     ])
   end
 
@@ -88,7 +88,7 @@ describe Bandiera::GUI do
           select 'pubserv', from: 'feature_group'
           fill_in 'feature_name', with: 'TEST-FEATURE'
           fill_in 'feature_description', with: 'This is a test feature.'
-          choose 'feature_enabled_true'
+          choose 'feature_active_true'
           click_button 'Create'
         end
 
@@ -102,7 +102,7 @@ describe Bandiera::GUI do
             select 'pubserv', from: 'feature_group'
             fill_in 'feature_name', with: 'TEST-FEATURE'
             fill_in 'feature_description', with: 'This is a test feature.'
-            choose 'feature_enabled_true'
+            choose 'feature_active_true'
             fill_in 'feature_user_groups_list', with: "Editor\nWriter"
             fill_in 'feature_user_groups_regex', with: '.*Admin'
             click_button 'Create'
@@ -126,7 +126,7 @@ describe Bandiera::GUI do
           select '', from: 'feature_group'
           fill_in 'feature_name', with: 'TEST-FEATURE'
           fill_in 'feature_description', with: 'This is a test feature.'
-          choose 'feature_enabled_true'
+          choose 'feature_active_true'
           click_button 'Create'
         end
 
@@ -140,7 +140,7 @@ describe Bandiera::GUI do
           select 'pubserv', from: 'feature_group'
           fill_in 'feature_name', with: ''
           fill_in 'feature_description', with: 'This is a test feature.'
-          choose 'feature_enabled_true'
+          choose 'feature_active_true'
           click_button 'Create'
         end
 
@@ -154,7 +154,7 @@ describe Bandiera::GUI do
           select 'pubserv', from: 'feature_group'
           fill_in 'feature_name', with: 'show something'
           fill_in 'feature_description', with: 'This is a test feature.'
-          choose 'feature_enabled_true'
+          choose 'feature_active_true'
           click_button 'Create'
         end
 

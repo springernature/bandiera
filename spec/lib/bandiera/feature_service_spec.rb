@@ -13,7 +13,7 @@ describe Bandiera::FeatureService do
   end
 
   describe '#add_feature' do
-    let(:feature_hash) { { name: 'name', group: 'group', description: '', enabled: true } }
+    let(:feature_hash) { { name: 'name', group: 'group', description: '', active: true } }
     let(:feature) { double('feature') }
 
     before do
@@ -37,8 +37,8 @@ describe Bandiera::FeatureService do
   describe '#add_features' do
     let(:features) do
       [
-        { name: 'feature_name', group: 'feature_group', description: '', enabled: true },
-        { name: 'feature_name2', group: 'feature_group', description: '', enabled: true }
+        { name: 'feature_name', group: 'feature_group', description: '', active: true },
+        { name: 'feature_name2', group: 'feature_group', description: '', active: true }
       ]
     end
 
@@ -74,7 +74,7 @@ describe Bandiera::FeatureService do
           db[:features] << {
             name:        feature_name,
             description: '',
-            enabled:     false,
+            active:      false,
             group_id:    group_id
           }
         end
@@ -114,7 +114,7 @@ describe Bandiera::FeatureService do
           name:         'feat',
           group:        'wibble',
           description:  'cheese',
-          enabled:      true,
+          active:       true,
           user_groups:  user_groups
         }]
       end
@@ -165,7 +165,7 @@ describe Bandiera::FeatureService do
 
     context 'when both the group and the feature exist' do
       before do
-        subject.add_feature({ name: 'feat', group: 'group', description: '', enabled: false })
+        subject.add_feature({ name: 'feat', group: 'group', description: '', active: false })
       end
 
       it 'removes a feature record' do
@@ -203,12 +203,12 @@ describe Bandiera::FeatureService do
 
     context 'when the group/feature does exist' do
       before do
-        subject.add_feature({ name: 'feat', group: 'group', description: '', enabled: false })
+        subject.add_feature({ name: 'feat', group: 'group', description: '', active: false })
       end
 
       it 'updates the feature' do
         expect {
-          subject.update_feature('group', 'feat', { name: 'updated', enabled: true })
+          subject.update_feature('group', 'feat', { name: 'updated', active: true })
         }.to change {
           db[:features].first[:name]
         }.from('feat').to('updated')

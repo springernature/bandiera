@@ -22,16 +22,16 @@
   </div>
 
   <div class="form-group">
-    <label for="feature[enabled]">Enabled?</label>
+    <label for="feature[active]">Active?</label>
     <div class="radio">
       <label>
-        <input type="radio" name="feature[enabled]" id="feature_enabled_true" value="true" <%= 'checked ' if @feature.enabled? %>/>
+        <input type="radio" name="feature[active]" id="feature_active_true" value="true" <%= 'checked ' if @feature.active? %>/>
         enabled
       </label>
     </div>
     <div class="radio">
       <label>
-        <input type="radio" name="feature[enabled]" id="feature_enabled_false" value="false" <%= 'checked ' unless @feature.enabled? %> />
+        <input type="radio" name="feature[active]" id="feature_active_false" value="false" <%= 'checked ' unless @feature.active? %> />
         disabled
       </label>
     </div>

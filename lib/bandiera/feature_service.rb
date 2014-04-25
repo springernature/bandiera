@@ -43,7 +43,7 @@ module Bandiera
             groups.name          AS group_name,
             features.name        AS name,
             features.description AS description,
-            features.enabled     AS enabled,
+            features.active      AS active,
             features.user_groups AS user_groups
           FROM features
           JOIN groups ON (groups.id = features.group_id)
@@ -68,7 +68,8 @@ module Bandiera
 
     def update_feature(group, name, params)
       db.transaction do
-        curr_params = get_feature(group, name).as_json
+        # FIXME: handle user_groups coming through as a hash...
+        curr_params = get_feature(group, name).as_v2_json
         new_params  = curr_params.merge(params)
 
         remove_feature(group, name)
@@ -102,7 +103,7 @@ module Bandiera
 
     def build_feature_from_group_and_row(group, row)
       user_groups = JSON.parse(row[:user_groups]).symbolize_keys
-      Feature.new(row[:name], group, row[:description], row[:enabled], user_groups)
+      Feature.new(row[:name], group, row[:description], row[:active], user_groups)
     end
 
     def find_group_id(name)

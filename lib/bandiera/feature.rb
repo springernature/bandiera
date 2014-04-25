@@ -1,17 +1,19 @@
 module Bandiera
   class Feature
-    attr_reader :name, :group, :description, :user_groups
+    attr_reader :name, :group, :description, :active, :user_groups
 
-    def initialize(name, group, description, enabled, user_groups={ list: [], regex: '' })
+    alias :active? :active
+
+    def initialize(name, group, description, active, user_groups={ list: [], regex: '' })
       @name        = name
       @group       = group
       @description = description
-      @enabled     = enabled
+      @active      = active
       @user_groups = user_groups
     end
 
     def enabled?(opts={ user_group: nil })
-      return false unless @enabled
+      return false unless active?
 
       user_group = opts.fetch(:user_group, nil)
 
@@ -47,13 +49,22 @@ module Bandiera
       configured
     end
 
-    def as_json
+    def as_v1_json
       {
         group:       group,
         name:        name,
         description: description,
-        enabled:     enabled?,
-        user_groups: user_groups
+        enabled:     enabled?
+      }
+    end
+
+    def as_v2_json
+      {
+        group:        group,
+        name:         name,
+        description:  description,
+        active:       enabled?,
+        user_groups:  user_groups
       }
     end
   end

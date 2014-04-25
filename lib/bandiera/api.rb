@@ -1,24 +1,5 @@
-require 'sinatra/base'
-require 'json'
-
 module Bandiera
-  class API < Sinatra::Base
-    class InvalidParams < StandardError; end
-
-    configure do
-      enable :logging
-    end
-
-    helpers do
-      def feature_service
-        @feature_service ||= FeatureService.new
-      end
-
-      def logger
-        request.logger
-      end
-    end
-
+  class API < WebAppBase
     before do
       content_type :json
     end
@@ -43,22 +24,16 @@ module Bandiera
 
     get '/v1/groups/:group_name/features' do |group_name|
       features = feature_service.get_group_features(group_name)
-      JSON.generate(features: features.map(&:as_json))
+      JSON.generate(features: features.map(&:as_v1_json))
     end
 
     post '/v1/groups/:group_name/features' do |group_name|
-      feature_params = params.fetch('feature', {})
-      feature_name   = feature_params['name']
-      feature_desc   = feature_params['description']
-      feature_enable = feature_params['enabled'] == 'true'
+      feature_params = process_v1_feature_params(params.fetch('feature', {}).merge('group' => group_name))
 
-      if feature_name && feature_desc && !feature_enable.nil?
-        args = { group: group_name, name: feature_name, description: feature_desc, enabled: feature_enable }
-        feature = feature_service.add_feature(args)
+      with_valid_feature_params(feature_params) do
+        feature = feature_service.add_feature(feature_params)
         status 201
-        JSON.generate(feature: feature.as_json)
-      else
-        fail InvalidParams, "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }"
+        JSON.generate(feature: feature.as_v1_json)
       end
     end
 
@@ -77,28 +52,20 @@ module Bandiera
         warning = "This #{thing} does not exist in the bandiera database."
       end
 
-      data = { feature: feature.as_json }
+      data = { feature: feature.as_v1_json }
       data[:warning] = warning if warning
 
       JSON.generate(data)
     end
 
     put '/v1/groups/:group_name/features/:feature_name' do |group_name, feature_name|
-      feature = feature_service.get_feature(group_name, feature_name)
+      feature_params         = process_v1_feature_params(params.fetch('feature', {}))
+      feature_params[:group] = group_name unless feature_params[:group]
 
-      feature_params = params.fetch('feature', {})
-      feature_group  = feature_params.fetch('group', group_name)
-      feature_name   = feature_params['name']
-      feature_desc   = feature_params['description']
-      feature_enable = feature_params['enabled'] == 'true'
-
-      if feature_name && feature_desc && !feature_enable.nil?
-        args = { group: feature_group, name: feature_name, description: feature_desc, enabled: feature_enable }
-        feature = feature_service.add_feature(args)
+      with_valid_feature_params(feature_params, true) do
+        feature = feature_service.update_feature(group_name, feature_name, feature_params)
         status 200
-        JSON.generate(feature: feature.as_json)
-      else
-        fail InvalidParams, "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }, optional params are { 'feature' => { 'group' => 'GROUP NAME' } }"
+        JSON.generate(feature: feature.as_v1_json)
       end
     end
 
@@ -106,7 +73,7 @@ module Bandiera
       group_data = feature_service.get_groups.map do |group_name|
         {
           name: group_name,
-          features: feature_service.get_group_features(group_name).map(&:as_json)
+          features: feature_service.get_group_features(group_name).map(&:as_v1_json)
         }
       end
 
@@ -121,6 +88,18 @@ module Bandiera
     error InvalidParams do
       status 400
       JSON.generate(error: request.env['sinatra.error'].message)
+    end
+
+    private
+
+    def with_valid_feature_params(feature, include_option_params_in_error_msg=false)
+      if valid_params?(feature)
+        yield
+      else
+        error_msg = "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }"
+        error_msg << ", optional params are { 'feature' => { 'group' => 'GROUP NAME' } }" if include_option_params_in_error_msg
+        fail InvalidParams, error_msg
+      end
     end
   end
 end
