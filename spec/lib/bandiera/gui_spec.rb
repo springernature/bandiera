@@ -1,14 +1,20 @@
 require 'spec_helper'
 require 'capybara/dsl'
+require 'capybara/rspec'
+require 'capybara/poltergeist'
 
 describe Bandiera::GUI do
   include Capybara::DSL
 
   let(:service) { Bandiera::FeatureService.new }
 
-  before do
-    Capybara.app = Bandiera::GUI.new
+  before(:all) do
+    Capybara.app               = Bandiera::GUI.new
+    Capybara.default_driver    = :rack_test
+    Capybara.javascript_driver = :poltergeist
+  end
 
+  before do
     service.add_features([
       { group: 'pubserv',   name: 'show_subjects',  description: 'Show all subject related features', active: false },
       { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
@@ -17,34 +23,41 @@ describe Bandiera::GUI do
     ])
   end
 
-  def check_success_flash(expected_text)
-    expect(page).to have_selector('.alert-success')
-    expect(page.find('.alert-success')).to have_content(expected_text)
-  end
-
-  def check_error_flash(expected_text)
-    expect(page).to have_selector('.alert-danger')
-    expect(page.find('.alert-danger')).to have_content(expected_text)
-  end
-
   describe 'the homepage' do
     it 'shows all feature flags organised by group' do
       visit('/')
 
-      groups = {}
-
-      all('.bandiera-feature-group').each do |div|
+      groups = all('.bandiera-feature-group').map do |div|
         group_name = div.find('h3').text
         features   = div.all('tr.bandiera-feature').map do |tr|
           tr.all('td')[2].text
         end
 
-        groups[group_name] = features
-      end
+        [group_name, features]
+      end.to_h
 
       expect(groups['pubserv']).to match_array(%w(show_subjects show_search))
       expect(groups['laserwolf']).to match_array(['enable_caching'])
       expect(groups['shunter']).to match_array(['stats_logging'])
+    end
+
+    it 'allows you to toggle the "active" flag on a feature', js: true do
+      visit('/')
+
+      toggle_container = first('.feature-toggle')
+      toggle           = toggle_container.first('.switch')
+      group            = toggle_container[:'data-group']
+      name             = toggle_container[:'data-feature']
+      active           = toggle_container[:'data-active'] == 'true'
+      switch_class     = active ? 'switch-on' : 'switch-off'
+
+      expect(toggle_container).to have_css(".#{switch_class}")
+      expect(service.get_feature(group, name).active?).to eq(active)
+
+      toggle.click
+
+      expect(toggle_container).to_not have_css(".#{switch_class}")
+      expect(service.get_feature(group, name).active?).to_not eq(active)
     end
   end
 
@@ -243,5 +256,17 @@ describe Bandiera::GUI do
       check_success_flash('Feature deleted')
       expect { service.get_feature(group_name, feature_name) }.to raise_error
     end
+  end
+
+  private
+
+  def check_success_flash(expected_text)
+    expect(page).to have_selector('.alert-success')
+    expect(page.find('.alert-success')).to have_content(expected_text)
+  end
+
+  def check_error_flash(expected_text)
+    expect(page).to have_selector('.alert-danger')
+    expect(page.find('.alert-danger')).to have_content(expected_text)
   end
 end

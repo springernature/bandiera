@@ -73,6 +73,23 @@ module Bandiera
       end
     end
 
+    put '/update/feature/active_toggle' do
+      feat_params = params[:feature] || {}
+      group       = feat_params[:group]
+      name        = feat_params[:name]
+      active      = feat_params[:active] == 'true'
+
+      if group && name && !active.nil?
+        feature_service.update_feature(group, name, { active: active })
+        status 200
+        content_type :json
+        "{}"
+      else
+        status 401
+        halt
+      end
+    end
+
     get '/groups/:group_name/features/:feature_name/delete' do |group_name, feature_name|
       feature_service.remove_feature(group_name, feature_name)
       flash[:success] = 'Feature deleted.'

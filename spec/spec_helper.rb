@@ -6,30 +6,13 @@ ENV['RACK_ENV'] = 'test'
 require 'rspec'
 require 'rake'
 require 'pry'
-require 'webmock/rspec'
-require 'simplecov'
-require 'simplecov-rcov'
 
-WebMock.disable_net_connect!
-
-class SimpleCov::Formatter::MergedFormatter
-  def format(result)
-    SimpleCov::Formatter::HTMLFormatter.new.format(result)
-    SimpleCov::Formatter::RcovFormatter.new.format(result)
-  end
-end
-
-SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
-
-SimpleCov.start do
-  load_profile 'test_frameworks'
-  merge_timeout 3600
-  add_group 'Lib', 'lib'
-end
-
-load File.expand_path('../../Rakefile', __FILE__)
+require_relative 'support/webmock_helper'
+require_relative 'support/simplecov_helper'
 
 require_relative '../lib/bandiera'
+
+load File.expand_path('../../Rakefile', __FILE__)
 
 db = Bandiera::Db.connection
 
