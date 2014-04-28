@@ -1,15 +1,16 @@
 require 'spec_helper'
 require 'rack/test'
 
-describe Bandiera::API do
+describe Bandiera::APIv1 do
   include Rack::Test::Methods
 
   def app
-    Bandiera::API
+    Bandiera::APIv1
   end
 
   def assert_last_response_matches(expected_data)
     data = JSON.parse(last_response.body)
+    data.delete('information') # this is the v1 API deprecation notice.
     expect(data).to eq(expected_data)
   end
 
@@ -24,9 +25,9 @@ describe Bandiera::API do
     ])
   end
 
-  describe 'GET /v1/groups' do
+  describe 'GET /groups' do
     before do
-      get '/v1/groups'
+      get '/groups'
     end
 
     it 'returns a 200 status' do
@@ -46,10 +47,10 @@ describe Bandiera::API do
     end
   end
 
-  describe 'POST /v1/groups' do
+  describe 'POST /groups' do
     context 'with valid params' do
       before do
-        post '/v1/groups', group: { name: 'wibble' }
+        post '/groups', group: { name: 'wibble' }
       end
 
       it 'return status 200' do
@@ -65,7 +66,7 @@ describe Bandiera::API do
 
     context 'with invalid params' do
       before do
-        post '/v1/groups', params: { wee: 'woo' }
+        post '/groups', params: { wee: 'woo' }
       end
 
       it 'returns status 400' do
@@ -80,10 +81,10 @@ describe Bandiera::API do
     end
   end
 
-  describe 'GET /v1/groups/:group_name/features' do
+  describe 'GET /groups/:group_name/features' do
     context 'when the group exists' do
       before do
-        get '/v1/groups/shunter/features'
+        get '/groups/shunter/features'
       end
 
       it 'returns status 200' do
@@ -106,7 +107,7 @@ describe Bandiera::API do
 
     context "when the group doesn't exist" do
       before do
-        get '/v1/groups/non_existent/features'
+        get '/groups/non_existent/features'
       end
 
       it 'returns a 404' do
@@ -123,7 +124,7 @@ describe Bandiera::API do
     end
   end
 
-  describe 'POST /v1/groups/:group_name/features' do
+  describe 'POST /groups/:group_name/features' do
     context 'when the group exists' do
       context 'with valid params' do
         let(:feature_params) do
@@ -135,7 +136,7 @@ describe Bandiera::API do
         end
 
         before do
-          post '/v1/groups/shunter/features', feature: feature_params
+          post '/groups/shunter/features', feature: feature_params
         end
 
         it 'returns a 201 status' do
@@ -155,7 +156,7 @@ describe Bandiera::API do
         end
 
         before do
-          post '/v1/groups/shunter/features', feature: feature_params
+          post '/groups/shunter/features', feature: feature_params
         end
 
         it 'returns a 400 status code' do
@@ -180,7 +181,7 @@ describe Bandiera::API do
       end
 
       before do
-        post '/v1/groups/wibble/features', feature: feature_params
+        post '/groups/wibble/features', feature: feature_params
       end
 
       it 'returns a 201 status code' do
@@ -195,10 +196,10 @@ describe Bandiera::API do
     end
   end
 
-  describe 'GET /v1/groups/:group_name/features/:feature_name' do
+  describe 'GET /groups/:group_name/features/:feature_name' do
     context 'when both the group and the feature exists' do
       before do
-        get '/v1/groups/pubserv/features/show_search'
+        get '/groups/pubserv/features/show_search'
       end
 
       it 'returns a 200 status code' do
@@ -221,7 +222,7 @@ describe Bandiera::API do
 
     context "when the group doesn't exist" do
       before do
-        get '/v1/groups/non_existent/features/wibble'
+        get '/groups/non_existent/features/wibble'
       end
 
       it 'returns a 200 status code' do
@@ -245,7 +246,7 @@ describe Bandiera::API do
 
     context "when the group exists, but the feature doesn't" do
       before do
-        get '/v1/groups/laserwolf/features/non_existent'
+        get '/groups/laserwolf/features/non_existent'
       end
 
       it 'returns a 200 status code' do
@@ -268,19 +269,19 @@ describe Bandiera::API do
     end
   end
 
-  describe 'PUT /v1/groups/:group_name/features/:feature_name' do
+  describe 'PUT /groups/:group_name/features/:feature_name' do
     context 'when both the group and the feature exists' do
       context 'with valid params' do
         it 'updates the feature' do
-          get '/v1/groups/shunter/features/stats_logging'
+          get '/groups/shunter/features/stats_logging'
 
           feature = JSON.parse(last_response.body)['feature']
 
-          put '/v1/groups/shunter/features/stats_logging', feature: feature.merge('group' => 'laserwolf', 'enabled' => 'false')
+          put '/groups/shunter/features/stats_logging', feature: feature.merge('group' => 'laserwolf', 'enabled' => 'false')
 
           expect(last_response).to be_successful
 
-          get '/v1/groups/laserwolf/features/stats_logging'
+          get '/groups/laserwolf/features/stats_logging'
 
           updated_feature = JSON.parse(last_response.body)['feature']
 
@@ -294,7 +295,7 @@ describe Bandiera::API do
         end
 
         before do
-          put '/v1/groups/shunter/features/stats_logging', feature: feature_params
+          put '/groups/shunter/features/stats_logging', feature: feature_params
         end
 
         it 'returns a 400 status code' do
@@ -322,21 +323,21 @@ describe Bandiera::API do
 
       context "group doesn't exist" do
         it 'returns a 404' do
-          put '/v1/groups/wibble/features/wibble_logging', params
+          put '/groups/wibble/features/wibble_logging', params
           expect(last_response.status).to eq(404)
         end
       end
 
       context "feature doesn't exist" do
         it 'returns a 404' do
-          put '/v1/groups/shunter/features/wibble_logging', params
+          put '/groups/shunter/features/wibble_logging', params
           expect(last_response.status).to eq(404)
         end
       end
     end
   end
 
-  describe 'GET /v1/all' do
+  describe 'GET /all' do
     let(:expected_data) do
       {
         'groups' => [
@@ -365,7 +366,7 @@ describe Bandiera::API do
     end
 
     before do
-      get '/v1/all'
+      get '/all'
     end
 
     it 'returns a 200 status code' do

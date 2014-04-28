@@ -24,7 +24,7 @@ use Rack::CommonLogger, logger
 use BandieraLoggerMiddleware, logger
 
 run Rack::URLMap.new(
-  '/'    => Bandiera::GUI,
-  '/api' => Bandiera::API
+  '/'       => Bandiera::GUI,
+  '/api/v1' => Bandiera::APIv1
 )
 
