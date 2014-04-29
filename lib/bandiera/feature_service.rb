@@ -1,6 +1,16 @@
 module Bandiera
   class FeatureService
-    class RecordNotFound < StandardError; end
+    class GroupNotFound < StandardError
+      def message
+        'This group does not exist in the Bandiera database.'
+      end
+    end
+
+    class FeatureNotFound < StandardError
+      def message
+        'This feature does not exist in the Bandiera database.'
+      end
+    end
 
     def initialize(db = Bandiera::Db.connection)
       @db = db
@@ -31,8 +41,12 @@ module Bandiera
         end
 
         features.map! do |f|
-          f[:group_id]    = group_name_to_id[f.delete(:group)]
-          f[:user_groups] = JSON.generate(f[:user_groups]) if f[:user_groups]
+          f[:group_id] = group_name_to_id[f.delete(:group)]
+          if f[:user_groups]
+            f[:user_groups] = JSON.generate(f[:user_groups])
+          else
+            f[:user_groups] = '{"list":[],"regex":""}'
+          end
           f
         end
 
@@ -62,8 +76,7 @@ module Bandiera
     def remove_feature(group, name)
       group_id      = find_group_id(group)
       affected_rows = db[:features].where(group_id: group_id, name: name).delete
-      # FIXME: raise a more specific error class - i.e. FeatureRecordNotFound
-      fail RecordNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
+      fail FeatureNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
     end
 
     def update_feature(group, name, params)
@@ -93,8 +106,7 @@ module Bandiera
     def get_feature(group, name)
       group_id = find_group_id(group)
       row      = db[:features].first(group_id: group_id, name: name)
-      # FIXME: raise a more specific error class - i.e. FeatureRecordNotFound
-      fail RecordNotFound, "Cannot find feature '#{name}'" unless row
+      fail FeatureNotFound, "Cannot find feature '#{name}'" unless row
 
       build_feature_from_group_and_row(group, row)
     end
@@ -108,8 +120,7 @@ module Bandiera
 
     def find_group_id(name)
       group_id = db[:groups].where(name: name).get(:id)
-      # FIXME: raise a more specific error class - i.e. GroupRecordNotFound
-      fail RecordNotFound, "Cannot find group '#{name}'" unless group_id
+      fail GroupNotFound, "Cannot find group '#{name}'" unless group_id
       group_id
     end
 

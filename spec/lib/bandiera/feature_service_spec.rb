@@ -146,9 +146,9 @@ describe Bandiera::FeatureService do
 
   describe '#remove_feature' do
     context "when the group doesn't exist" do
-      it 'raises a RecordNotFound error' do
+      it 'raises a GroupNotFound error' do
         expect { subject.remove_feature('burgers', 'foo') }
-          .to raise_error(Bandiera::FeatureService::RecordNotFound)
+          .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
 
@@ -157,9 +157,9 @@ describe Bandiera::FeatureService do
         db[:groups] << { name: 'group1' }
       end
 
-      it 'raises a RecordNotFound error' do
+      it 'raises a FeatureNotFound error' do
         expect { subject.remove_feature('group1', 'foo') }
-          .to raise_error(Bandiera::FeatureService::RecordNotFound)
+          .to raise_error(Bandiera::FeatureService::FeatureNotFound)
       end
     end
 
@@ -184,9 +184,9 @@ describe Bandiera::FeatureService do
 
   describe '#update_feature' do
     context "when the group doesn't exist" do
-      it 'raises a RecordNotFound error' do
+      it 'raises a GroupNotFound error' do
         expect { subject.update_feature('my_group', 'my_feature', {}) }
-          .to raise_error(Bandiera::FeatureService::RecordNotFound)
+          .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
 
@@ -195,9 +195,9 @@ describe Bandiera::FeatureService do
         db[:groups] << { name: 'my_group' }
       end
 
-      it 'raises a RecordNotFound error' do
+      it 'raises a FeatureNotFound error' do
         expect { subject.update_feature('my_group', 'my_feature', {}) }
-          .to raise_error(Bandiera::FeatureService::RecordNotFound)
+          .to raise_error(Bandiera::FeatureService::FeatureNotFound)
       end
     end
 
@@ -256,9 +256,9 @@ describe Bandiera::FeatureService do
     end
 
     context "when the group doesn't exist" do
-      it 'raises a Bandiera::FeatureService::RecordNotFound error' do
+      it 'raises a GroupNotFound error' do
         expect { subject.get_group_features('burgers') }
-          .to raise_error(Bandiera::FeatureService::RecordNotFound)
+          .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
   end
@@ -277,9 +277,9 @@ describe Bandiera::FeatureService do
     end
 
     context "when the group doesn't exist" do
-      it 'raises a Bandiera::FeatureService::RecordNotFound error' do
+      it 'raises a GroupNotFound error' do
         expect { subject.get_feature('cheeses', 'stilton') }
-          .to raise_error(Bandiera::FeatureService::RecordNotFound)
+          .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
 
@@ -288,9 +288,9 @@ describe Bandiera::FeatureService do
         db[:groups] << { name: 'cheeses' }
       end
 
-      it 'raises a Bandiera::FeatureService::RecordNotFound error' do
+      it 'raises a FeatureNotFound error' do
         expect { subject.get_feature('cheeses', 'stilton') }
-          .to raise_error(Bandiera::FeatureService::RecordNotFound)
+          .to raise_error(Bandiera::FeatureService::FeatureNotFound)
       end
     end
   end

@@ -4,6 +4,10 @@ module Bandiera
 
     alias :active? :active
 
+    def self.stub_feature(name, group)
+      new(name, group, '', false)
+    end
+
     def initialize(name, group, description, active, user_groups={ list: [], regex: '' })
       @name        = name
       @group       = group

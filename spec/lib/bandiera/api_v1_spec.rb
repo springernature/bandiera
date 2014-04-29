@@ -116,7 +116,7 @@ describe Bandiera::APIv1 do
 
       it 'returns error data' do
         expected_data = {
-          'error' => "Cannot find group 'non_existent'"
+          'error' => "This group does not exist in the Bandiera database."
         }
 
         assert_last_response_matches(expected_data)
@@ -234,10 +234,10 @@ describe Bandiera::APIv1 do
           'feature' => {
             'group'       => 'non_existent',
             'name'        => 'wibble',
-            'description' => nil,
+            'description' => '',
             'enabled'     => false
           },
-          'warning' => 'This group does not exist in the bandiera database.'
+          'warning' => 'This group does not exist in the Bandiera database.'
         }
 
         assert_last_response_matches(expected_data)
@@ -258,10 +258,10 @@ describe Bandiera::APIv1 do
           'feature' => {
             'group'       => 'laserwolf',
             'name'        => 'non_existent',
-            'description' => nil,
+            'description' => '',
             'enabled'     => false
           },
-          'warning' => 'This feature does not exist in the bandiera database.'
+          'warning' => 'This feature does not exist in the Bandiera database.'
         }
 
         assert_last_response_matches(expected_data)

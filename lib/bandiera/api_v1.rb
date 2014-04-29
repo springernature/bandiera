@@ -1,9 +1,5 @@
 module Bandiera
   class APIv1 < WebAppBase
-    before do
-      content_type :json
-    end
-
     get '/groups' do
       groups = feature_service.get_groups.map { |name| { name: name } }
       render_json(groups: groups)
@@ -38,22 +34,20 @@ module Bandiera
     end
 
     get '/groups/:group_name/features/:feature_name' do |group_name, feature_name|
-      feature, warning = nil, nil
+      data, feature, warning = {}, nil, nil
 
       begin
         feature = feature_service.get_feature(group_name, feature_name)
-      rescue Bandiera::FeatureService::RecordNotFound => e
-        thing = case e.message
-                when /group/ then 'group'
-                when /feature/ then 'feature'
-                end
-
-        feature = Bandiera::Feature.new(feature_name, group_name, nil, false)
-        warning = "This #{thing} does not exist in the bandiera database."
+      rescue *[Bandiera::FeatureService::GroupNotFound, Bandiera::FeatureService::FeatureNotFound] => e
+        warning = e.message
       end
 
-      data = { feature: feature.as_v1_json }
-      data[:warning] = warning if warning
+      if warning
+        feature        = Bandiera::Feature.stub_feature(feature_name, group_name)
+        data[:warning] = warning
+      end
+
+      data[:feature] = feature.as_v1_json
 
       render_json(data)
     end
@@ -80,7 +74,7 @@ module Bandiera
       render_json(groups: group_data)
     end
 
-    error Bandiera::FeatureService::RecordNotFound do
+    error *[Bandiera::FeatureService::GroupNotFound, Bandiera::FeatureService::FeatureNotFound] do
       status 404
       render_json(error: request.env['sinatra.error'].message)
     end
@@ -93,7 +87,8 @@ module Bandiera
     private
 
     def render_json(data)
-      data.merge!(information: "You are using the v1 Bandiera API - this interface is deprecated, you should switch to use the latest version (see GITHUB_URL for more information).")
+      data.merge!(information: "You are using the v1 Bandiera API - this interface is deprecated, you should switch to use the latest version (see https://github.com/nature/bandiera/wiki/API-Documentation for more information).")
+      content_type :json
       JSON.generate(data)
     end
 
