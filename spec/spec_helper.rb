@@ -1,6 +1,8 @@
 require 'bundler'
 Bundler.setup(:default, :test)
 
+require_relative 'support/codeclimate_helper'
+
 ENV['RACK_ENV'] = 'test'
 
 require 'rspec'
@@ -21,6 +23,10 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Rake::Task['db:reset'].invoke(ENV['RACK_ENV'])
+  end
+
+  config.after(:suite) do
+    WebMock.disable!
   end
 
   config.after(:each) do

@@ -30,5 +30,6 @@ group :test do
   gem 'pry'
   gem 'simplecov'
   gem 'simplecov-rcov'
+  gem 'codeclimate-test-reporter'
 end
 

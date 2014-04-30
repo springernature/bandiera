@@ -10,6 +10,8 @@ GEM
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
     cliver (0.3.2)
+    codeclimate-test-reporter (0.3.0)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
@@ -316,6 +318,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
+  codeclimate-test-reporter
   jdbc-mysql
   mysql2
   poltergeist

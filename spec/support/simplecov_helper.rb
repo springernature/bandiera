@@ -1,14 +1,17 @@
 require 'simplecov'
 require 'simplecov-rcov'
 
-class SimpleCov::Formatter::MergedFormatter
-  def format(result)
-    SimpleCov::Formatter::HTMLFormatter.new.format(result)
-    SimpleCov::Formatter::RcovFormatter.new.format(result)
-  end
+formatters = [
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::RcovFormatter
+]
+
+if ENV['CODECLIMATE_REPO_TOKEN']
+  require 'codeclimate-test-reporter'
+  formatters << CodeClimate::TestReporter::Formatter
 end
 
-SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
 
 SimpleCov.start do
   load_profile 'test_frameworks'
