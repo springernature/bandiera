@@ -207,11 +207,10 @@ describe Bandiera::FeatureService do
       end
 
       it 'updates the feature' do
-        expect {
-          subject.update_feature('group', 'feat', { name: 'updated', active: true })
-        }.to change {
-          db[:features].first[:name]
-        }.from('feat').to('updated')
+        expect { subject.update_feature('group', 'feat', { name: 'updated', active: true }) }
+          .to change { db[:features].first[:name] }
+          .from('feat')
+          .to('updated')
       end
 
       it 'returns the updated feature' do

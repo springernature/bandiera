@@ -178,4 +178,3 @@ describe Bandiera::Feature do
     end
   end
 end
-
