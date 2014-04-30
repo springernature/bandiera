@@ -27,14 +27,16 @@ describe Bandiera::GUI do
     it 'shows all feature flags organised by group' do
       visit('/')
 
-      groups = all('.bandiera-feature-group').map do |div|
+      groups = {}
+
+      all('.bandiera-feature-group').each do |div|
         group_name = div.find('h3').text
         features   = div.all('tr.bandiera-feature').map do |tr|
           tr.all('td')[2].text
         end
 
-        [group_name, features]
-      end.to_h
+        groups[group_name] = features
+      end
 
       expect(groups['pubserv']).to match_array(%w(show_subjects show_search))
       expect(groups['laserwolf']).to match_array(['enable_caching'])

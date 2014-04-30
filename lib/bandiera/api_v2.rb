@@ -1,10 +1,12 @@
 module Bandiera
   class APIv2 < WebAppBase
     get '/all' do
-      group_map = feature_service.get_groups.map do |group_name|
+      group_map = {}
+
+      feature_service.get_groups.each do |group_name|
         features = feature_service.get_group_features(group_name)
-        [group_name, features_enabled_hash(features)]
-      end.to_h
+        group_map[group_name] = features_enabled_hash(features)
+      end
 
       json_or_jsonp(response: group_map)
     end
@@ -51,9 +53,13 @@ module Bandiera
     end
 
     def features_enabled_hash(features)
-      features.map do |feature|
-        [feature.name, feature_enabled?(feature)]
-      end.to_h
+      map = {}
+
+      features.each do |feature|
+        map[feature.name] = feature_enabled?(feature)
+      end
+
+      map
     end
 
     def json_or_jsonp(data)
