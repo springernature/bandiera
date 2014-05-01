@@ -23,6 +23,7 @@ module Bandiera
     end
 
     def self.connection_string
+      return ENV['DATABASE_URL'] if ENV.key? 'DATABASE_URL'
       conn = params(ENV['RACK_ENV'])
 
       if RUBY_PLATFORM == 'java'
