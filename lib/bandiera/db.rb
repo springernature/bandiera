@@ -5,7 +5,9 @@ Sequel.extension :migration
 
 module Bandiera
   class Db
-    CONFIG = YAML.load(File.open(File.join('config', 'database.yml')))
+    def self.configuration
+      @configuration ||= YAML.load(File.open(File.join('config', 'database.yml')))
+    end
 
     def self.connection
       @connection ||= Sequel.connect(connection_string)
@@ -13,12 +15,12 @@ module Bandiera
 
     def self.params(env)
       {
-        host:         CONFIG[env]['host'],
-        port:         CONFIG[env]['port'],
-        user:         CONFIG[env]['username'],
-        password:     CONFIG[env]['password'],
-        encoding:     CONFIG[env]['encoding'],
-        database:     CONFIG[env]['database']
+        host:         configuration[env]['host'],
+        port:         configuration[env]['port'],
+        user:         configuration[env]['username'],
+        password:     configuration[env]['password'],
+        encoding:     configuration[env]['encoding'],
+        database:     configuration[env]['database']
       }
     end
 
