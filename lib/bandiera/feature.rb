@@ -19,7 +19,7 @@ module Bandiera
     def enabled?(opts={ user_group: nil })
       return false unless active?
 
-      user_group = opts.fetch(:user_group, nil)
+      user_group = opts[:user_group]
 
       if user_groups_configured?
         enabled = false
@@ -48,9 +48,7 @@ module Bandiera
     end
 
     def user_groups_configured?
-      configured = false
-      configured = true unless user_groups_list.empty? && user_groups_regex.empty?
-      configured
+      !(user_groups_list.empty? && user_groups_regex.empty?)
     end
 
     def as_v1_json

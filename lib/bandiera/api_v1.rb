@@ -39,12 +39,8 @@ module Bandiera
       begin
         feature = feature_service.get_feature(group_name, feature_name)
       rescue *[Bandiera::FeatureService::GroupNotFound, Bandiera::FeatureService::FeatureNotFound] => e
-        warning = e.message
-      end
-
-      if warning
         feature        = Bandiera::Feature.stub_feature(feature_name, group_name)
-        data[:warning] = warning
+        data[:warning] = e.message
       end
 
       data[:feature] = feature.as_v1_json
