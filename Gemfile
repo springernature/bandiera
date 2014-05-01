@@ -11,6 +11,8 @@ gem 'jdbc-mysql', platform: :jruby
 gem 'sinatra'
 gem 'rack-flash3'
 
+gem 'macmillan-utils', git: 'git@github.com:nature/macmillan-utils.git', require: false
+
 gem 'unicorn', require: nil, platform: :ruby
 gem 'trinidad', require: nil, platform: :jruby
 
