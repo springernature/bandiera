@@ -1,14 +1,27 @@
 module Bandiera
   class FeatureService
-    class RecordNotFound < StandardError; end
+    class GroupNotFound < StandardError
+      def message
+        'This group does not exist in the Bandiera database.'
+      end
+    end
+
+    class FeatureNotFound < StandardError
+      def message
+        'This feature does not exist in the Bandiera database.'
+      end
+    end
 
     def initialize(db = Bandiera::Db.connection)
       @db = db
     end
 
+    # TODO: make Group a first-class object and have this return the created group
     def add_group(group)
       db[:groups].insert_ignore.multi_insert([{ name: group }])
     end
+
+    # TODO: add a add_groups method
 
     def add_feature(feature)
       add_features([feature]).first
@@ -29,6 +42,11 @@ module Bandiera
 
         features.map! do |f|
           f[:group_id] = group_name_to_id[f.delete(:group)]
+          if f[:user_groups]
+            f[:user_groups] = JSON.generate(f[:user_groups])
+          else
+            f[:user_groups] = '{"list":[],"regex":""}'
+          end
           f
         end
 
@@ -39,16 +57,15 @@ module Bandiera
             groups.name          AS group_name,
             features.name        AS name,
             features.description AS description,
-            features.enabled     AS enabled
+            features.active      AS active,
+            features.user_groups AS user_groups
           FROM features
           JOIN groups ON (groups.id = features.group_id)
         SQL
 
         db[sql].each do |f|
           if matched_names.include?("#{f[:group_name]} | #{f[:name]}")
-            returned_features << Bandiera::Feature.new(
-              f[:name], f[:group_name], f[:description], f[:enabled]
-            )
+            returned_features << build_feature_from_group_and_row(f[:group_name], f)
           end
         end
       end
@@ -59,12 +76,13 @@ module Bandiera
     def remove_feature(group, name)
       group_id      = find_group_id(group)
       affected_rows = db[:features].where(group_id: group_id, name: name).delete
-      fail RecordNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
+      fail FeatureNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
     end
 
     def update_feature(group, name, params)
       db.transaction do
-        curr_params = get_feature(group, name).as_json
+        # FIXME: handle user_groups coming through as a hash...
+        curr_params = get_feature(group, name).as_v2_json
         new_params  = curr_params.merge(params)
 
         remove_feature(group, name)
@@ -72,6 +90,7 @@ module Bandiera
       end
     end
 
+    # TODO: return group objects
     def get_groups
       db[:groups].order('name ASC').select_map(:name)
     end
@@ -87,7 +106,7 @@ module Bandiera
     def get_feature(group, name)
       group_id = find_group_id(group)
       row      = db[:features].first(group_id: group_id, name: name)
-      fail RecordNotFound, "Cannot find feature '#{name}'" unless row
+      fail FeatureNotFound, "Cannot find feature '#{name}'" unless row
 
       build_feature_from_group_and_row(group, row)
     end
@@ -95,12 +114,13 @@ module Bandiera
     private
 
     def build_feature_from_group_and_row(group, row)
-      Feature.new(row[:name], group, row[:description], row[:enabled])
+      user_groups = JSON.parse(row[:user_groups]).symbolize_keys
+      Feature.new(row[:name], group, row[:description], row[:active], user_groups)
     end
 
     def find_group_id(name)
       group_id = db[:groups].where(name: name).get(:id)
-      fail RecordNotFound, "Cannot find group '#{name}'" unless group_id
+      fail GroupNotFound, "Cannot find group '#{name}'" unless group_id
       group_id
     end
 

@@ -11,6 +11,8 @@ gem 'jdbc-mysql', platform: :jruby
 gem 'sinatra'
 gem 'rack-flash3'
 
+gem 'macmillan-utils', git: 'git@github.com:nature/macmillan-utils.git', require: false
+
 gem 'unicorn', require: nil, platform: :ruby
 gem 'trinidad', require: nil, platform: :jruby
 
@@ -25,9 +27,11 @@ group :test do
   gem 'rspec'
   gem 'rack-test'
   gem 'capybara'
+  gem 'poltergeist'
   gem 'webmock'
   gem 'pry'
   gem 'simplecov'
   gem 'simplecov-rcov'
+  gem 'codeclimate-test-reporter'
 end
 

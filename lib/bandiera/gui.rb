@@ -1,26 +1,13 @@
-require 'sinatra/base'
 require 'rack-flash'
 
 module Bandiera
-  class GUI < Sinatra::Base
+  class GUI < WebAppBase
     configure do
       set :root, File.join(File.dirname(__FILE__), 'gui')
-
       enable :sessions
-      enable :logging
     end
 
     use Rack::Flash
-
-    helpers do
-      def feature_service
-        @feature_service ||= FeatureService.new
-      end
-
-      def logger
-        env['bandiera-logger']
-      end
-    end
 
     get '/' do
       @groups_and_features = feature_service.get_groups.map do |group_name|
@@ -58,7 +45,7 @@ module Bandiera
     end
 
     post '/create/feature' do
-      feature = setup_feature_params(params[:feature])
+      feature = process_v2_feature_params(params[:feature])
 
       with_valid_feature_params(feature, '/new/feature') do
         feature_service.add_feature(feature)
@@ -77,12 +64,29 @@ module Bandiera
     post '/update/feature' do
       prev_group  = params[:feature][:previous_group]
       prev_name   = params[:feature][:previous_name]
-      new_feature = setup_feature_params(params[:feature])
+      new_feature = process_v2_feature_params(params[:feature])
 
       with_valid_feature_params(new_feature, "/groups/#{prev_group}/features/#{prev_name}/edit") do
         feature_service.update_feature(prev_group, prev_name, new_feature)
         flash[:success] = 'Feature updated.'
         redirect '/'
+      end
+    end
+
+    put '/update/feature/active_toggle' do
+      feat_params = params[:feature] || {}
+      group       = feat_params[:group]
+      name        = feat_params[:name]
+      active      = feat_params[:active] == 'true'
+
+      if group && name && !active.nil?
+        feature_service.update_feature(group, name, { active: active })
+        status 200
+        content_type :json
+        "{}"
+      else
+        status 401
+        halt
       end
     end
 
@@ -94,17 +98,8 @@ module Bandiera
 
     private
 
-    def setup_feature_params(feature_params)
-      {
-        group:        feature_params[:group],
-        name:         feature_params[:name],
-        description:  feature_params[:description],
-        enabled:      feature_params[:enabled] == 'true'
-      }
-    end
-
     def with_valid_feature_params(feature, on_error_url, &block)
-      if param_present?(feature[:name]) && param_present?(feature[:group]) && !feature[:name].include?(' ')
+      if valid_params?(feature)
         yield
       else
         errors = []

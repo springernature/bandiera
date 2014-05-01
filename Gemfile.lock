@@ -1,3 +1,14 @@
+GIT
+  remote: git@github.com:nature/macmillan-utils.git
+  revision: fc6f25a3ea47c65536a88308f687779349682fb3
+  specs:
+    macmillan-utils (0.0.1)
+      codeclimate-test-reporter
+      rspec
+      simplecov
+      simplecov-rcov
+      webmock
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -9,6 +20,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    cliver (0.3.2)
+    codeclimate-test-reporter (0.3.0)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
@@ -19,6 +33,7 @@ GEM
     jdbc-mysql (5.1.30)
     jruby-rack (1.1.14)
     json (1.8.1)
+    json (1.8.1-java)
     kgio (2.9.2)
     method_source (0.8.2)
     mime-types (2.2)
@@ -32,6 +47,11 @@ GEM
     parser (2.1.7)
       ast (~> 1.1)
       slop (~> 3.4, >= 3.4.5)
+    poltergeist (1.5.0)
+      capybara (~> 2.1)
+      cliver (~> 0.3.1)
+      multi_json (~> 1.0)
+      websocket-driver (>= 0.2.0)
     powerpack (0.0.9)
     pry (0.9.12.6)
       coderay (~> 1.0)
@@ -300,6 +320,8 @@ GEM
     webmock (1.17.4)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
+    websocket-driver (0.3.2)
+    websocket-driver (0.3.2-java)
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -309,8 +331,11 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
+  codeclimate-test-reporter
   jdbc-mysql
+  macmillan-utils!
   mysql2
+  poltergeist
   pry
   rack-flash3
   rack-test

@@ -1,4 +1,4 @@
-<% @feature ||= Bandiera::Feature.new("","","",false) %>
+<% @feature ||= Bandiera::Feature.new('','','',false) %>
 
 <form role="form" action="<%= action %>" method="post">
   <div class="form-group">
@@ -22,20 +22,46 @@
   </div>
 
   <div class="form-group">
-    <label for="feature[enabled]">Enabled?</label>
+    <label for="feature[active]">Active?</label>
     <div class="radio">
       <label>
-        <input type="radio" name="feature[enabled]" id="feature_enabled_true" value="true" <%= "checked " if @feature.enabled? %>/>
+        <input type="radio" name="feature[active]" id="feature_active_true" value="true" <%= 'checked ' if @feature.active? %>/>
         enabled
       </label>
     </div>
     <div class="radio">
       <label>
-        <input type="radio" name="feature[enabled]" id="feature_enabled_false" value="false" <%= "checked " unless @feature.enabled? %> />
+        <input type="radio" name="feature[active]" id="feature_active_false" value="false" <%= 'checked ' unless @feature.active? %> />
         disabled
       </label>
     </div>
   </div>
+
+  <hr />
+
+  <div class="well">
+    <h4>User Groups</h4>
+    <p>Use these options to have feature enabled for only a select number of users.</p>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="feature[user_groups][list]">Exact Match List</label>
+          <textarea class="form-control" id="feature_user_groups_list" name="feature[user_groups][list]"><%= @feature.user_groups_list.join("\n") %></textarea>
+          <p class="help-block">Enter one user group per-line - these must be the <strong>exact</strong> user group strings you intend to pass through (case-sensitive).</p>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="feature[user_groups][regex]">Regular Expression</label>
+          <input type="text" class="form-control" id="feature_user_groups_regex" name="feature[user_groups][regex]" value="<%= @feature.user_groups_regex %>" />
+          <p class="help-block">Enter a Ruby based regular expression - i.e. <code>.*_admin</code> will match anything that ends in <code>_admin</code>.  Please see <a href="http://rubular.com/">http://rubular.com/</a> for more information on Ruby regular expressions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr />
 
   <input type="hidden" name="feature[previous_group]" value="<%= @feature.group %>" />
   <input type="hidden" name="feature[previous_name]" value="<%= @feature.name %>" />

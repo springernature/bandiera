@@ -28,7 +28,8 @@
               <table class="table table-striped table-hover">
                 <thead>
                   <tr>
-                    <th class="feature-toggle-header" width="15%">Enabled?</th>
+                    <th style="text-align:center">Active?</th>
+                    <th style="text-align:center">User Groups?</th>
                     <th width="20%">Name</th>
                     <th width="40%">Description</th>
                     <th></th>
@@ -37,7 +38,12 @@
                 <tbody>
                   <% group[:features].each do |feature| %>
                     <tr class="bandiera-feature">
-                      <td class="feature-toggle" data-group="<%= group[:name] %>" data-feature="<%= feature.name %>" data-description="<%= feature.description %>" data-enabled="<%= feature.enabled? %>"><%= feature.enabled? %></td>
+                      <td class="feature-toggle" data-group="<%= group[:name] %>" data-feature="<%= feature.name %>" data-description="<%= feature.description %>" data-active="<%= feature.active? %>"><%= feature.active? %></td>
+                      <td style="text-align:center">
+                        <% if feature.user_groups_configured? %>
+                          <span class="fa fa-check"></span>
+                        <% end %>
+                      </td>
                       <td><%= feature.name %></td>
                       <td><%= feature.description %></td>
                       <td style="text-align:right">

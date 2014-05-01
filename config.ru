@@ -15,7 +15,7 @@ class BandieraLoggerMiddleware
   end
 
   def call(env)
-    env['bandiera-logger'] = @logger
+    env['rack.logger'] = @logger
     @app.call(env)
   end
 end
@@ -24,7 +24,8 @@ use Rack::CommonLogger, logger
 use BandieraLoggerMiddleware, logger
 
 run Rack::URLMap.new(
-  '/'    => Bandiera::GUI,
-  '/api' => Bandiera::API
+  '/'       => Bandiera::GUI,
+  '/api/v1' => Bandiera::APIv1,
+  '/api/v2' => Bandiera::APIv2
 )
 

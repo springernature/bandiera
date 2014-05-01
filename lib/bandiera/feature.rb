@@ -1,22 +1,72 @@
 module Bandiera
   class Feature
-    attr_reader :name, :group, :description, :enabled
+    attr_reader :name, :group, :description, :active, :user_groups
 
-    alias_method :enabled?, :enabled
+    alias :active? :active
 
-    def initialize(name, group, description, enabled)
+    def self.stub_feature(name, group)
+      new(name, group, '', false)
+    end
+
+    def initialize(name, group, description, active, user_groups={ list: [], regex: '' })
       @name        = name
       @group       = group
       @description = description
-      @enabled     = enabled
+      @active      = active
+      @user_groups = user_groups
     end
 
-    def as_json
+    def enabled?(opts={ user_group: nil })
+      return false unless active?
+
+      user_group = opts[:user_group]
+
+      if user_groups_configured?
+        enabled = false
+
+        if !user_groups_list.empty? && user_groups_list.include?(user_group)
+          enabled = true
+        end
+
+        if !user_groups_regex.empty?
+          regexp = Regexp.new(user_groups_regex)
+          enabled = true if regexp.match(user_group)
+        end
+
+        enabled
+      else
+        true
+      end
+    end
+
+    def user_groups_list
+      user_groups.fetch(:list, [])
+    end
+
+    def user_groups_regex
+      user_groups.fetch(:regex, '')
+    end
+
+    def user_groups_configured?
+      !(user_groups_list.empty? && user_groups_regex.empty?)
+    end
+
+    def as_v1_json
       {
         group:       group,
         name:        name,
         description: description,
-        enabled:     enabled
+        enabled:     enabled?
+      }
+    end
+
+    def as_v2_json
+      {
+        group:        group,
+        name:         name,
+        description:  description,
+        active:       enabled?,
+        user_groups:  user_groups
       }
     end
   end
