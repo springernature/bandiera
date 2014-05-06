@@ -26,13 +26,13 @@
     <div class="radio">
       <label>
         <input type="radio" name="feature[active]" id="feature_active_true" value="true" <%= 'checked ' if @feature.active? %>/>
-        enabled
+        on
       </label>
     </div>
     <div class="radio">
       <label>
         <input type="radio" name="feature[active]" id="feature_active_false" value="false" <%= 'checked ' unless @feature.active? %> />
-        disabled
+        off
       </label>
     </div>
   </div>
