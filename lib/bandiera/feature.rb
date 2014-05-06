@@ -24,7 +24,7 @@ module Bandiera
       if user_groups_configured?
         enabled = false
 
-        if !user_groups_list.empty? && user_groups_list.include?(user_group)
+        if !user_groups_list.empty? && cleaned_user_groups_list.include?(user_group)
           enabled = true
         end
 
@@ -68,6 +68,12 @@ module Bandiera
         active:       enabled?,
         user_groups:  user_groups
       }
+    end
+
+    private
+
+    def cleaned_user_groups_list
+      user_groups_list.reject { |elm| elm.nil? || elm.empty? }
     end
   end
 end
