@@ -72,6 +72,19 @@ describe Bandiera::Feature do
           end
         end
       end
+
+      context 'when users have blank lines in their list of groups' do
+        let(:user_groups) do
+          { list: ['admin', '', 'editor', ''] }
+        end
+
+        describe 'enabled?' do
+          it 'ignores these values when considering the user_group' do
+            expect(subject.enabled?(user_group: 'admin')).to be_true
+            expect(subject.enabled?(user_group: '')).to be_false
+          end
+        end
+      end
     end
 
     context "configured as a regex" do
