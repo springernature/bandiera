@@ -10,3 +10,18 @@
   background-color: #f6f8f9;
 }
 
+.bandiera-feature-group .panel-body {
+  padding: 0;
+}
+
+.bandiera-feature-group .panel-body table {
+  margin-bottom: 0;
+}
+
+.bandiera-feature-group .panel-body table thead {
+  border-bottom: 2px solid #eee;
+}
+
+.bandiera-feature-group .panel-body .no-features {
+  margin: 15px;
+}
