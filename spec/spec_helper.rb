@@ -2,9 +2,9 @@ require 'bundler'
 Bundler.setup(:default, :test)
 
 require 'macmillan/utils/rspec/rspec_defaults'
-require 'macmillan/utils/rspec/codeclimate_helper'
-require 'macmillan/utils/rspec/simplecov_helper'
 require 'macmillan/utils/rspec/webmock_helper'
+require 'macmillan/utils/test_helpers/codeclimate_helper'
+require 'macmillan/utils/test_helpers/simplecov_helper'
 
 ENV['RACK_ENV'] = 'test'
 
