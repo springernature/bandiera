@@ -13,6 +13,11 @@ module Bandiera
       @connection ||= Sequel.connect(connection_string)
     end
 
+    def self.disconnect!
+      connection.disconnect
+      @connection = nil
+    end
+
     def self.params(env)
       {
         host:         configuration[env]['host'],
@@ -25,7 +30,8 @@ module Bandiera
     end
 
     def self.connection_string
-      return ENV['DATABASE_URL'] if ENV.key? 'DATABASE_URL'
+      return ENV['DATABASE_URL'] if ENV['DATABASE_URL']
+
       conn = params(ENV['RACK_ENV'])
 
       if RUBY_PLATFORM == 'java'
