@@ -1,11 +1,33 @@
 require 'sinatra/base'
 
+if ENV['AIRBRAKE_API_KEY']
+  require 'socket'
+  require 'airbrake'
+
+  Airbrake.configure do |config|
+    config.api_key = ENV['AIRBRAKE_API_KEY']
+
+    if ENV['MACMILLAN_ENV']
+      config.development_environments = []
+      config.environment_name         = case Socket.gethostname
+                                        when /test/    then 'test'
+                                        when /staging/ then 'staging'
+                                        else
+                                          'live'
+                                        end
+    end
+  end
+end
+
 module Bandiera
   class WebAppBase < Sinatra::Base
     class InvalidParams < StandardError; end
 
+    use Airbrake::Rack if ENV['AIRBRAKE_API_KEY']
+
     configure do
       enable :logging
+      enable :raise_errors if ENV['AIRBRAKE_API_KEY']
     end
 
     helpers do
