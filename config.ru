@@ -1,13 +1,11 @@
 $LOAD_PATH.unshift File.join(__FILE__, '../lib')
 
 require 'bandiera'
-require 'syslog-logger'
+require 'macmillan/utils/logger/factory'
+require 'macmillan/utils/logger/formatter'
 
-class Logger::Syslog
-  alias_method :write, :info
-end
-
-logger = Logger::Syslog.new('bandiera', Syslog::LOG_LOCAL0)
+logger = Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
+logger.formatter = Macmillan::Utils::Logger::Formatter.new
 
 class BandieraLoggerMiddleware
   def initialize(app, logger)

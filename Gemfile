@@ -16,7 +16,6 @@ gem 'macmillan-utils', git: 'git@github.com:nature/macmillan-utils.git', require
 gem 'unicorn', require: false, platform: :ruby
 gem 'trinidad', require: false, platform: :jruby
 
-gem 'syslog-logger', require: false
 gem 'airbrake', require: false
 
 group :development do

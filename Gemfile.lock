@@ -1,12 +1,14 @@
 GIT
   remote: git@github.com:nature/macmillan-utils.git
-  revision: fc6f25a3ea47c65536a88308f687779349682fb3
+  revision: 90e10fe858fbe69480499b7b1a630e42c4b03f6b
   specs:
     macmillan-utils (0.0.1)
       codeclimate-test-reporter
+      multi_test
       rspec
       simplecov
       simplecov-rcov
+      syslog-logger
       webmock
 
 GEM
@@ -43,6 +45,7 @@ GEM
     mime-types (2.2)
     mini_portile (0.5.3)
     multi_json (1.10.0)
+    multi_test (0.1.1)
     mysql2 (0.3.15)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
@@ -293,7 +296,7 @@ GEM
     rubysl-xmlrpc (2.0.0)
     rubysl-yaml (2.0.4)
     rubysl-zlib (2.0.1)
-    safe_yaml (1.0.2)
+    safe_yaml (1.0.3)
     sequel (4.9.0)
     shotgun (0.9)
       rack (>= 1.0)
@@ -353,7 +356,6 @@ DEPENDENCIES
   simplecov
   simplecov-rcov
   sinatra
-  syslog-logger
   trinidad
   unicorn
   webmock
