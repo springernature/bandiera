@@ -13,18 +13,9 @@ if ENV['USE_SYSLOG']
   require 'macmillan/utils/logger/formatter'
 
   syslog_logger           = Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
-  syslog_logger.formatter = Macmillan::Utils::Logger::Formatter.new('[UNICORN:M]')
+  syslog_logger.formatter = Macmillan::Utils::Logger::Formatter.new
   syslog_logger.level     = Logger::INFO
   logger(syslog_logger)
-end
-
-after_fork do |server, worker|
-  if ENV['USE_SYSLOG']
-    syslog_logger           = Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
-    syslog_logger.formatter = Macmillan::Utils::Logger::Formatter.new("[UNICORN:#{worker.nr}]")
-    syslog_logger.level     = Logger::INFO
-    logger(syslog_logger)
-  end
 end
 
 if ENV['WORKING_DIR']
