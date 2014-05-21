@@ -10,8 +10,8 @@ module Bandiera
     use Rack::Flash
 
     get '/' do
-      @groups_and_features = feature_service.get_groups.map do |group_name|
-        { name: group_name, features: feature_service.get_group_features(group_name) }
+      @groups_and_features = feature_service.get_groups.map do |group|
+        { name: group.name, features: feature_service.get_group_features(group.name) }
       end
 
       erb :index

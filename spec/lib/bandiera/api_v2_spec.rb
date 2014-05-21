@@ -27,7 +27,7 @@ describe Bandiera::APIv2 do
       expected_data = {
         'response' => {
           'pubserv' => {
-            'show_subjects' => false,
+            'show_subjects' => true,
             'show_metrics' => false
           },
           'shunter' => {
@@ -59,7 +59,7 @@ describe Bandiera::APIv2 do
       it 'returns a hash of features / enabled pairs' do
         expected_data = {
           'response' => {
-            'show_subjects' => false,
+            'show_subjects' => true,
             'show_metrics' => false
           }
         }

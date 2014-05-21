@@ -1,19 +1,15 @@
 module Bandiera
-  class Feature
-    attr_reader :name, :group, :description, :active, :user_groups
+  class Feature < Sequel::Model
+    many_to_one :group
+
+    plugin :serialization
+
+    serialize_attributes :json, :user_groups
 
     alias :active? :active
 
     def self.stub_feature(name, group)
-      new(name, group, '', false)
-    end
-
-    def initialize(name, group, description, active, user_groups={ list: [], regex: '' })
-      @name        = name
-      @group       = group
-      @description = description
-      @active      = active
-      @user_groups = user_groups
+      new(name: name, group: Group.find_or_create(name: group), description: '')
     end
 
     def enabled?(opts={ user_group: nil })
@@ -53,7 +49,7 @@ module Bandiera
 
     def as_v1_json
       {
-        group:       group,
+        group:       group.name,
         name:        name,
         description: description,
         enabled:     enabled?
@@ -62,7 +58,7 @@ module Bandiera
 
     def as_v2_json
       {
-        group:        group,
+        group:        group.name,
         name:         name,
         description:  description,
         active:       enabled?,

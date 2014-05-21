@@ -76,7 +76,7 @@ describe Bandiera::GUI do
         end
 
         check_success_flash('Group created')
-        expect(service.get_groups).to include('TEST')
+        expect(service.get_groups.map(&:name)).to include('TEST')
       end
     end
 
@@ -203,7 +203,7 @@ describe Bandiera::GUI do
       context 'choosing another group' do
         it 'moves the feature to the new group' do
           curr_group    = find_field('feature_group').value
-          other_groups  = service.get_groups - [curr_group]
+          other_groups  = service.get_groups.map(&:name) - [curr_group]
           new_group     = other_groups.sample
 
           within('form') do

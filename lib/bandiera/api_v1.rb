@@ -1,7 +1,7 @@
 module Bandiera
   class APIv1 < WebAppBase
     get '/groups' do
-      groups = feature_service.get_groups.map { |name| { name: name } }
+      groups = feature_service.get_groups.map { |group| { name: group.name } }
       render_json(groups: groups)
     end
 
@@ -60,10 +60,10 @@ module Bandiera
     end
 
     get '/all' do
-      group_data = feature_service.get_groups.map do |group_name|
+      group_data = feature_service.get_groups.map do |group|
         {
-          name: group_name,
-          features: feature_service.get_group_features(group_name).map(&:as_v1_json)
+          name: group.name,
+          features: feature_service.get_group_features(group.name).map(&:as_v1_json)
         }
       end
 

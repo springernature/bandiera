@@ -12,19 +12,20 @@ module Bandiera
       end
     end
 
-    def initialize(db = Bandiera::Db.connection)
+    def initialize(db = Db.connection)
       @db = db
     end
 
-    # TODO: make Group a first-class object and have this return the created group
     def add_group(group)
-      db[:groups].insert_ignore.multi_insert([{ name: group }])
+      Group.find_or_create(name: group)
     end
 
     # TODO: add a add_groups method
 
-    def add_feature(feature)
-      add_features([feature]).first
+    def add_feature(data)
+      data[:group] = Group.find_or_create(name: data[:group])
+      lookup       = { name: data[:name], group: data[:group] }
+      Feature.update_or_create(lookup, data)
     end
 
     def add_features(features)
@@ -84,23 +85,18 @@ module Bandiera
         # FIXME: handle user_groups coming through as a hash...
         curr_params = get_feature(group, name).as_v2_json
         new_params  = curr_params.merge(params)
-
         remove_feature(group, name)
         add_feature(new_params)
       end
     end
 
-    # TODO: return group objects
     def get_groups
-      db[:groups].order('name ASC').select_map(:name)
+      Group.order(Sequel.asc(:name))
     end
 
-    def get_group_features(group)
-      group_id = find_group_id(group)
-
-      db[:features].where(group_id: group_id).order('name ASC').map do |row|
-        build_feature_from_group_and_row(group, row)
-      end
+    def get_group_features(group_name)
+      group = find_group(group_name)
+      group ? group.features : []
     end
 
     def get_feature(group, name)
@@ -115,11 +111,23 @@ module Bandiera
 
     def build_feature_from_group_and_row(group, row)
       user_groups = JSON.parse(row[:user_groups]).symbolize_keys
-      Feature.new(row[:name], group, row[:description], row[:active], user_groups)
+      Feature.new(
+        name:         row[:name],
+        group:        add_group(group),
+        description:  row[:description],
+        active:       row[:active],
+        user_groups:  user_groups
+      )
+    end
+
+    def find_group(name)
+      group = Group.find(name: name)
+      fail GroupNotFound, "Cannot find group '#{name}'" unless group
+      group
     end
 
     def find_group_id(name)
-      group_id = db[:groups].where(name: name).get(:id)
+      group_id = Group.where(name: name).get(:id)
       fail GroupNotFound, "Cannot find group '#{name}'" unless group_id
       group_id
     end

@@ -3,9 +3,9 @@ module Bandiera
     get '/all' do
       group_map = {}
 
-      feature_service.get_groups.each do |group_name|
-        features = feature_service.get_group_features(group_name)
-        group_map[group_name] = features_enabled_hash(features)
+      feature_service.get_groups.each do |group|
+        features = feature_service.get_group_features(group.name)
+        group_map[group.name] = features_enabled_hash(features)
       end
 
       json_or_jsonp(response: group_map)
