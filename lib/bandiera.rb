@@ -12,3 +12,9 @@ require_relative 'bandiera/web_app_base'
 require_relative 'bandiera/api_v1'
 require_relative 'bandiera/api_v2'
 require_relative 'bandiera/gui'
+
+module Bandiera
+  def self.init(environment)
+    Bundler.setup(:default, environment)
+  end
+end

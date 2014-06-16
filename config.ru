@@ -1,6 +1,10 @@
 $LOAD_PATH.unshift File.join(__FILE__, '../lib')
 
+require 'bundler'
 require 'bandiera'
+
+Bandiera.init(ENV['RACK_ENV'] || 'development')
+
 require 'macmillan/utils/logger/factory'
 require 'macmillan/utils/logger/formatter'
 
@@ -26,4 +30,3 @@ run Rack::URLMap.new(
   '/api/v1' => Bandiera::APIv1,
   '/api/v2' => Bandiera::APIv2
 )
-
