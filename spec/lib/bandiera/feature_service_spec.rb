@@ -73,15 +73,15 @@ describe Bandiera::FeatureService do
     end
 
     context 'creating features configured for specific user groups' do
-      let(:feat_data) {
+      let(:feat_data) do
         {
           name: 'feat_name',
           group: 'group_name',
           description: '',
           active: true,
-          user_groups: { list: ['info@example.com'], regex: ""}
+          user_groups: { list: ['info@example.com'], regex: '' }
         }
-      }
+      end
 
       it 'creates the feature' do
         target = subject.add_feature(feat_data)
@@ -91,7 +91,7 @@ describe Bandiera::FeatureService do
       end
 
       it 'populates the user_groups_data field correctly' do
-        expected = { list: ['info@example.com'], regex: ""}
+        expected = { list: ['info@example.com'], regex: '' }
         target = subject.add_feature(feat_data)
         expect(target.user_groups).to eq expected
       end
@@ -252,10 +252,10 @@ describe Bandiera::FeatureService do
       end
 
       it 'updates the feature' do
-        expect { subject.update_feature('group', 'feat', name: 'updated', active: true) }.
-          to change { db[:features].first[:name] }.
-          from('feat').
-          to('updated')
+        expect { subject.update_feature('group', 'feat', name: 'updated', active: true) }
+          .to change { db[:features].first[:name] }
+          .from('feat')
+          .to('updated')
       end
 
       it 'returns the updated feature' do

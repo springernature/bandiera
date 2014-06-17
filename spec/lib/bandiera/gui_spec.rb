@@ -128,7 +128,7 @@ describe Bandiera::GUI do
           feature = service.get_feature('pubserv', 'TEST-FEATURE')
 
           expect(feature).to be_an_instance_of(Bandiera::Feature)
-          expect(feature.user_groups_configured?).to be_true
+          expect(feature.user_groups_configured?).to be_truthy
           expect(feature.user_groups_list).to eq(%w(Editor Writer))
           expect(feature.user_groups_regex).to eq('.*Admin')
         end

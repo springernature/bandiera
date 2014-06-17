@@ -44,7 +44,7 @@ describe Bandiera::APIv2 do
       it 'passes this on to the feature when evaluating if a feature is enabled' do
         # this user_group statisfies the above settings - we expect show_subjects to be true
         get '/all', user_group: 'editor'
-        expect(last_response_data['response']['pubserv']['show_subjects']).to be_true
+        expect(last_response_data['response']['pubserv']['show_subjects']).to be_truthy
       end
     end
   end
@@ -72,7 +72,7 @@ describe Bandiera::APIv2 do
         it 'passes this on to the feature when evaluating if a feature is enabled' do
           # this user_group statisfies the above settings - we expect show_subjects to be true
           get '/groups/pubserv/features', user_group: 'editor'
-          expect(last_response_data['response']['show_subjects']).to be_true
+          expect(last_response_data['response']['show_subjects']).to be_truthy
         end
       end
     end
@@ -116,7 +116,7 @@ describe Bandiera::APIv2 do
         it 'passes this on to the feature when evaluating if a feature is enabled' do
           # this user_group statisfies the above settings - we expect show_subjects to be true
           get '/groups/pubserv/features/show_subjects', user_group: 'editor'
-          expect(last_response_data['response']).to be_true
+          expect(last_response_data['response']).to be_truthy
         end
       end
     end
