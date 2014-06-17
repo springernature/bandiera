@@ -1,2 +1,15 @@
 LineLength:
+  Description: 'Limit lines to 120 characters.'
   Max: 120
+
+BracesAroundHashParameters:
+  Enabled: false
+
+DotPosition:
+  EnforcedStyle: leading
+
+AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+IndentHash:
+  EnforcedStyle: consistent
