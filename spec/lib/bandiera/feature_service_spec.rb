@@ -21,14 +21,14 @@ describe Bandiera::FeatureService do
       end
 
       it 'creates the feature' do
-        expect { subject.add_feature(feat_data) }.
-          to change { db[:features].count }.
-          by(1)
+        expect { subject.add_feature(feat_data) }
+          .to change { db[:features].count }
+          .by(1)
       end
 
       it 'does not create a new group' do
-        expect { subject.add_feature(feat_data) }.
-          to_not change { db[:groups].count }
+        expect { subject.add_feature(feat_data) }
+          .to_not change { db[:groups].count }
       end
 
       it 'returns the created feature' do
@@ -49,22 +49,52 @@ describe Bandiera::FeatureService do
         end
 
         it 'updates the existing feature' do
-          expect { subject.add_feature(feat_data) }.
-            to change { subject.get_feature('group_name', 'feat_name').enabled? }.
-            from(false).
-            to(true)
+          expect { subject.add_feature(feat_data) }
+            .to change { subject.get_feature('group_name', 'feat_name').enabled? }
+            .from(false)
+            .to(true)
         end
       end
     end
 
     context 'when a group does not exist' do
-      it 'creates the group'
-      it 'creates the feature'
+      it 'creates the group' do
+        expect { subject.add_feature(feat_data) }
+          .to change { db[:groups].count }
+          .by(1)
+      end
+
+      it 'creates the feature' do
+        target = subject.add_feature(feat_data)
+        expect(target).to be_an_instance_of(Bandiera::Feature)
+        expect(target.name).to eq('feat_name')
+        expect(target.group.name).to eq('group_name')
+      end
     end
 
     context 'creating features configured for specific user groups' do
-      it 'creates features'
-      it 'populates the user_groups_data field correctly'
+      let(:feat_data) {
+        {
+          name: 'feat_name',
+          group: 'group_name',
+          description: '',
+          active: true,
+          user_groups: { list: ['info@example.com'], regex: ""}
+        }
+      }
+
+      it 'creates the feature' do
+        target = subject.add_feature(feat_data)
+        expect(target).to be_an_instance_of(Bandiera::Feature)
+        expect(target.name).to eq('feat_name')
+        expect(target.group.name).to eq('group_name')
+      end
+
+      it 'populates the user_groups_data field correctly' do
+        expected = { list: ['info@example.com'], regex: ""}
+        target = subject.add_feature(feat_data)
+        expect(target.user_groups).to eq expected
+      end
     end
   end
 
@@ -95,27 +125,27 @@ describe Bandiera::FeatureService do
         end
 
         it 'updates the existing features' do
-          expect { subject.add_features(features) }.
-            to change { subject.get_feature('feature_group', 'feature_name').enabled? }.
-            from(false).
-            to(true)
+          expect { subject.add_features(features) }
+            .to change { subject.get_feature('feature_group', 'feature_name').enabled? }
+            .from(false)
+            .to(true)
         end
       end
     end
 
     context "when a group doesn't exist" do
       it 'creates the group' do
-        expect { subject.add_features(features) }.
-          to change { db[:groups].count }.
-          from(0).
-          to(1)
+        expect { subject.add_features(features) }
+          .to change { db[:groups].count }
+          .from(0)
+          .to(1)
       end
 
       it 'creates the features' do
-        expect { subject.add_features(features) }.
-          to change { db[:features].count }.
-          from(0).
-          to(2)
+        expect { subject.add_features(features) }
+          .to change { db[:features].count }
+          .from(0)
+          .to(2)
       end
     end
 
@@ -135,10 +165,10 @@ describe Bandiera::FeatureService do
       end
 
       it 'creates features' do
-        expect { subject.add_features(features) }.
-          to change { db[:features].count }.
-          from(0).
-          to(1)
+        expect { subject.add_features(features) }
+          .to change { db[:features].count }
+          .from(0)
+          .to(1)
       end
 
       it 'populates the user_groups_data field correctly' do
@@ -173,8 +203,8 @@ describe Bandiera::FeatureService do
       end
 
       it 'raises a FeatureNotFound error' do
-        expect { subject.remove_feature('group1', 'foo') }.
-          to raise_error(Bandiera::FeatureService::FeatureNotFound)
+        expect { subject.remove_feature('group1', 'foo') }
+          .to raise_error(Bandiera::FeatureService::FeatureNotFound)
       end
     end
 
@@ -184,15 +214,15 @@ describe Bandiera::FeatureService do
       end
 
       it 'removes a feature record' do
-        expect { subject.remove_feature('group', 'feat') }.
-          to change { db[:features].count }.
-          from(1).
-          to(0)
+        expect { subject.remove_feature('group', 'feat') }
+          .to change { db[:features].count }
+          .from(1)
+          .to(0)
       end
 
       it 'does not remove the group' do
-        expect { subject.remove_feature('group', 'feat') }.
-          to_not change { db[:groups].count }
+        expect { subject.remove_feature('group', 'feat') }
+          .to_not change { db[:groups].count }
       end
     end
   end
@@ -200,8 +230,8 @@ describe Bandiera::FeatureService do
   describe '#update_feature' do
     context "when the group doesn't exist" do
       it 'raises a GroupNotFound error' do
-        expect { subject.update_feature('my_group', 'my_feature', {}) }.
-          to raise_error(Bandiera::FeatureService::GroupNotFound)
+        expect { subject.update_feature('my_group', 'my_feature', {}) }
+          .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
 
@@ -272,8 +302,8 @@ describe Bandiera::FeatureService do
 
     context "when the group doesn't exist" do
       it 'raises a GroupNotFound error' do
-        expect { subject.get_group_features('burgers') }.
-          to raise_error(Bandiera::FeatureService::GroupNotFound)
+        expect { subject.get_group_features('burgers') }
+          .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
   end
@@ -293,8 +323,8 @@ describe Bandiera::FeatureService do
 
     context "when the group doesn't exist" do
       it 'raises a GroupNotFound error' do
-        expect { subject.get_feature('cheeses', 'stilton') }.
-          to raise_error(Bandiera::FeatureService::GroupNotFound)
+        expect { subject.get_feature('cheeses', 'stilton') }
+          .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
 
@@ -304,8 +334,8 @@ describe Bandiera::FeatureService do
       end
 
       it 'raises a FeatureNotFound error' do
-        expect { subject.get_feature('cheeses', 'stilton') }.
-          to raise_error(Bandiera::FeatureService::FeatureNotFound)
+        expect { subject.get_feature('cheeses', 'stilton') }
+          .to raise_error(Bandiera::FeatureService::FeatureNotFound)
       end
     end
   end

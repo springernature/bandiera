@@ -95,8 +95,7 @@ module Bandiera
     end
 
     def get_group_features(group_name)
-      group = find_group(group_name)
-      group ? group.features : []
+      find_group(group_name).features
     end
 
     def get_feature(group, name)
