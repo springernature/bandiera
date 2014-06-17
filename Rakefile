@@ -1,6 +1,7 @@
 #!/usr/bin/env rake
 
-require_relative "lib/bandiera"
+$LOAD_PATH.unshift(File.dirname(__FILE__) + '/lib')
+require "bandiera"
 
 begin
   require "rspec/core/rake_task"

@@ -13,24 +13,88 @@ describe Bandiera::FeatureService do
   end
 
   describe '#add_feature' do
-    let(:feature_hash) { { name: 'name', group: 'group', description: '', active: true } }
-    let(:feature) { double('feature') }
+    let(:feat_data) { { name: 'feat_name', group: 'group_name', description: '', active: true } }
 
-    before do
-      subject.stub(:add_features).and_return([feature])
+    context 'when a group exists' do
+      before do
+        db[:groups] << { name: 'group_name' }
+      end
+
+      it 'creates the feature' do
+        expect { subject.add_feature(feat_data) }
+          .to change { db[:features].count }
+          .by(1)
+      end
+
+      it 'does not create a new group' do
+        expect { subject.add_feature(feat_data) }
+          .to_not change { db[:groups].count }
+      end
+
+      it 'returns the created feature' do
+        target = subject.add_feature(feat_data)
+        expect(target).to be_an_instance_of(Bandiera::Feature)
+        expect(target.name).to eq('feat_name')
+        expect(target.group.name).to eq('group_name')
+      end
+
+      context 'when the feature already exists' do
+        before do
+          db[:features] << {
+            name:        'feat_name',
+            description: '',
+            active:      false,
+            group_id:    db[:groups].first[:id]
+          }
+        end
+
+        it 'updates the existing feature' do
+          expect { subject.add_feature(feat_data) }
+            .to change { subject.get_feature('group_name', 'feat_name').enabled? }
+            .from(false)
+            .to(true)
+        end
+      end
     end
 
-    it 'calls #add_features' do
-      subject
-        .should_receive(:add_features)
-        .with([feature_hash])
+    context 'when a group does not exist' do
+      it 'creates the group' do
+        expect { subject.add_feature(feat_data) }
+          .to change { db[:groups].count }
+          .by(1)
+      end
 
-      subject.add_feature(feature_hash)
+      it 'creates the feature' do
+        target = subject.add_feature(feat_data)
+        expect(target).to be_an_instance_of(Bandiera::Feature)
+        expect(target.name).to eq('feat_name')
+        expect(target.group.name).to eq('group_name')
+      end
     end
 
-    it 'returns the created feature' do
-      result = subject.add_feature(feature_hash)
-      expect(result).to eq(feature)
+    context 'creating features configured for specific user groups' do
+      let(:feat_data) do
+        {
+          name: 'feat_name',
+          group: 'group_name',
+          description: '',
+          active: true,
+          user_groups: { list: ['info@example.com'], regex: '' }
+        }
+      end
+
+      it 'creates the feature' do
+        target = subject.add_feature(feat_data)
+        expect(target).to be_an_instance_of(Bandiera::Feature)
+        expect(target.name).to eq('feat_name')
+        expect(target.group.name).to eq('group_name')
+      end
+
+      it 'populates the user_groups_data field correctly' do
+        expected = { list: ['info@example.com'], regex: '' }
+        target = subject.add_feature(feat_data)
+        expect(target.user_groups).to eq expected
+      end
     end
   end
 
@@ -47,41 +111,22 @@ describe Bandiera::FeatureService do
         db[:groups] << { name: 'feature_group' }
       end
 
-      it 'create features' do
-        expect { subject.add_features(features) }
-          .to change { db[:features].count }
-          .by(2)
-      end
-
-      it 'does not create a new group' do
-        expect { subject.add_features(features) }
-          .to_not change { db[:groups].count }
-      end
-
-      it 'returns a list of created features' do
-        returned_features = subject.add_features(features)
-
-        expect(returned_features).to be_an_instance_of(Array)
-        expect(returned_features.first).to be_an_instance_of(Bandiera::Feature)
-        expect(returned_features.size).to eq(2)
-      end
-
       context 'when one or more of the features already exists' do
-        let(:group_id)     { db[:groups].first[:id] }
+        let(:group_id) { db[:groups].first[:id] }
         let(:feature_name) { 'feature_name' }
 
         before do
           db[:features] << {
-            name:        feature_name,
+            name: feature_name,
             description: '',
-            active:      false,
-            group_id:    group_id
+            active: false,
+            group_id: group_id
           }
         end
 
         it 'updates the existing features' do
           expect { subject.add_features(features) }
-            .to change { subject.get_feature('feature_group', feature_name).enabled? }
+            .to change { subject.get_feature('feature_group', 'feature_name').enabled? }
             .from(false)
             .to(true)
         end
@@ -207,7 +252,7 @@ describe Bandiera::FeatureService do
       end
 
       it 'updates the feature' do
-        expect { subject.update_feature('group', 'feat', { name: 'updated', active: true }) }
+        expect { subject.update_feature('group', 'feat', name: 'updated', active: true) }
           .to change { db[:features].first[:name] }
           .from('feat')
           .to('updated')
@@ -227,8 +272,9 @@ describe Bandiera::FeatureService do
       db[:groups] << { name: 'group2' }
     end
 
-    it 'gets a list of all groups' do
-      expect(subject.get_groups).to eq(%w(group1 group2))
+    it 'gets a array of all group objects' do
+      expect(subject.get_groups.first).to be_an_instance_of(Bandiera::Group)
+      expect(subject.get_groups.first.name).to eq('group1')
     end
   end
 

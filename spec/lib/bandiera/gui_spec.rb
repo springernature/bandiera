@@ -76,7 +76,7 @@ describe Bandiera::GUI do
         end
 
         check_success_flash('Group created')
-        expect(service.get_groups).to include('TEST')
+        expect(service.get_groups.map(&:name)).to include('TEST')
       end
     end
 
@@ -128,7 +128,7 @@ describe Bandiera::GUI do
           feature = service.get_feature('pubserv', 'TEST-FEATURE')
 
           expect(feature).to be_an_instance_of(Bandiera::Feature)
-          expect(feature.user_groups_configured?).to be_true
+          expect(feature.user_groups_configured?).to be_truthy
           expect(feature.user_groups_list).to eq(%w(Editor Writer))
           expect(feature.user_groups_regex).to eq('.*Admin')
         end
@@ -203,7 +203,7 @@ describe Bandiera::GUI do
       context 'choosing another group' do
         it 'moves the feature to the new group' do
           curr_group    = find_field('feature_group').value
-          other_groups  = service.get_groups - [curr_group]
+          other_groups  = service.get_groups.map(&:name) - [curr_group]
           new_group     = other_groups.sample
 
           within('form') do

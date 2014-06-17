@@ -2,6 +2,7 @@ require 'sequel'
 require 'yaml'
 
 Sequel.extension :migration
+Sequel::Model.plugin :update_or_create
 
 module Bandiera
   class Db

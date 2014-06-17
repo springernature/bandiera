@@ -1,19 +1,18 @@
-module Bandiera
-end
-
 require 'json'
-
+require 'sequel'
 require_relative 'hash'
-require_relative 'bandiera/version'
-require_relative 'bandiera/db'
-require_relative 'bandiera/feature'
-require_relative 'bandiera/feature_service'
-require_relative 'bandiera/web_app_base'
-require_relative 'bandiera/api_v1'
-require_relative 'bandiera/api_v2'
-require_relative 'bandiera/gui'
 
 module Bandiera
+  autoload :VERSION,        'bandiera/version'
+  autoload :Db,             'bandiera/db'
+  autoload :Group,          'bandiera/group'
+  autoload :Feature,        'bandiera/feature'
+  autoload :FeatureService, 'bandiera/feature_service'
+  autoload :WebAppBase,     'bandiera/web_app_base'
+  autoload :APIv1,          'bandiera/api_v1'
+  autoload :APIv2,          'bandiera/api_v2'
+  autoload :GUI,            'bandiera/gui'
+
   def self.init(environment)
     Bundler.setup(:default, environment)
   end
