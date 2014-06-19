@@ -15,7 +15,9 @@ module Bandiera
     end
 
     def self.disconnect!
-      connection.disconnect
+      if @connection
+        @connection.disconnect
+      end
       @connection = nil
     end
 
