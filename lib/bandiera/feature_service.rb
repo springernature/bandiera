@@ -20,6 +20,11 @@ module Bandiera
       Group.find_or_create(name: group)
     end
 
+    def get_user_feature(user_id, feature_id)
+      UserFeature.unrestrict_primary_key
+      UserFeature.find_or_create(user_id: user_id, feature_id: feature_id)
+    end
+
     # TODO: add a add_groups method
 
     def add_feature(data)
@@ -81,12 +86,18 @@ module Bandiera
     end
 
     def update_feature(group, name, params)
-      db.transaction do
-        # FIXME: handle user_groups coming through as a hash...
-        curr_params = get_feature(group, name).as_v2_json
-        new_params  = curr_params.merge(params)
-        remove_feature(group, name)
-        add_feature(new_params)
+      group_id  = find_group_id(group)
+      feature   = Feature.first(group_id: group_id, name: name)
+      if feature
+        fields  = {
+          description:  params[:description],
+          active:       params[:active],
+          user_groups:  params[:user_groups],
+          percentage:   params[:percentage]
+        }.delete_if { |k, v| v.nil? }
+        feature.update(fields)
+      else
+        fail FeatureNotFound, "Cannot find feature '#{name}'"
       end
     end
 
@@ -100,10 +111,9 @@ module Bandiera
 
     def get_feature(group, name)
       group_id = find_group_id(group)
-      row      = db[:features].first(group_id: group_id, name: name)
-      fail FeatureNotFound, "Cannot find feature '#{name}'" unless row
-
-      build_feature_from_group_and_row(group, row)
+      feature = Feature.first(group_id: group_id, name: name)
+      fail FeatureNotFound, "Cannot find feature '#{name}'" unless feature
+      feature
     end
 
     private
@@ -115,7 +125,8 @@ module Bandiera
         group:        add_group(group),
         description:  row[:description],
         active:       row[:active],
-        user_groups:  user_groups
+        user_groups:  user_groups,
+        percentage:   row[:percentage]
       )
     end
 

@@ -7,6 +7,7 @@ module Bandiera
   autoload :Db,             'bandiera/db'
   autoload :Group,          'bandiera/group'
   autoload :Feature,        'bandiera/feature'
+  autoload :UserFeature,    'bandiera/user_feature'
   autoload :FeatureService, 'bandiera/feature_service'
   autoload :WebAppBase,     'bandiera/web_app_base'
   autoload :APIv1,          'bandiera/api_v1'
@@ -15,5 +16,6 @@ module Bandiera
 
   def self.init(environment)
     Bundler.setup(:default, environment)
+    Db.connection
   end
 end

@@ -11,17 +11,21 @@
 <form role="form" action="<%= action %>" method="post">
   <div class="form-group">
     <label for="feature[group]">Group</label>
-    <select class="form-control" id="feature_group" name="feature[group]">
-      <option></option>
-      <% @groups.each do |group| %>
-        <option value="<%= group.name %>"<%= " selected" if @feature.group == group %>><%= group.name %></option>
-      <% end %>
-    </select>
+    <% if method == :update %>
+      <input type="text" class="form-control" id="feature_group" name="feature[group]" value="<%= @feature.group.name %>" <%= "readonly" if method == :update %>/>
+    <% else %>
+      <select class="form-control" id="feature_group" name="feature[group]">
+        <option></option>
+        <% @groups.each do |group| %>
+          <option value="<%= group.name %>"<%= " selected" if @feature.group == group %>><%= group.name %></option>
+        <% end %>
+      </select>
+    <% end %>
   </div>
 
   <div class="form-group">
     <label for="feature[name]">Name</label>
-    <input type="text" class="form-control" id="feature_name" name="feature[name]" value="<%= @feature.name %>" />
+    <input type="text" class="form-control" id="feature_name" name="feature[name]" value="<%= @feature.name %>" <%= "readonly" if method == :update %>/>
   </div>
 
   <div class="form-group">
@@ -47,7 +51,32 @@
 
   <hr />
 
+  <div class="alert">
+    <p><span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Important:</strong> The following fields are optional. You can use either Percentage of users <strong>OR</strong> User groups.</p>
+  </div>
+
   <div class="well">
+    <span style="font-size:80%;color:#777;">Option 1</span>
+    <h4>Percentage of users</h4>
+    <p>Use this option to have the feature enabled for a percentage of users.</p>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="feature[percentage]">Percentage</label>
+          <select class="form-control" id="feature_percentage" name="feature[percentage]">
+            <option></option>
+            <% (5..100).step(5).each do |perc| %>
+              <option value="<%= perc %>"<%= " selected" if @feature.percentage == perc %>><%= perc %>%</option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="well">
+    <span style="font-size:80%;color:#777;">Option 2</span>
     <h4>User Groups</h4>
     <p>Use these options to have feature enabled for only a select number of users.</p>
     <div class="row">
@@ -74,5 +103,5 @@
   <input type="hidden" name="feature[previous_group]" value="<%= @feature.group ? @feature.group.name : nil %>" />
   <input type="hidden" name="feature[previous_name]" value="<%= @feature.name %>" />
 
-  <button type="submit" class="btn btn-primary"><%= button_text %></button>
+  <button type="submit" class="btn btn-primary"><%= method.to_s.capitalize %></button>
 </form>

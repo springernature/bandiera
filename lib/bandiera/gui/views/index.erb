@@ -30,6 +30,7 @@
                   <tr>
                     <th style="text-align:center">Active?</th>
                     <th style="text-align:center">User Groups?</th>
+                    <th style="text-align:center">User %</th>
                     <th width="20%">Name</th>
                     <th width="40%">Description</th>
                     <th></th>
@@ -41,6 +42,11 @@
                       <td class="feature-toggle" data-group="<%= group[:name] %>" data-feature="<%= feature.name %>" data-description="<%= feature.description %>" data-active="<%= feature.active? %>"><%= feature.active? %></td>
                       <td style="text-align:center">
                         <% if feature.user_groups_configured? %>
+                          <span class="fa fa-check"></span>
+                        <% end %>
+                      </td>
+                      <td style="text-align:center">
+                        <% if feature.percentage %>
                           <span class="fa fa-check"></span>
                         <% end %>
                       </td>
