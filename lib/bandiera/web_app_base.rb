@@ -47,7 +47,8 @@ module Bandiera
         group:        params['group'],
         name:         params['name'],
         description:  params['description'],
-        active:       params['enabled'] == 'true'
+        active:       params['enabled'] == 'true',
+        percentage:   params['percentage']
       }
     end
 
@@ -63,7 +64,8 @@ module Bandiera
         name:         params['name'],
         description:  params['description'],
         active:       params['active'] == 'true',
-        user_groups:  user_groups
+        user_groups:  user_groups,
+        percentage:   params['percentage']
       }
     end
 
@@ -79,7 +81,15 @@ module Bandiera
     end
 
     def valid_params?(feature)
-      param_present?(feature[:name]) && param_present?(feature[:group]) && !feature[:name].include?(' ')
+      param_present?(feature[:name]) && !feature[:name].include?(' ') && param_present?(feature[:group]) && valid_user_filters?(feature)
+    end
+
+    def valid_user_filters?(feature)
+      !(param_present?(feature[:percentage]) && has_user_groups_params?(feature))
+    end
+
+    def has_user_groups_params?(feature)
+      param_present?(feature[:user_groups][:list]) || param_present?(feature[:user_groups][:regex])
     end
 
     def param_present?(param)

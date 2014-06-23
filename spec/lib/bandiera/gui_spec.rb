@@ -32,7 +32,7 @@ describe Bandiera::GUI do
       all('.bandiera-feature-group').each do |div|
         group_name = div.find('h3').text
         features   = div.all('tr.bandiera-feature').map do |tr|
-          tr.all('td')[2].text
+          tr.all('td')[3].text
         end
 
         groups[group_name] = features
@@ -188,58 +188,14 @@ describe Bandiera::GUI do
       row.find('.bandiera-edit-feature').click
     end
 
-    context 'updating the group' do
-      context 'setting it as blank' do
-        it 'shows validation errors' do
-          within('form') do
-            select '', from: 'feature_group'
-            click_button 'Update'
-          end
-
-          check_error_flash('You must select a group')
+    context 'failures' do
+      it 'do not allow adding both percentage and groups of users' do
+        within('form') do
+          select '50%', from: 'feature_percentage'
+          fill_in 'feature_user_groups_list', with: 'admin'
+          click_button 'Update'
         end
-      end
-
-      context 'choosing another group' do
-        it 'moves the feature to the new group' do
-          curr_group    = find_field('feature_group').value
-          other_groups  = service.get_groups.map(&:name) - [curr_group]
-          new_group     = other_groups.sample
-
-          within('form') do
-            select new_group, from: 'feature_group'
-            click_button 'Update'
-          end
-
-          expect(service.get_feature(new_group, @feature_name)).to be_an_instance_of(Bandiera::Feature)
-        end
-      end
-    end
-
-    context 'updating the name' do
-      context 'setting it as something invalid' do
-        it 'shows validation errors' do
-          within('form') do
-            fill_in 'feature_name', with: 'bob flemming'
-            click_button 'Update'
-          end
-
-          check_error_flash('You must enter a feature name without spaces')
-        end
-      end
-
-      context 'with a new valid name' do
-        it 'updates the feature flag' do
-          find_field('feature_group').select('laserwolf')
-
-          within('form') do
-            fill_in 'feature_name', with: 'bob-flemming'
-            click_button 'Update'
-          end
-
-          check_success_flash('Feature updated')
-          expect(service.get_feature('laserwolf', 'bob-flemming')).to be_an_instance_of(Bandiera::Feature)
-        end
+        check_error_flash('You must use either percentage or groups of users')
       end
     end
   end

@@ -19,13 +19,13 @@ describe Bandiera::Feature do
 
   describe 'a plain on/off feature flag' do
     it 'responds to #enabled?' do
-      expect(subject.respond_to?(:enabled?)).to be_truthy
+      expect(subject.respond_to?(:enabled?)).to be true
     end
 
     context 'when @active is true' do
       describe '#enabled?' do
         it 'returns true' do
-          expect(subject.enabled?).to be_truthy
+          expect(subject.enabled?).to be true
         end
       end
     end
@@ -35,7 +35,7 @@ describe Bandiera::Feature do
 
       describe '#enabled?' do
         it 'returns false' do
-          expect(subject.enabled?).to be_falsey
+          expect(subject.enabled?).to be false
         end
       end
     end
@@ -75,7 +75,7 @@ describe Bandiera::Feature do
 
         describe '#enabled?' do
           it 'always returns false' do
-            expect(subject.enabled?(user_group: user_group)).to be_falsey
+            expect(subject.enabled?(user_group: user_group)).to be false
           end
         end
       end
@@ -87,8 +87,8 @@ describe Bandiera::Feature do
 
         describe 'enabled?' do
           it 'ignores these values when considering the user_group' do
-            expect(subject.enabled?(user_group: 'admin')).to be_truthy
-            expect(subject.enabled?(user_group: '')).to be_falsey
+            expect(subject.enabled?(user_group: 'admin')).to be true
+            expect(subject.enabled?(user_group: '')).to be false
           end
         end
       end
@@ -104,7 +104,7 @@ describe Bandiera::Feature do
         describe '#enabled?' do
           context 'returns true' do
             it 'if the user_group matches the regex' do
-              expect(subject.enabled?(user_group: user_group)).to be_truthy
+              expect(subject.enabled?(user_group: user_group)).to be true
             end
           end
 
@@ -112,7 +112,7 @@ describe Bandiera::Feature do
             let(:user_group) { 'guest' }
 
             it 'if the user_group does not match the regex' do
-              expect(subject.enabled?(user_group: user_group)).to be_falsey
+              expect(subject.enabled?(user_group: user_group)).to be false
             end
           end
         end
@@ -123,8 +123,19 @@ describe Bandiera::Feature do
 
         describe '#enabled?' do
           it 'always returns false' do
-            expect(subject.enabled?(user_group: user_group)).to be_falsey
+            expect(subject.enabled?(user_group: user_group)).to be false
           end
+        end
+      end
+
+      context 'with a wrong regex' do
+        let(:active) { true }
+        let(:user_groups) do
+          { regex: '*admin' }
+        end
+
+        it 'returns false without raisning an error' do
+          expect(subject.enabled?(user_group: user_group)).to be false
         end
       end
     end

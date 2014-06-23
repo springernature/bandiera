@@ -13,6 +13,7 @@ describe Bandiera::APIv2 do
     feature_service.add_features([
       { group: 'pubserv', name: 'show_subjects', description: '', active: true, user_groups: { list: ['editor'], regex: '' } },
       { group: 'pubserv', name: 'show_metrics', description: '', active: false },
+      { group: 'pubserv', name: 'use_content_hub', description: '', active: true },
       { group: 'shunter', name: 'stats_logging', description: '', active: true }
     ])
   end
@@ -27,8 +28,9 @@ describe Bandiera::APIv2 do
       expected_data = {
         'response' => {
           'pubserv' => {
-            'show_subjects' => true,
-            'show_metrics' => false
+            'show_subjects'   => false,
+            'show_metrics'    => false,
+            'use_content_hub' => true
           },
           'shunter' => {
             'stats_logging' => true
@@ -59,8 +61,9 @@ describe Bandiera::APIv2 do
       it 'returns a hash of features / enabled pairs' do
         expected_data = {
           'response' => {
-            'show_subjects' => true,
-            'show_metrics' => false
+            'show_subjects' => false,
+            'show_metrics' => false,
+            'use_content_hub' => true
           }
         }
 
@@ -162,6 +165,90 @@ describe Bandiera::APIv2 do
     end
   end
 
+  describe 'GET /groups/:group_name/features/:feature_name?user_id=ident' do
+    context 'with user_id' do
+      after :each do
+        Bandiera::UserFeature.dataset.delete
+      end
+
+      context 'enabled feature with percentage' do
+        before :each do
+          feature_service = Bandiera::FeatureService.new
+          feature = feature_service.get_feature('pubserv', 'use_content_hub')
+          feature.percentage = percentage
+          feature.save
+        end
+
+        context 'with 5%' do
+          let(:percentage) { 5 }
+
+          it 'it allow ~5% of the users to receive true' do
+            expect(active_count(percentage)).to be < 15
+          end
+        end
+
+        context 'with 95%' do
+          let(:percentage) { 95 }
+
+          it 'it allow ~95% of the users to receive true' do
+            expect(active_count(percentage)).to be > 85
+          end
+        end
+      end
+
+      context 'disabled feature with percentage' do
+        let(:percentage) { 95 }
+
+        before :each do
+          Bandiera::UserFeature.dataset.delete
+          feature_service = Bandiera::FeatureService.new
+          feature = feature_service.get_feature('pubserv', 'use_content_hub')
+          feature.percentage = percentage
+          feature.active     = false
+          feature.save
+        end
+
+        it 'always return false' do
+          expect(active_count(percentage)).to eq 0
+        end
+      end
+    end
+
+    context 'without user_id' do
+      let(:percentage) { 95 }
+
+      before :each do
+        feature_service = Bandiera::FeatureService.new
+        @feature = feature_service.get_feature('pubserv', 'use_content_hub')
+        @feature.percentage = percentage
+      end
+
+      context 'enabled feature with percentage' do
+        it 'always return false and send a warning' do
+          @feature.active = true
+          @feature.save
+
+          get '/groups/pubserv/features/use_content_hub'
+          @data = JSON.parse(last_response.body)
+          expect(@data['response']).to eq(false)
+          expect(@data['warning']).to_not be_nil
+        end
+      end
+
+      context 'disabled feature with percentage' do
+        it 'always return false' do
+          @feature.active = false
+          @feature.save
+
+          get '/groups/pubserv/features/use_content_hub'
+          @data = JSON.parse(last_response.body)
+          expect(@data['response']).to eq(false)
+          expect(@data['warning']).to be_nil
+        end
+      end
+    end
+  end
+
   private
 
   def last_response_data
@@ -172,4 +259,12 @@ describe Bandiera::APIv2 do
     expect(last_response_data).to eq(expected_data)
   end
 
+  def active_count(percentage)
+    @results = []
+    (0...100).each do |i|
+      get "/groups/pubserv/features/use_content_hub?user_id=user#{i}"
+      @results << JSON.parse(last_response.body)['response']
+    end
+    @results.count { |v| v == true }
+  end
 end
