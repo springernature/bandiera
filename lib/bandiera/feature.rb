@@ -21,7 +21,7 @@ module Bandiera
     end
 
     def enabled_for_user?(user_feature)
-      Zlib.crc32(user_feature.index) % 100 < self.percentage
+      Zlib.crc32(user_feature.user_seed) % 100 < percentage
     end
 
     def user_groups_list
