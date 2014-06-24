@@ -21,7 +21,6 @@ module Bandiera
     end
 
     def get_user_feature(user_id, feature_id)
-      UserFeature.unrestrict_primary_key
       UserFeature.find_or_create(user_id: user_id, feature_id: feature_id)
     end
 
