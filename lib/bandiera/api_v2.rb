@@ -27,9 +27,13 @@ module Bandiera
     get '/groups/:group_name/features/:feature_name' do |group_name, feature_name|
       begin
         feature  = feature_service.get_feature(group_name, feature_name)
-        return { response: false } unless feature
         response = response_for(feature)
-      rescue *[Bandiera::FeatureService::GroupNotFound, Bandiera::FeatureService::FeatureNotFound] => e
+      rescue *
+        [
+          Bandiera::FeatureService::GroupNotFound,
+          Bandiera::FeatureService::FeatureNotFound,
+          Bandiera::FeatureService::UserNotFound
+        ] => e
         response = { response: false, warning:  e.message }
       end
       json_or_jsonp(response)
@@ -39,40 +43,17 @@ module Bandiera
 
     def response_for(feature)
       if feature.percentage
-        feature_percentage(feature)
+        { response: feature_service.user_within_percentage?(params[:user_id], feature) }
       else
-        { response: feature_enabled?(feature) }
+        { response: feature.enabled?(user_group: params[:user_group]) }
       end
-    end
-
-    def feature_percentage(feature)
-      if !feature.active?
-        { response: false }
-      elsif !params[:user_id]
-        { response: false, warning:  "Feature is only active for a percentage of users. You need to pass a user id." }
-      else
-        user_feature  = feature_service.get_user_feature(params[:user_id], feature.id)
-        { response: feature_enabled_for_user?(feature, user_feature) }
-      end
-    end
-
-    def current_user_group
-      params[:user_group]
-    end
-
-    def feature_enabled?(feature)
-      feature.enabled?(user_group: current_user_group)
-    end
-
-    def feature_enabled_for_user?(feature, user_feature)
-      feature_enabled?(feature) && feature.enabled_for_user?(user_feature)
     end
 
     def features_enabled_hash(features)
       map = {}
 
       features.each do |feature|
-        map[feature.name] = feature_enabled?(feature)
+        map[feature.name] = feature.enabled?(user_group: params[:user_group])
       end
 
       map

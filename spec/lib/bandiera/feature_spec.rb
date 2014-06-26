@@ -149,7 +149,7 @@ describe Bandiera::Feature do
         describe '#enabled?' do
           context 'returns true' do
             it 'if the user_group is in the exact match list but does not match the regex' do
-              expect(subject.enabled?(user_group: 'editor')).to be_truthy
+              expect(subject.enabled?(user_group: 'editor')).to be true
             end
 
             it 'if the user_group matches the regex but is not in the exact match list' do
@@ -159,7 +159,7 @@ describe Bandiera::Feature do
 
           context 'returns false' do
             it 'if the user_group is not in the exact match list and does not match the regex' do
-              expect(subject.enabled?(user_group: 'guest')).to be_falsey
+              expect(subject.enabled?(user_group: 'guest')).to be false
             end
           end
         end
@@ -170,7 +170,7 @@ describe Bandiera::Feature do
 
         describe '#enabled?' do
           it 'always returns false' do
-            expect(subject.enabled?(user_group: 'editor')).to be_falsey
+            expect(subject.enabled?(user_group: 'editor')).to be false
           end
         end
       end
@@ -184,7 +184,7 @@ describe Bandiera::Feature do
       let(:user_groups) { { list: %w(boo bar) } }
 
       it 'returns true' do
-        expect(subject.user_groups_configured?).to be_truthy
+        expect(subject.user_groups_configured?).to be true
       end
     end
 
@@ -192,13 +192,13 @@ describe Bandiera::Feature do
       let(:user_groups) { { regex: '.*' } }
 
       it 'returns true' do
-        expect(subject.user_groups_configured?).to be_truthy
+        expect(subject.user_groups_configured?).to be true
       end
     end
 
     context 'if no user_group settings have been configured' do
       it 'returns false' do
-        expect(subject.user_groups_configured?).to be_falsey
+        expect(subject.user_groups_configured?).to be false
       end
     end
   end
