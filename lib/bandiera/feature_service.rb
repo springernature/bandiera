@@ -12,6 +12,12 @@ module Bandiera
       end
     end
 
+    class UserNotFound < StandardError
+      def message
+        'Feature is only active for a percentage of users. You need to pass a user id.'
+      end
+    end
+
     def initialize(db = Db.connection)
       @db = db
     end
@@ -20,11 +26,14 @@ module Bandiera
       Group.find_or_create(name: group)
     end
 
-    def get_user_feature(user_id, feature_id)
-      UserFeature.find_or_create(user_id: user_id, feature_id: feature_id)
-    end
-
     # TODO: add a add_groups method
+    #
+    def get_feature(group, name)
+      group_id = find_group_id(group)
+      feature = Feature.first(group_id: group_id, name: name)
+      fail FeatureNotFound, "Cannot find feature '#{name}'" unless feature
+      feature
+    end
 
     def add_feature(data)
       data[:group] = Group.find_or_create(name: data[:group])
@@ -32,72 +41,28 @@ module Bandiera
       Feature.update_or_create(lookup, data)
     end
 
-    def add_features(features)
-      returned_features = []
-
-      db.transaction do
-        matched_names = features.map { |f| "#{f[:group]} | #{f[:name]}" }
-
-        db[:groups].insert_ignore.multi_insert(features.map { |f| { name: f[:group] } })
-
-        group_name_to_id = {}
-        db[:groups].each do |g|
-          group_name_to_id[g[:name]] = g[:id]
-        end
-
-        features.map! do |f|
-          f[:group_id] = group_name_to_id[f.delete(:group)]
-          if f[:user_groups]
-            f[:user_groups] = JSON.generate(f[:user_groups])
-          else
-            f[:user_groups] = '{"list":[],"regex":""}'
-          end
-          f
-        end
-
-        db[:features].on_duplicate_key_update.multi_insert(features)
-
-        sql = <<-SQL
-          SELECT
-            groups.name          AS group_name,
-            features.name        AS name,
-            features.description AS description,
-            features.active      AS active,
-            features.user_groups AS user_groups
-          FROM features
-          JOIN groups ON (groups.id = features.group_id)
-        SQL
-
-        db[sql].each do |f|
-          if matched_names.include?("#{f[:group_name]} | #{f[:name]}")
-            returned_features << build_feature_from_group_and_row(f[:group_name], f)
-          end
-        end
-      end
-
-      returned_features
-    end
-
     def remove_feature(group, name)
       group_id      = find_group_id(group)
-      affected_rows = db[:features].where(group_id: group_id, name: name).delete
+      affected_rows = Feature.where(group_id: group_id, name: name).delete
       fail FeatureNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
     end
 
     def update_feature(group, name, params)
       group_id  = find_group_id(group)
       feature   = Feature.first(group_id: group_id, name: name)
-      if feature
-        fields  = {
-          description:  params[:description],
-          active:       params[:active],
-          user_groups:  params[:user_groups],
-          percentage:   params[:percentage]
-        }.delete_if { |k, v| v.nil? }
-        feature.update(fields)
-      else
-        fail FeatureNotFound, "Cannot find feature '#{name}'"
-      end
+      fail FeatureNotFound, "Cannot find feature '#{name}'" unless feature
+
+      fields  = {
+        description:  params[:description],
+        active:       params[:active],
+        user_groups:  params[:user_groups],
+        percentage:   params[:percentage]
+      }.delete_if { |k, v| v.nil? }
+      feature.update(fields)
+    end
+
+    def get_user_feature(user_id, feature_id)
+      UserFeature.find_or_create(user_id: user_id, feature_id: feature_id)
     end
 
     def get_groups
@@ -108,26 +73,19 @@ module Bandiera
       find_group(group_name).features
     end
 
-    def get_feature(group, name)
-      group_id = find_group_id(group)
-      feature = Feature.first(group_id: group_id, name: name)
-      fail FeatureNotFound, "Cannot find feature '#{name}'" unless feature
-      feature
+    def add_features(features)
+      features.map { |feature| add_feature(feature) }
+    end
+
+    def user_within_percentage?(user_id, feature)
+      return false unless feature.active?
+      fail UserNotFound unless user_id
+
+      user_feature  = get_user_feature(user_id, feature.id)
+      feature.enabled_for_user?(user_feature)
     end
 
     private
-
-    def build_feature_from_group_and_row(group, row)
-      user_groups = JSON.parse(row[:user_groups]).symbolize_keys
-      Feature.new(
-        name:         row[:name],
-        group:        add_group(group),
-        description:  row[:description],
-        active:       row[:active],
-        user_groups:  user_groups,
-        percentage:   row[:percentage]
-      )
-    end
 
     def find_group(name)
       group = Group.find(name: name)
