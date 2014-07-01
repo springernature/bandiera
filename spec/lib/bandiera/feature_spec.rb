@@ -6,6 +6,7 @@ describe Bandiera::Feature do
   let(:description) { 'feature description' }
   let(:active)      { true }
   let(:user_groups) { nil }
+  let(:percentage)  { nil }
 
   subject do
     Bandiera::Feature.create do |feat|
@@ -14,6 +15,7 @@ describe Bandiera::Feature do
       feat.description = description
       feat.active      = active
       feat.user_groups = user_groups if user_groups
+      feat.percentage  = percentage if percentage
     end
   end
 
@@ -62,10 +64,10 @@ describe Bandiera::Feature do
             it 'if the user_group is not in the list' do
               expect(subject.enabled?(user_group: user_group)).to be_falsey
             end
+          end
 
-            it 'if no user_group is passed through' do
-              expect(subject.enabled?).to be_falsey
-            end
+          it 'raises an ArgumentError if user_group is not passed' do
+            expect { subject.enabled? }.to raise_error(ArgumentError)
           end
         end
       end
@@ -177,6 +179,74 @@ describe Bandiera::Feature do
     end
   end
 
+  describe 'a feature for a percentage of users' do
+    after :each do
+      Bandiera::FeatureUser.dataset.delete
+    end
+
+    context 'when @active is true' do
+      context 'with 5%' do
+        let(:percentage) { 5 }
+
+        describe '#enabled?' do
+          it 'returns true for ~5% of users' do
+            expect(calculate_active_count(subject, percentage)).to be < 15
+          end
+        end
+      end
+
+      context 'with 95%' do
+        let(:percentage) { 95 }
+
+        describe '#enabled?' do
+          it 'returns true for ~95% of users' do
+            expect(calculate_active_count(subject, percentage)).to be > 85
+            expect(calculate_active_count(subject, percentage)).to be < 100
+          end
+        end
+      end
+
+      context 'when no user_id is passed' do
+        let(:percentage) { 95 }
+
+        describe '#enabled?' do
+          it 'raises a ArgumentError' do
+            expect { subject.enabled? }.to raise_error(ArgumentError)
+          end
+        end
+      end
+    end
+
+    context 'when @active is false' do
+      let(:percentage) { 95 }
+      let(:active) { false }
+
+      describe '#enabled?' do
+        it 'returns false' do
+          expect(calculate_active_count(subject, percentage)).to be == 0
+        end
+      end
+    end
+  end
+
+  describe 'a feature configured for both user groups and a percentage of users' do
+    context 'if the user matches on the user_group configuration' do
+      it 'returns true'
+    end
+
+    context 'if the user does not match the user_groups, but does fall into the percentage' do
+      it 'returns true'
+    end
+
+    context 'if the user matches neither the user_groups or falls into the percentage' do
+      it 'returns false'
+    end
+
+    context 'if the feature is not active' do
+      it 'returns false'
+    end
+  end
+
   describe '#user_groups_configured?' do
     let(:user_groups) { Hash.new }
 
@@ -201,5 +271,13 @@ describe Bandiera::Feature do
         expect(subject.user_groups_configured?).to be false
       end
     end
+  end
+
+  private
+
+  def calculate_active_count(feature, percentage)
+    (0...100)
+      .map   { |id| feature.enabled?(user_id: id) }
+      .count { |val| val == true }
   end
 end

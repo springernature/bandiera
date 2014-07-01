@@ -61,10 +61,6 @@ module Bandiera
       feature.update(fields)
     end
 
-    def get_user_feature(user_id, feature_id)
-      UserFeature.find_or_create(user_id: user_id, feature_id: feature_id)
-    end
-
     def get_groups
       Group.order(Sequel.asc(:name))
     end
@@ -75,14 +71,6 @@ module Bandiera
 
     def add_features(features)
       features.map { |feature| add_feature(feature) }
-    end
-
-    def user_within_percentage?(user_id, feature)
-      return false unless feature.active?
-      fail UserNotFound unless user_id
-
-      user_feature  = get_user_feature(user_id, feature.id)
-      feature.enabled_for_user?(user_feature)
     end
 
     private
