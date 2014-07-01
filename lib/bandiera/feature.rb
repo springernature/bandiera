@@ -1,6 +1,7 @@
 module Bandiera
   class Feature < Sequel::Model
     many_to_one :group
+    one_to_many :feature_users
 
     plugin :serialization
 
