@@ -13,3 +13,6 @@ AlignParameters:
 
 IndentHash:
   EnforcedStyle: consistent
+
+StringLiterals:
+  EnforcedStyle: single_quotes

@@ -1,6 +1,10 @@
 module Bandiera
   class Feature < Sequel::Model
+    class UserGroupArgumentError < ArgumentError; end
+    class UserPercentageArgumentError < ArgumentError; end
+
     many_to_one :group
+    one_to_many :feature_users
 
     plugin :serialization
 
@@ -12,16 +16,25 @@ module Bandiera
       new(name: name, group: Group.find_or_create(name: group), description: '')
     end
 
-    def enabled?(opts = { user_group: nil })
+    def enabled?(opts = { user_group: nil, user_id: nil })
       return false unless active?
-      return true  unless user_groups_configured?
+      return true  unless user_groups_configured? || percentage_configured?
 
-      user_group = opts[:user_group]
-      user_group_within_list?(user_group) || user_group_match_regex?(user_group)
-    end
+      return_val = false
 
-    def enabled_for_user?(user_feature)
-      Zlib.crc32(user_feature.user_seed) % 100 < percentage
+      if user_groups_configured?
+        fail UserGroupArgumentError, 'This feature is configured for user groups - you must pass a user_group' unless opts[:user_group]
+        user_group = opts[:user_group]
+        return_val = (user_group_within_list?(user_group) || user_group_match_regex?(user_group))
+      end
+
+      if !return_val && percentage_configured?
+        fail UserPercentageArgumentError, 'This feature is configured for a % of users - you must pass a user_id' unless opts[:user_id]
+        user       = feature_service.get_feature_user(self, opts[:user_id])
+        return_val = percentage_enabled_for_user?(user)
+      end
+
+      return_val
     end
 
     def user_groups_list
@@ -36,15 +49,8 @@ module Bandiera
       !(user_groups_list.empty? && user_groups_regex.empty?)
     end
 
-    def user_group_within_list?(user_group)
-      !user_groups_list.empty? && cleaned_user_groups_list.include?(user_group)
-    end
-
-    def user_group_match_regex?(user_group)
-      regexp = Regexp.new(user_groups_regex)
-      !user_groups_regex.empty? && !!regexp.match(user_group)
-    rescue RegexpError
-      false
+    def percentage_configured?
+      !percentage.nil?
     end
 
     def as_v1_json
@@ -56,20 +62,29 @@ module Bandiera
       }
     end
 
-    def as_v2_json
-      {
-        group:        group.name,
-        name:         name,
-        description:  description,
-        active:       enabled?,
-        user_groups:  user_groups
-      }
+    private
+
+    def feature_service
+      @feature_service ||= FeatureService.new
     end
 
-    private
+    def percentage_enabled_for_user?(user)
+      Zlib.crc32(user.user_seed) % 100 < percentage
+    end
 
     def cleaned_user_groups_list
       user_groups_list.reject { |elm| elm.nil? || elm.empty? }
+    end
+
+    def user_group_within_list?(user_group)
+      !user_groups_list.empty? && cleaned_user_groups_list.include?(user_group)
+    end
+
+    def user_group_match_regex?(user_group)
+      regexp = Regexp.new(user_groups_regex)
+      !user_groups_regex.empty? && !!regexp.match(user_group)
+    rescue RegexpError
+      false
     end
   end
 end

@@ -12,22 +12,32 @@ module Bandiera
       end
     end
 
-    class UserNotFound < StandardError
-      def message
-        'Feature is only active for a percentage of users. You need to pass a user id.'
-      end
-    end
-
     def initialize(db = Db.connection)
       @db = db
+    end
+
+    # Groups
+
+    def find_group(name)
+      group = Group.find(name: name)
+      fail GroupNotFound, "Cannot find group '#{name}'" unless group
+      group
     end
 
     def add_group(group)
       Group.find_or_create(name: group)
     end
 
-    # TODO: add a add_groups method
-    #
+    def get_groups
+      Group.order(Sequel.asc(:name))
+    end
+
+    def get_group_features(group_name)
+      find_group(group_name).features
+    end
+
+    # Features
+
     def get_feature(group, name)
       group_id = find_group_id(group)
       feature = Feature.first(group_id: group_id, name: name)
@@ -39,6 +49,10 @@ module Bandiera
       data[:group] = Group.find_or_create(name: data[:group])
       lookup       = { name: data[:name], group: data[:group] }
       Feature.update_or_create(lookup, data)
+    end
+
+    def add_features(features)
+      features.map { |feature| add_feature(feature) }
     end
 
     def remove_feature(group, name)
@@ -61,37 +75,13 @@ module Bandiera
       feature.update(fields)
     end
 
-    def get_user_feature(user_id, feature_id)
-      UserFeature.find_or_create(user_id: user_id, feature_id: feature_id)
-    end
+    # FeatureUsers
 
-    def get_groups
-      Group.order(Sequel.asc(:name))
-    end
-
-    def get_group_features(group_name)
-      find_group(group_name).features
-    end
-
-    def add_features(features)
-      features.map { |feature| add_feature(feature) }
-    end
-
-    def user_within_percentage?(user_id, feature)
-      return false unless feature.active?
-      fail UserNotFound unless user_id
-
-      user_feature  = get_user_feature(user_id, feature.id)
-      feature.enabled_for_user?(user_feature)
+    def get_feature_user(feature, user_id)
+      FeatureUser.find_or_create(feature_id: feature.id, user_id: user_id)
     end
 
     private
-
-    def find_group(name)
-      group = Group.find(name: name)
-      fail GroupNotFound, "Cannot find group '#{name}'" unless group
-      group
-    end
 
     def find_group_id(name)
       group_id = Group.where(name: name).get(:id)

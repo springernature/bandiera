@@ -81,15 +81,7 @@ module Bandiera
     end
 
     def valid_params?(feature)
-      param_present?(feature[:name]) && !feature[:name].include?(' ') && param_present?(feature[:group]) && valid_user_filters?(feature)
-    end
-
-    def valid_user_filters?(feature)
-      !(param_present?(feature[:percentage]) && has_user_groups_params?(feature))
-    end
-
-    def has_user_groups_params?(feature)
-      param_present?(feature[:user_groups][:list]) || param_present?(feature[:user_groups][:regex])
+      param_present?(feature[:name]) && !feature[:name].include?(' ') && param_present?(feature[:group])
     end
 
     def param_present?(param)
