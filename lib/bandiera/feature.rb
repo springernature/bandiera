@@ -50,7 +50,7 @@ module Bandiera
     end
 
     def percentage_configured?
-      !self.percentage.nil?
+      !percentage.nil?
     end
 
     def as_v1_json
@@ -86,7 +86,5 @@ module Bandiera
     rescue RegexpError
       false
     end
-
-
   end
 end

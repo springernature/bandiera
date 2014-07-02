@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:nature/macmillan-utils.git
-  revision: 31c9c0fe99d48f9997a5ceb5ba436bb4e4e123f0
+  revision: 2acfe1ae32b4f1ba45e5f4f71c9f87b0267b7702
   specs:
     macmillan-utils (0.0.1)
       codeclimate-test-reporter
@@ -83,14 +83,14 @@ GEM
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
       rspec-mocks (~> 3.0.0)
-    rspec-core (3.0.1)
+    rspec-core (3.0.2)
       rspec-support (~> 3.0.0)
-    rspec-expectations (3.0.1)
+    rspec-expectations (3.0.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.0.0)
-    rspec-mocks (3.0.1)
+    rspec-mocks (3.0.2)
       rspec-support (~> 3.0.0)
-    rspec-support (3.0.0)
+    rspec-support (3.0.2)
     rubocop (0.20.1)
       json (>= 1.7.7, < 2)
       parser (~> 2.1.7)

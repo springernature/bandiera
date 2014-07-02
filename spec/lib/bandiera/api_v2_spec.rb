@@ -129,7 +129,7 @@ describe Bandiera::APIv2 do
         assert_last_response_matches(expected_data)
       end
 
-      it 'returns a warning if the correct params are not passed when the feature is a user_group or percentage feature' do
+      it 'returns a warning if correct params are not passed when the feature is a user_group/percentage feature' do
         get '/groups/pubserv/features/show_subjects'
         expect(last_response_data['warning']).to_not be_nil
 

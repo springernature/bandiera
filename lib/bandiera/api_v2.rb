@@ -87,7 +87,7 @@ module Bandiera
       end
     end
 
-    def format_multiple_warning_messages(error_map, show_group=false)
+    def format_multiple_warning_messages(error_map, show_group = false)
       msg           = "The following warnings were raised on this request:\n"
       error_handles = {
         user_group:       "these features have user groups configured and require a `user_group` param",
