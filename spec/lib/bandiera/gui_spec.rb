@@ -178,28 +178,6 @@ describe Bandiera::GUI do
     end
   end
 
-  describe 'editing a feature flag' do
-    before do
-      visit('/')
-
-      row           = first('tr.bandiera-feature')
-      @feature_name = row.all('td')[2].text
-
-      row.find('.bandiera-edit-feature').click
-    end
-
-    context 'failures' do
-      it 'do not allow adding both percentage and groups of users' do
-        within('form') do
-          select '50%', from: 'feature_percentage'
-          fill_in 'feature_user_groups_list', with: 'admin'
-          click_button 'Update'
-        end
-        check_error_flash('You must use either percentage or groups of users')
-      end
-    end
-  end
-
   describe 'removing a feature flag' do
     it 'deletes a flag' do
       visit('/')

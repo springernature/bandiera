@@ -106,7 +106,6 @@ module Bandiera
         errors << 'enter a feature name' unless param_present?(feature[:name])
         errors << 'enter a feature name without spaces' if feature[:name].include?(' ')
         errors << 'select a group' unless param_present?(feature[:group])
-        errors << 'use either percentage or groups of users' unless valid_user_filters?(feature)
         flash[:danger] = "You must #{errors.join(" and ")}."
         redirect on_error_url
       end
