@@ -30,15 +30,11 @@ module Bandiera
 
       if !return_val && percentage_configured?
         fail UserPercentageArgumentError, 'This feature is configured for a % of users - you must pass a user_id' unless opts[:user_id]
-        user       = FeatureUser.find_or_create(feature_id: self.id, user_id: opts[:user_id])
-        return_val = ((Zlib.crc32(user.user_seed) % 100) < self.percentage)
+        user       = feature_service.get_feature_user(self, opts[:user_id])
+        return_val = percentage_enabled_for_user?(user)
       end
 
       return_val
-    end
-
-    def enabled_for_user?(user_feature)
-      Zlib.crc32(user_feature.user_seed) % 100 < percentage
     end
 
     def user_groups_list
@@ -66,17 +62,15 @@ module Bandiera
       }
     end
 
-    def as_v2_json
-      {
-        group:        group.name,
-        name:         name,
-        description:  description,
-        active:       enabled?,
-        user_groups:  user_groups
-      }
+    private
+
+    def feature_service
+      @feature_service ||= FeatureService.new
     end
 
-    private
+    def percentage_enabled_for_user?(user)
+      Zlib.crc32(user.user_seed) % 100 < percentage
+    end
 
     def cleaned_user_groups_list
       user_groups_list.reject { |elm| elm.nil? || elm.empty? }
