@@ -1,3 +1,19 @@
+= 2.1.0 / 2014-07-03
+
+ * [Feature] added capability to enable features for a percentage of users, this can
+   also be mixed in with 'user groups' so that selected approved users ALWAYS see the
+   feature, but for the rest of the user base, it is based on a percentage
+ * Model layer switched to use Sequel::Model
+
+= 2.0.0 / 2014-05-09
+
+ * [Feature] added capability to selectivley enable features for specific users/groups
+ * [Feature] new v2 API (read-only) with support for new user groups features
+ * [Feature] enable database configuration via a `DATABASE_URL` environment variable
+ * [Operations] allow error/exception reporting via Airbrake
+ * [Bugfix] more stable database connections
+ * [Deprecation] v1 API is now deprecated
+
 = 1.0.0 / 2014-04-25
 
  * Initial tagging of 1.0.0 codebase
