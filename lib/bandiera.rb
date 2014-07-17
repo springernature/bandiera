@@ -1,5 +1,6 @@
 require 'json'
 require 'sequel'
+require 'macmillan/utils/logger'
 require_relative 'hash'
 
 module Bandiera
@@ -14,8 +15,15 @@ module Bandiera
   autoload :APIv2,          'bandiera/api_v2'
   autoload :GUI,            'bandiera/gui'
 
-  def self.init(environment)
-    Bundler.setup(:default, environment)
-    Db.connection
+  class << self
+    def init(environment)
+      Bundler.setup(:default, environment)
+      Db.connect
+    end
+
+    def logger
+      @logger ||= Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
+    end
+    attr_writer :logger
   end
 end
