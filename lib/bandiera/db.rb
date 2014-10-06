@@ -7,7 +7,7 @@ Sequel::Model.plugin :update_or_create
 module Bandiera
   class Db
     def self.connect
-      @db ||= Sequel.connect(connection_string, loggers: [Bandiera.logger])
+      @db ||= Sequel.connect(connection_string)
     end
 
     def self.disconnect
