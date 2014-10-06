@@ -1,3 +1,8 @@
+= upcoming
+
+ * [Feature] Now *should* support all RDBMs supported by Sequel (note: we ONLY test on MySQL at present)
+ * Test suite now runs using an in-memory SQLite database
+
 = 2.1.0 / 2014-07-03
 
  * [Feature] added capability to enable features for a percentage of users, this can
