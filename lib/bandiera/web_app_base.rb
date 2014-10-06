@@ -34,10 +34,6 @@ module Bandiera
       def feature_service
         @feature_service ||= FeatureService.new
       end
-
-      def logger
-        request.logger
-      end
     end
 
     private

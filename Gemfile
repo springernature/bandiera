@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'rubysl', platform: :rbx
-
 gem 'rake'
 
 gem 'sequel'
@@ -24,6 +22,8 @@ group :development do
 end
 
 group :test do
+  gem 'sqlite3', platform: :ruby
+  gem 'jdbc-sqlite3', platform: :jruby
   gem 'rspec'
   gem 'rack-test'
   gem 'capybara'

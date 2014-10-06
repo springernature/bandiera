@@ -12,7 +12,7 @@ module Bandiera
       end
     end
 
-    def initialize(db = Db.connection)
+    def initialize(db = Db.connect)
       @db = db
     end
 

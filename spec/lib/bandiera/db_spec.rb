@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Bandiera::Db do
-  subject { Bandiera::Db.connection }
+  subject { Bandiera::Db.connect }
 
   describe 'the features table' do
     it 'should be present' do

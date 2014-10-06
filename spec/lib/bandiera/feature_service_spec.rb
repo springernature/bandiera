@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Bandiera::FeatureService do
-  let(:db) { Bandiera::Db.connection }
+  let(:db) { Bandiera::Db.connect }
   subject { Bandiera::FeatureService.new }
 
   describe '#add_group' do

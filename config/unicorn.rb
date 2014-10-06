@@ -11,23 +11,14 @@ listen            unix_socket
 timeout           15
 preload_app       true
 worker_processes  no_of_processes
-
-if ENV['USE_SYSLOG']
-  require 'macmillan/utils/logger/factory'
-  require 'macmillan/utils/logger/formatter'
-
-  syslog_logger           = Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
-  syslog_logger.formatter = Macmillan::Utils::Logger::Formatter.new
-  syslog_logger.level     = Logger::INFO
-  logger(syslog_logger)
-end
+logger            Bandiera.logger
 
 before_fork do |server, worker|
-  Bandiera::Db.disconnect!
+  Bandiera::Db.disconnect
 end
 
 after_fork do |server, worker|
-  Bandiera::Db.connection
+  Bandiera::Db.connect
 end
 
 if ENV['WORKING_DIR']

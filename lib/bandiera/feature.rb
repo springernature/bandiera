@@ -10,10 +10,15 @@ module Bandiera
 
     serialize_attributes :json, :user_groups
 
-    alias_method :active?, :active
-
     def self.stub_feature(name, group)
       new(name: name, group: Group.find_or_create(name: group), description: '')
+    end
+
+    def active?
+      # work around for JRuby's SQLite connector returning numerical values instead of boolean
+      return false if active == 0
+      return true if active == 1
+      active
     end
 
     def enabled?(opts = { user_group: nil, user_id: nil })

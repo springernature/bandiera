@@ -6,17 +6,25 @@ require 'macmillan/utils/rspec/webmock_helper'
 require 'macmillan/utils/test_helpers/codeclimate_helper'
 require 'macmillan/utils/test_helpers/simplecov_helper'
 
+require 'pry'
+
 require_relative '../lib/bandiera'
 load File.expand_path('../../Rakefile', __FILE__)
 
-db = Bandiera::Db.connection
+# Suppress logging
+Bandiera.logger = Macmillan::Utils::Logger::Factory.build_logger(:null)
+
+# use an in-memory sqlite database for testing
+ENV['DATABASE_URL'] = 'sqlite:/'
+ENV['DATABASE_URL'] = 'jdbc:sqlite:' if RUBY_PLATFORM == 'java'
+
+DB = Bandiera::Db.connect
+Bandiera::Db.migrate
 
 RSpec.configure do |config|
-  config.before(:suite) do
-    Rake::Task['db:reset'].invoke(ENV['RACK_ENV'])
-  end
-
   config.after(:each) do
-    db[:groups].delete
+    DB[:feature_users].delete
+    DB[:features].delete
+    DB[:groups].delete
   end
 end

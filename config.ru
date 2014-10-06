@@ -4,12 +4,7 @@ require 'bundler'
 require 'bandiera'
 
 Bandiera.init(ENV['RACK_ENV'] || 'development')
-
-require 'macmillan/utils/logger/factory'
-require 'macmillan/utils/logger/formatter'
-
-logger = Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
-logger.formatter = Macmillan::Utils::Logger::Formatter.new
+logger = Bandiera.logger
 
 class BandieraLoggerMiddleware
   def initialize(app, logger)
