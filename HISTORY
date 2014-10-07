@@ -1,6 +1,6 @@
-= upcoming
+= 2.2.0 / 2014-10-07
 
- * [Feature] Now *should* support all RDBMs supported by Sequel (note: we ONLY test on MySQL at present)
+ * [Feature] Bandiera *should* now support all RDBMs supported by Sequel (note: we ONLY test on MySQL at present)
  * Test suite now runs using an in-memory SQLite database
 
 = 2.1.0 / 2014-07-03
