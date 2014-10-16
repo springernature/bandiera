@@ -78,11 +78,11 @@ module Bandiera
     end
 
     def cleaned_user_groups_list
-      user_groups_list.reject { |elm| elm.nil? || elm.empty? }
+      user_groups_list.reject { |elm| elm.nil? || elm.empty? }.map(&:downcase)
     end
 
     def user_group_within_list?(user_group)
-      !user_groups_list.empty? && cleaned_user_groups_list.include?(user_group)
+      !user_groups_list.empty? && cleaned_user_groups_list.include?(user_group.downcase)
     end
 
     def user_group_match_regex?(user_group)

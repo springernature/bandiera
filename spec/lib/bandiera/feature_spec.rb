@@ -54,6 +54,10 @@ describe Bandiera::Feature do
             it 'if the user_group is in the list' do
               expect(subject.enabled?(user_group: user_group)).to eq true
             end
+
+            it 'if the user_group is in the list regardless of case' do
+              expect(subject.enabled?(user_group: user_group.upcase)).to eq true
+            end
           end
 
           context 'returns false' do

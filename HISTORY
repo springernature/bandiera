@@ -1,3 +1,7 @@
+= 2.2.1 / 2014-10-16
+
+ * Make "User Group" matches case in-sensitive
+
 = 2.2.0 / 2014-10-07
 
  * [Feature] Bandiera *should* now support all RDBMs supported by Sequel (note: we ONLY test on MySQL at present)
