@@ -12,7 +12,7 @@ gem 'rack-flash3'
 gem 'macmillan-utils', git: 'git@github.com:nature/macmillan-utils.git', require: false
 
 gem 'unicorn', require: false, platform: :ruby
-gem 'trinidad', require: false, platform: :jruby
+gem 'puma', require: false
 
 gem 'airbrake', require: false
 

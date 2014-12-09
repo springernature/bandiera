@@ -1,4 +1,6 @@
-$LOAD_PATH.unshift File.join(__FILE__, '../../lib')
+APP_ROOT = File.expand_path(File.dirname(File.dirname(__FILE__)))
+
+$LOAD_PATH.unshift File.join(APP_ROOT, 'lib')
 
 require 'bandiera'
 
@@ -9,9 +11,11 @@ unix_socket     = ENV['SOCKET'] || '/tmp/bandiera.sock'
 listen            port, tcp_nopush: true
 listen            unix_socket
 timeout           15
-preload_app       true
 worker_processes  no_of_processes
 logger            Bandiera.logger
+working_directory ENV['WORKING_DIR'] if ENV['WORKING_DIR']
+pid               ENV['PID_FILE'] if ENV['PID_FILE']
+preload_app       true
 
 before_fork do |server, worker|
   Bandiera::Db.disconnect
@@ -19,12 +23,4 @@ end
 
 after_fork do |server, worker|
   Bandiera::Db.connect
-end
-
-if ENV['WORKING_DIR']
-  working_directory ENV['WORKING_DIR']
-end
-
-if ENV['PID_FILE']
-  pid ENV['PID_FILE']
 end
