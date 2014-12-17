@@ -1,4 +1,5 @@
 require 'json'
+require 'dotenv'
 require 'sequel'
 require 'macmillan/utils/logger'
 require_relative 'hash'
@@ -18,6 +19,7 @@ module Bandiera
   class << self
     def init(environment)
       Bundler.setup(:default, environment)
+      Dotenv.load
       Db.connect
     end
 
@@ -25,5 +27,35 @@ module Bandiera
       @logger ||= Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
     end
     attr_writer :logger
+
+    def statsd
+      @statsd ||= begin
+                    if ENV['STATSD_HOST'] && ENV['STATSD_PORT']
+                      build_statsd_client
+                    else
+                      require 'macmillan/utils/statsd_stub'
+                      Macmillan::Utils::StatsdStub.new
+                    end
+                  end
+    end
+    attr_writer :statsd
+
+    private
+
+    def build_statsd_client
+      require 'statsd-ruby'
+      require 'macmillan/utils/statsd_decorator'
+
+      statsd = Statsd.new(ENV['STATSD_HOST'], ENV['STATSD_PORT'])
+      statsd.namespace = statsd_namespace
+      Macmillan::Utils::StatsdDecorator.new(statsd, ENV['RACK_ENV'], logger)
+    end
+
+    def statsd_namespace
+      hostname = `hostname`.chomp.downcase
+      tier     = hostname =~ /test/ ? 'test' : 'live'
+
+      "bandiera.#{tier}.#{hostname}.#{RUBY_ENGINE}"
+    end
   end
 end

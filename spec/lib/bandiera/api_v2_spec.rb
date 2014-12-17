@@ -5,7 +5,10 @@ describe Bandiera::APIv2 do
   include Rack::Test::Methods
 
   def app
-    Bandiera::APIv2
+    Rack::Builder.new do
+      use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
+      run Bandiera::APIv2
+    end
   end
 
   before do

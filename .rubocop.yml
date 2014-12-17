@@ -1,20 +1,27 @@
-LineLength:
+Metrics/LineLength:
   Description: 'Limit lines to 120 characters.'
   Max: 120
 
-BracesAroundHashParameters:
+Style/Documentation:
   Enabled: false
 
-DotPosition:
-  EnforcedStyle: leading
+Style/SingleSpaceBeforeFirstArg:
+  Enabled: false
 
-AlignParameters:
-  EnforcedStyle: with_fixed_indentation
+Style/BracesAroundHashParameters:
+  Enabled: false
 
-IndentHash:
+Style/IndentHash:
   EnforcedStyle: consistent
 
-StringLiterals:
+Style/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Style/StringLiterals:
   EnforcedStyle: single_quotes
 
 Style/CollectionMethods:
@@ -24,3 +31,6 @@ Style/CollectionMethods:
     inject: 'reduce'
     detect: 'find'
     find_all: 'select'
+
+Style/DotPosition:
+  EnforcedStyle: leading
