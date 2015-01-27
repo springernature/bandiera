@@ -6,6 +6,7 @@ if ENV['AIRBRAKE_API_KEY']
 
   Airbrake.configure do |config|
     config.api_key = ENV['AIRBRAKE_API_KEY']
+    config.ignore << 'Sinatra::NotFound'
 
     if ENV['MACMILLAN_ENV']
       config.development_environments = []
