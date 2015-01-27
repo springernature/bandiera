@@ -1,3 +1,9 @@
+= 2.2.2 / 2015-01-27
+
+* [Feature] GUI update - sort the feature flags by name rather than ID
+* [Operations] Switch to using Airbrake::Sinatra for better error reporting
+* [Bugfix] Remove the use of Sequels .find_or_create method as we were seeing 'Sequel::UniqueConstraintViolation' errors
+
 = 2.2.1 / 2014-10-16
 
  * Make "User Group" matches case in-sensitive
