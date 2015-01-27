@@ -9,6 +9,14 @@ module Bandiera
 
     use Rack::Flash
 
+    error Bandiera::FeatureService::GroupNotFound do
+      not_found
+    end
+
+    error Bandiera::FeatureService::FeatureNotFound do
+      not_found
+    end
+
     get '/' do
       @groups_and_features = feature_service.get_groups.map do |group|
         { name: group.name, features: feature_service.get_group_features(group.name) }

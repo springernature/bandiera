@@ -194,6 +194,22 @@ describe Bandiera::GUI do
     end
   end
 
+  describe 'editing a feature flag' do
+    context 'when the group does not exist' do
+      it 'returns a 404' do
+        visit('/groups/wibble/features/stats_logging/edit')
+        expect(page.status_code).to eq(404)
+      end
+    end
+
+    context 'when the flag does not exist' do
+      it 'returns a 404' do
+        visit('/groups/shunter/features/wibble/edit')
+        expect(page.status_code).to eq(404)
+      end
+    end
+  end
+
   private
 
   def check_success_flash(expected_text)
