@@ -56,10 +56,10 @@ module Bandiera
     end
 
     def statsd_namespace
-      hostname = `hostname`.chomp.downcase
+      hostname = `hostname`.chomp.downcase.sub('.nature.com', '')
       tier     = hostname =~ /test/ ? 'test' : 'live'
 
-      "bandiera.#{tier}.#{hostname}.#{RUBY_ENGINE}"
+      ['bandiera', tier, hostname, RUBY_ENGINE].join('.')
     end
   end
 end
