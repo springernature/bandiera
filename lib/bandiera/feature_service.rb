@@ -78,7 +78,8 @@ module Bandiera
     # FeatureUsers
 
     def get_feature_user(feature, user_id)
-      FeatureUser.find_or_create(feature_id: feature.id, user_id: user_id)
+      conditions = { feature_id: feature.id, user_id: user_id }
+      FeatureUser.first(conditions) || FeatureUser.create(conditions)
     end
 
     private
