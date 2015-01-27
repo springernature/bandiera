@@ -1,24 +1,12 @@
 $LOAD_PATH.unshift File.join(__FILE__, '../lib')
 
-require 'bundler'
 require 'bandiera'
-
 Bandiera.init(ENV['RACK_ENV'] || 'development')
-logger = Bandiera.logger
 
-class BandieraLoggerMiddleware
-  def initialize(app, logger)
-    @app, @logger = app, logger
-  end
+require 'macmillan/utils/statsd_middleware'
 
-  def call(env)
-    env['rack.logger'] = @logger
-    @app.call(env)
-  end
-end
-
-use Rack::CommonLogger, logger
-use BandieraLoggerMiddleware, logger
+use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
+use Rack::CommonLogger, Bandiera.logger
 
 run Rack::URLMap.new(
   '/'       => Bandiera::GUI,

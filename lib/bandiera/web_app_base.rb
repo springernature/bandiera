@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'macmillan/utils/statsd_controller_helper'
 
 if ENV['AIRBRAKE_API_KEY']
   require 'socket'
@@ -24,6 +25,8 @@ module Bandiera
   class WebAppBase < Sinatra::Base
     class InvalidParams < StandardError; end
 
+    include Macmillan::Utils::StatsdControllerHelper
+
     use Airbrake::Sinatra if ENV['AIRBRAKE_API_KEY']
 
     configure do
@@ -35,6 +38,13 @@ module Bandiera
       def feature_service
         @feature_service ||= FeatureService.new
       end
+    end
+
+    before do
+      path   = request.path.sub(/^\//, '').gsub('/', '.')
+      path   = 'homepage' if path.empty?
+      method = request.request_method.downcase
+      add_statsd_timer_and_increment "#{path}.#{method}"
     end
 
     private

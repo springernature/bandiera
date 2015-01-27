@@ -9,7 +9,10 @@ describe Bandiera::GUI do
   let(:service) { Bandiera::FeatureService.new }
 
   before(:all) do
-    Capybara.app               = Bandiera::GUI.new
+    Capybara.app = Rack::Builder.new do
+      use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
+      run Bandiera::GUI.new
+    end
     Capybara.default_driver    = :rack_test
     Capybara.javascript_driver = :poltergeist
   end

@@ -1,6 +1,8 @@
 module Bandiera
   class APIv2 < WebAppBase
     get '/all' do
+      add_statsd_timer 'api.v2.all.get'
+
       group_map = {}
       warnings  = { user_group: [], user_percentage: [] }
 
@@ -17,6 +19,8 @@ module Bandiera
     end
 
     get '/groups/:group_name/features' do |group_name|
+      add_statsd_timer 'api.v2.group_features.get'
+
       response = { response: {} }
 
       begin
@@ -32,6 +36,8 @@ module Bandiera
     end
 
     get '/groups/:group_name/features/:feature_name' do |group_name, feature_name|
+      add_statsd_timer 'api.v2.individual_feature.get'
+
       begin
         feature  = feature_service.get_feature(group_name, feature_name)
         response = { response: response_for(feature) }

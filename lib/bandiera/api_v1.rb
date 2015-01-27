@@ -1,11 +1,15 @@
 module Bandiera
   class APIv1 < WebAppBase
     get '/groups' do
+      add_statsd_timer 'api.v1.groups.get'
+
       groups = feature_service.get_groups.map { |group| { name: group.name } }
       render_json(groups: groups)
     end
 
     post '/groups' do
+      add_statsd_timer 'api.v1.groups.post'
+
       group_params = params.fetch('group', {})
       group_name   = group_params.fetch('name', nil)
 
@@ -19,11 +23,15 @@ module Bandiera
     end
 
     get '/groups/:group_name/features' do |group_name|
+      add_statsd_timer 'api.v1.group_features.get'
+
       features = feature_service.get_group_features(group_name)
       render_json(features: features.map(&:as_v1_json))
     end
 
     post '/groups/:group_name/features' do |group_name|
+      add_statsd_timer 'api.v1.group_features.post'
+
       feature_params = process_v1_feature_params(params.fetch('feature', {}).merge('group' => group_name))
 
       with_valid_feature_params(feature_params) do
@@ -34,6 +42,8 @@ module Bandiera
     end
 
     get '/groups/:group_name/features/:feature_name' do |group_name, feature_name|
+      add_statsd_timer 'api.v1.individual_feature.get'
+
       data, feature, warning = {}, nil, nil
 
       begin
@@ -49,6 +59,8 @@ module Bandiera
     end
 
     put '/groups/:group_name/features/:feature_name' do |group_name, feature_name|
+      add_statsd_timer 'api.v1.individual_feature.put'
+
       feature_params         = process_v1_feature_params(params.fetch('feature', {}))
       feature_params[:group] = group_name unless feature_params[:group]
 
@@ -60,6 +72,8 @@ module Bandiera
     end
 
     get '/all' do
+      add_statsd_timer 'api.v1.all.get'
+
       group_data = feature_service.get_groups.map do |group|
         {
           name: group.name,

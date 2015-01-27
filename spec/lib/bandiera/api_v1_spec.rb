@@ -5,7 +5,10 @@ describe Bandiera::APIv1 do
   include Rack::Test::Methods
 
   def app
-    Bandiera::APIv1
+    Rack::Builder.new do
+      use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
+      run Bandiera::APIv1
+    end
   end
 
   def assert_last_response_matches(expected_data)

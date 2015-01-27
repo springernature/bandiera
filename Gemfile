@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rake'
+gem 'dotenv'
 
 gem 'sequel'
 gem 'mysql2', platform: :ruby
@@ -8,13 +9,13 @@ gem 'jdbc-mysql', platform: :jruby
 
 gem 'sinatra'
 gem 'rack-flash3'
-
-gem 'macmillan-utils', git: 'git@github.com:nature/macmillan-utils.git', require: false
+gem 'macmillan-utils'
 
 gem 'unicorn', require: false, platform: :ruby
-gem 'trinidad', require: false, platform: :jruby
+gem 'puma', require: false
 
 gem 'airbrake', require: false
+gem 'statsd-ruby', require: false
 
 group :development do
   gem 'shotgun'
@@ -30,8 +31,4 @@ group :test do
   gem 'poltergeist'
   gem 'webmock'
   gem 'pry'
-  gem 'simplecov'
-  gem 'simplecov-rcov'
-  gem 'codeclimate-test-reporter'
 end
-
