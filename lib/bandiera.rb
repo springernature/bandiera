@@ -34,7 +34,7 @@ module Bandiera
 
     def statsd
       @statsd ||= begin
-                    if ENV['STATSD_HOST'] && ENV['STATSD_PORT']
+                    if ENV['STATSD_HOST'] && ENV['STATSD_PORT'] && ENV['RACK_ENV'] == 'production'
                       build_statsd_client
                     else
                       require 'macmillan/utils/statsd_stub'
@@ -48,17 +48,11 @@ module Bandiera
 
     def build_statsd_client
       require 'statsd-ruby'
-      require 'macmillan/utils/statsd_decorator'
 
       statsd = Statsd.new(ENV['STATSD_HOST'], ENV['STATSD_PORT'])
       statsd.namespace = statsd_namespace
-      decd_statsd = Macmillan::Utils::StatsdDecorator.new(statsd, ENV['RACK_ENV'], logger)
 
-      logger.error(statsd.inspect)
-      logger.error(decd_statsd.inspect)
-      logger.error(ENV.inspect)
-
-      decd_statsd
+      statsd
     end
 
     def statsd_namespace
