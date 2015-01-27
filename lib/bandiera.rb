@@ -24,7 +24,11 @@ module Bandiera
     end
 
     def logger
-      @logger ||= Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
+      @logger ||= begin
+                    logger       = Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
+                    logger.level = Logger::DEBUG
+                    logger
+                  end
     end
     attr_writer :logger
 
