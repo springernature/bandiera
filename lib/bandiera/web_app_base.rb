@@ -23,7 +23,7 @@ module Bandiera
   class WebAppBase < Sinatra::Base
     class InvalidParams < StandardError; end
 
-    use Airbrake::Rack if ENV['AIRBRAKE_API_KEY']
+    use Airbrake::Sinatra if ENV['AIRBRAKE_API_KEY']
 
     configure do
       enable :logging
