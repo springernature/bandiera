@@ -35,6 +35,7 @@ GEM
       sinatra (>= 1.2.7)
     httpclient (2.6.0.1)
     jdbc-mysql (5.1.33)
+    jdbc-postgres (9.3.1102)
     jdbc-sqlite3 (3.8.7)
     kgio (2.9.3)
     macmillan-utils (1.0.12)
@@ -60,6 +61,7 @@ GEM
     nokogiri (1.6.6.2-java)
     parser (2.2.0.2)
       ast (>= 1.1, < 3.0)
+    pg (0.18.1)
     poltergeist (1.5.1)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -154,9 +156,11 @@ DEPENDENCIES
   capybara
   dotenv
   jdbc-mysql
+  jdbc-postgres
   jdbc-sqlite3
   macmillan-utils
   mysql2
+  pg
   poltergeist
   pry
   puma

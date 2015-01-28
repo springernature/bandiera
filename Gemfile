@@ -5,7 +5,9 @@ gem 'dotenv'
 
 gem 'sequel'
 gem 'mysql2', platform: :ruby
+gem 'pg', platform: :ruby
 gem 'jdbc-mysql', platform: :jruby
+gem 'jdbc-postgres', platform: :jruby
 
 gem 'sinatra'
 gem 'rack-flash3'
