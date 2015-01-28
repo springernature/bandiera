@@ -33,4 +33,5 @@ group :test do
   gem 'poltergeist'
   gem 'webmock'
   gem 'pry'
+  gem 'guard-rspec', require: false
 end
