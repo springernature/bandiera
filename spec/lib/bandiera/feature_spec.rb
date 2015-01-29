@@ -235,7 +235,7 @@ describe Bandiera::Feature do
 
         describe '#enabled?' do
           it 'returns true' do
-            expect(subject.enabled?(user_group: 'admin', user_id: 12345)).to eq true
+            expect(subject.enabled?(user_group: 'admin', user_id: 12_345)).to eq true
           end
         end
       end
@@ -246,7 +246,7 @@ describe Bandiera::Feature do
 
         describe '#enabled?' do
           it 'returns true' do
-            expect(subject.enabled?(user_group: 'qwerty', user_id: 12345)).to eq true
+            expect(subject.enabled?(user_group: 'qwerty', user_id: 12_345)).to eq true
           end
         end
       end
@@ -261,7 +261,7 @@ describe Bandiera::Feature do
 
         describe '#enabled?' do
           it 'returns false' do
-            expect(subject.enabled?(user_group: 'qwerty', user_id: 12345)).to eq false
+            expect(subject.enabled?(user_group: 'qwerty', user_id: 12_345)).to eq false
           end
         end
       end
@@ -274,7 +274,7 @@ describe Bandiera::Feature do
 
       describe '#enabled?' do
         it 'returns false' do
-          expect(subject.enabled?(user_group: 'admin', user_id: 12345)).to eq false
+          expect(subject.enabled?(user_group: 'admin', user_id: 12_345)).to eq false
         end
       end
     end
@@ -308,7 +308,7 @@ describe Bandiera::Feature do
 
   private
 
-  def calculate_active_count(feature, percentage)
+  def calculate_active_count(feature, _percentage)
     (0...100)
       .map   { |id| feature.enabled?(user_id: id) }
       .count { |val| val == true }

@@ -75,10 +75,10 @@ describe Bandiera::FeatureService do
     context 'creating features configured for specific user groups' do
       let(:feat_data) do
         {
-          name: 'feat_name',
-          group: 'group_name',
+          name:        'feat_name',
+          group:       'group_name',
           description: '',
-          active: true,
+          active:      true,
           user_groups: { list: ['info@example.com'], regex: '' }
         }
       end
@@ -117,10 +117,10 @@ describe Bandiera::FeatureService do
 
         before do
           db[:features] << {
-            name: feature_name,
+            name:        feature_name,
             description: '',
-            active: false,
-            group_id: group_id
+            active:      false,
+            group_id:    group_id
           }
         end
 
@@ -156,11 +156,11 @@ describe Bandiera::FeatureService do
 
       let(:features) do
         [{
-          name:         'feat',
-          group:        'wibble',
-          description:  'cheese',
-          active:       true,
-          user_groups:  user_groups
+          name:        'feat',
+          group:       'wibble',
+          description: 'cheese',
+          active:      true,
+          user_groups: user_groups
         }]
       end
 

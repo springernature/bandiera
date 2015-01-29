@@ -67,11 +67,11 @@ module Bandiera
       fail FeatureNotFound, "Cannot find feature '#{name}'" unless feature
 
       fields  = {
-        description:  params[:description],
-        active:       params[:active],
-        user_groups:  params[:user_groups],
-        percentage:   params[:percentage]
-      }.delete_if { |k, v| v.nil? }
+        description: params[:description],
+        active:      params[:active],
+        user_groups: params[:user_groups],
+        percentage:  params[:percentage]
+      }.delete_if { |_k, v| v.nil? }
       feature.update(fields)
     end
 

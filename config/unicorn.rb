@@ -17,10 +17,10 @@ working_directory ENV['WORKING_DIR'] if ENV['WORKING_DIR']
 pid               ENV['PID_FILE'] if ENV['PID_FILE']
 preload_app       true
 
-before_fork do |server, worker|
+before_fork do |_server, _worker|
   Bandiera::Db.disconnect
 end
 
-after_fork do |server, worker|
+after_fork do |_server, _worker|
   Bandiera::Db.connect
 end

@@ -91,7 +91,7 @@ module Bandiera
         feature_service.update_feature(group, name, { active: active })
         status 200
         content_type :json
-        "{}"
+        '{}'
       else
         status 401
         halt
@@ -106,7 +106,7 @@ module Bandiera
 
     private
 
-    def with_valid_feature_params(feature, on_error_url, &block)
+    def with_valid_feature_params(feature, on_error_url)
       if valid_params?(feature)
         yield
       else
@@ -114,7 +114,7 @@ module Bandiera
         errors << 'enter a feature name' unless param_present?(feature[:name])
         errors << 'enter a feature name without spaces' if feature[:name].include?(' ')
         errors << 'select a group' unless param_present?(feature[:group])
-        flash[:danger] = "You must #{errors.join(" and ")}."
+        flash[:danger] = "You must #{errors.join(' and ')}."
         redirect on_error_url
       end
     end

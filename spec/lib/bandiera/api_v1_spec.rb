@@ -119,7 +119,7 @@ describe Bandiera::APIv1 do
 
       it 'returns error data' do
         expected_data = {
-          'error' => "This group does not exist in the Bandiera database."
+          'error' => 'This group does not exist in the Bandiera database.'
         }
 
         assert_last_response_matches(expected_data)
@@ -317,9 +317,9 @@ describe Bandiera::APIv1 do
       let(:params) do
         {
           feature: {
-            name:         'wibble_logging',
-            description:  'Log me some wibble',
-            enabled:      true
+            name:        'wibble_logging',
+            description: 'Log me some wibble',
+            enabled:     true
           }
         }
       end
@@ -345,13 +345,13 @@ describe Bandiera::APIv1 do
       {
         'groups' => [
           {
-            'name' => 'laserwolf',
+            'name'     => 'laserwolf',
             'features' => [
               { 'group' => 'laserwolf', 'name' => 'enable_caching', 'description' => 'Enable caching', 'enabled' => false }
             ]
           },
           {
-            'name' => 'pubserv',
+            'name'     => 'pubserv',
             'features' => [
               { 'group' => 'pubserv', 'name' => 'show_search', 'description' => 'Show the search bar', 'enabled' => true },
               { 'group' => 'pubserv', 'name' => 'show_subjects', 'description' => 'Show all subject related features', 'enabled' => false },
@@ -359,7 +359,7 @@ describe Bandiera::APIv1 do
             ]
           },
           {
-            'name' => 'shunter',
+            'name'     => 'shunter',
             'features' => [
               { 'group' => 'shunter', 'name' => 'stats_logging', 'description' => 'Log stats', 'enabled' => true }
             ]

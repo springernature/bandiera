@@ -96,8 +96,8 @@ module Bandiera
     def format_multiple_warning_messages(error_map, show_group = false)
       msg           = "The following warnings were raised on this request:\n"
       error_handles = {
-        user_group:       "these features have user groups configured and require a `user_group` param",
-        user_percentage:  "these features have user percentages configured and require a `user_id` param"
+        user_group:      'these features have user groups configured and require a `user_group` param',
+        user_percentage: 'these features have user percentages configured and require a `user_id` param'
       }
 
       error_handles.each do |type, preamble|
