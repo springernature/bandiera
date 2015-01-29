@@ -49,7 +49,7 @@ describe Bandiera::APIv2 do
       get '/all'
       expect(last_response_data['warning']).to_not be_nil
 
-      get '/all', user_group: 'wibble', user_id: 12345
+      get '/all', user_group: 'wibble', user_id: 12_345
       expect(last_response_data['warning']).to be_nil
     end
 
@@ -71,8 +71,8 @@ describe Bandiera::APIv2 do
     context 'when the group exists' do
       it 'returns a hash of features / enabled pairs' do
         expected_response = {
-          'show_subjects' => false,
-          'show_metrics' => false,
+          'show_subjects'   => false,
+          'show_metrics'    => false,
           'use_content_hub' => true
         }
 
@@ -84,7 +84,7 @@ describe Bandiera::APIv2 do
         get '/groups/pubserv/features'
         expect(last_response_data['warning']).to_not be_nil
 
-        get '/groups/pubserv/features', user_group: 'wibble', user_id: 12345
+        get '/groups/pubserv/features', user_group: 'wibble', user_id: 12_345
         expect(last_response_data['warning']).to be_nil
       end
 
@@ -142,7 +142,7 @@ describe Bandiera::APIv2 do
         get '/groups/shunter/features/use_img_serv'
         expect(last_response_data['warning']).to_not be_nil
 
-        get '/groups/shunter/features/use_img_serv', user_id: 12345
+        get '/groups/shunter/features/use_img_serv', user_id: 12_345
         expect(last_response_data['warning']).to be_nil
       end
 

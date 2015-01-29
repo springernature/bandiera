@@ -51,28 +51,28 @@ module Bandiera
 
     def process_v1_feature_params(params)
       {
-        group:        params['group'],
-        name:         params['name'],
-        description:  params['description'],
-        active:       params['enabled'] == 'true',
-        percentage:   params['percentage']
+        group:       params['group'],
+        name:        params['name'],
+        description: params['description'],
+        active:      params['enabled'] == 'true',
+        percentage:  params['percentage']
       }
     end
 
     def process_v2_feature_params(params)
       user_group_params = params.fetch('user_groups', {}).symbolize_keys
       user_groups       = {
-        list:   process_user_group_list_param(user_group_params.fetch(:list, '')),
-        regex:  user_group_params.fetch(:regex, '')
+        list:  process_user_group_list_param(user_group_params.fetch(:list, '')),
+        regex: user_group_params.fetch(:regex, '')
       }
 
       {
-        group:        params['group'],
-        name:         params['name'],
-        description:  params['description'],
-        active:       params['active'] == 'true',
-        user_groups:  user_groups,
-        percentage:   params['percentage']
+        group:       params['group'],
+        name:        params['name'],
+        description: params['description'],
+        active:      params['active'] == 'true',
+        user_groups: user_groups,
+        percentage:  params['percentage']
       }
     end
 
@@ -81,10 +81,10 @@ module Bandiera
              when String then val.split("\n")
              when Array  then val
              else
-               fail InvalidParams, "params[user_groups][list] must be a string or array."
+               fail InvalidParams, 'params[user_groups][list] must be a string or array.'
              end
 
-      list.map { |elm| elm.strip }
+      list.map(&:strip)
     end
 
     def valid_params?(feature)

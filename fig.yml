@@ -1,0 +1,41 @@
+app:
+  build: .
+  volumes:
+    - .:/usr/src/app
+  command: 'bundle exec shotgun -p 5000 -o 0.0.0.0 -s puma'
+  ports:
+    - '5000:5000'
+  environment:
+    RACK_ENV: development
+    DATABASE_URL: 'postgres://bandiera:bandiera@db/bandiera'
+    LOG_TO_STDOUT: true
+  links:
+    - db
+
+test:
+  build: .
+  volumes:
+    - .:/usr/src/app
+  command: 'bundle exec guard -i -p -l 1'
+  environment:
+    RACK_ENV: test
+    LOG_TO_STDOUT: true
+
+db:
+  image: postgres
+  ports:
+    - '5432'
+  volumes_from:
+    - data
+  environment:
+    POSTGRES_USER: bandiera
+    POSTGRES_PASSWORD: bandiera
+  links:
+    - data
+
+data:
+  image: busybox
+  volumes:
+    - /var/lib/postgresql/data
+  command: 'true'
+

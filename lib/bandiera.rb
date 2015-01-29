@@ -24,7 +24,13 @@ module Bandiera
     end
 
     def logger
-      @logger ||= Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
+      @logger ||= begin
+                    if ENV['LOG_TO_STDOUT']
+                      Macmillan::Utils::Logger::Factory.build_logger
+                    else
+                      Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
+                    end
+                  end
     end
     attr_writer :logger
 

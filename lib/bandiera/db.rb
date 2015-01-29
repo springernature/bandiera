@@ -24,8 +24,6 @@ module Bandiera
       Sequel::Migrator.apply(connect, migrations_dir, version - 1)
     end
 
-    private
-
     def self.configuration
       @configuration ||= begin
         database_conf = File.join(File.dirname(__FILE__), '../../config/database.yml')
@@ -37,13 +35,13 @@ module Bandiera
 
     def self.params
       {
-        host:         configuration['host'],
-        port:         configuration['port'],
-        user:         configuration['username'],
-        password:     configuration['password'],
-        encoding:     configuration['encoding'],
-        database:     configuration['database'],
-        adapter:      configuration['adapter'],
+        host:     configuration['host'],
+        port:     configuration['port'],
+        user:     configuration['username'],
+        password: configuration['password'],
+        encoding: configuration['encoding'],
+        database: configuration['database'],
+        adapter:  configuration['adapter']
       }
     end
 

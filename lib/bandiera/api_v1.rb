@@ -76,7 +76,7 @@ module Bandiera
 
       group_data = feature_service.get_groups.map do |group|
         {
-          name: group.name,
+          name:     group.name,
           features: feature_service.get_group_features(group.name).map(&:as_v1_json)
         }
       end
@@ -97,12 +97,12 @@ module Bandiera
     private
 
     def render_json(data)
-      data.merge!(information: "You are using the v1 Bandiera API - this interface is deprecated, you should switch to use the latest version (see https://github.com/nature/bandiera/wiki/API-Documentation for more information).")
+      data.merge!(information: 'You are using the v1 Bandiera API - this interface is deprecated, you should switch to use the latest version (see https://github.com/nature/bandiera/wiki/API-Documentation for more information).')
       content_type :json
       JSON.generate(data)
     end
 
-    def with_valid_feature_params(feature, include_option_params_in_error_msg=false)
+    def with_valid_feature_params(feature, include_option_params_in_error_msg = false)
       if valid_params?(feature)
         yield
       else
