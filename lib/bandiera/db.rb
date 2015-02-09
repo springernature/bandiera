@@ -53,10 +53,10 @@ module Bandiera
       if RUBY_PLATFORM == 'java'
         str = "jdbc:#{conn[:adapter]}://#{conn[:host]}:#{conn[:port]}/#{conn[:database]}?user=#{conn[:user]}"
         str << "&password=#{conn[:password]}" if conn[:password]
-        str << '&useUnicode=true&characterEncoding=utf8'
+        str << '&useUnicode=true&characterEncoding=utf8&max-connections=24'
         str
       else
-        conn.merge(max_connections: 10, reconnect: true)
+        conn.merge(max_connections: 24, reconnect: true)
       end
     end
 
