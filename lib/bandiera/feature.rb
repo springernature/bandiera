@@ -4,7 +4,6 @@ module Bandiera
     class UserPercentageArgumentError < ArgumentError; end
 
     many_to_one :group
-    one_to_many :feature_users
 
     plugin :serialization
 

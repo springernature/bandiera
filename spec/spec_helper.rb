@@ -25,7 +25,6 @@ Bandiera::Db.migrate
 
 RSpec.configure do |config|
   config.after(:each) do
-    DB[:feature_users].delete
     DB[:features].delete
     DB[:groups].delete
   end

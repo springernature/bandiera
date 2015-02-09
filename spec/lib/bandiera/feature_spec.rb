@@ -174,10 +174,6 @@ describe Bandiera::Feature do
   end
 
   describe 'a feature for a percentage of users' do
-    after :each do
-      Bandiera::FeatureUser.dataset.delete
-    end
-
     context 'when @active is true' do
       context 'with 5%' do
         let(:percentage) { 5 }
