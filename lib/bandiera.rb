@@ -9,7 +9,6 @@ module Bandiera
   autoload :Db,             'bandiera/db'
   autoload :Group,          'bandiera/group'
   autoload :Feature,        'bandiera/feature'
-  autoload :FeatureUser,    'bandiera/feature_user'
   autoload :FeatureService, 'bandiera/feature_service'
   autoload :WebAppBase,     'bandiera/web_app_base'
   autoload :APIv1,          'bandiera/api_v1'

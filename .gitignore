@@ -1,4 +1,4 @@
 config/database.yml
-coverage/*
-
+coverage*
+artifacts*
 .env

@@ -75,14 +75,6 @@ module Bandiera
       feature.update(fields)
     end
 
-    # FeatureUsers
-
-    def get_feature_user(feature, user_id)
-      db.transaction(retry_on: [Sequel::UniqueConstraintViolation, Sequel::SerializationFailure]) do
-        FeatureUser.find_or_create(feature_id: feature.id, user_id: user_id)
-      end
-    end
-
     private
 
     def find_group_id(name)
