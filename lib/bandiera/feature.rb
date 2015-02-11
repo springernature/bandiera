@@ -1,8 +1,5 @@
 module Bandiera
   class Feature < Sequel::Model
-    class UserGroupArgumentError < ArgumentError; end
-    class UserPercentageArgumentError < ArgumentError; end
-
     many_to_one :group
 
     plugin :serialization
@@ -26,18 +23,27 @@ module Bandiera
 
       return_val = false
 
-      if user_groups_configured?
-        fail UserGroupArgumentError, 'This feature is configured for user groups - you must pass a user_group' unless opts[:user_group]
+      if user_groups_configured? && opts[:user_group]
         user_group = opts[:user_group]
         return_val = (user_group_within_list?(user_group) || user_group_match_regex?(user_group))
       end
 
-      if !return_val && percentage_configured?
-        fail UserPercentageArgumentError, 'This feature is configured for a % of users - you must pass a user_id' unless opts[:user_id]
+      if !return_val && percentage_configured? && opts[:user_id]
         return_val = percentage_enabled_for_user?(opts[:user_id])
       end
 
       return_val
+    end
+
+    def report_enabled_warnings(opts = { user_group: nil, user_id: nil })
+      warnings = []
+
+      return warnings unless active?
+
+      warnings << :user_group if user_groups_configured? && !opts[:user_group]
+      warnings << :user_id if percentage_configured? && !opts[:user_id]
+
+      warnings
     end
 
     def user_groups_list
