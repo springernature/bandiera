@@ -18,6 +18,10 @@ module Bandiera
     end
 
     get '/' do
+      _get_home
+    end
+
+    def _get_home
       @groups_and_features = feature_service.get_groups.map do |group|
         { name: group.name, features: feature_service.get_group_features(group.name) }
       end
@@ -28,10 +32,18 @@ module Bandiera
     # Groups.
 
     get '/new/group' do
+      _get_new_group
+    end
+
+    def _get_new_group
       erb :new_group
     end
 
     post '/create/group' do
+      _post_create_group
+    end
+
+    def _post_create_group
       group_name = params[:group][:name]
 
       if param_present?(group_name)
@@ -47,12 +59,20 @@ module Bandiera
     # Features.
 
     get '/new/feature' do
+      _get_new_feature
+    end
+
+    def _get_new_feature
       @groups = feature_service.get_groups
 
       erb :new_feature
     end
 
     post '/create/feature' do
+      _post_create_feature
+    end
+
+    def _post_create_feature
       feature = process_v2_feature_params(params[:feature])
 
       with_valid_feature_params(feature, '/new/feature') do
@@ -63,6 +83,10 @@ module Bandiera
     end
 
     get '/groups/:group_name/features/:feature_name/edit' do |group_name, feature_name|
+      _get_edit_feature(group_name, feature_name)
+    end
+
+    def _get_edit_feature(group_name, feature_name)
       @groups  = feature_service.get_groups
       @feature = feature_service.get_feature(group_name, feature_name)
 
@@ -70,6 +94,10 @@ module Bandiera
     end
 
     post '/update/feature' do
+      _post_update_feature
+    end
+
+    def _post_update_feature
       prev_group  = params[:feature][:previous_group]
       prev_name   = params[:feature][:previous_name]
       new_feature = process_v2_feature_params(params[:feature])
@@ -82,6 +110,10 @@ module Bandiera
     end
 
     put '/update/feature/active_toggle' do
+      _put_update_feature_active_toggle
+    end
+
+    def _put_update_feature_active_toggle
       feat_params = params[:feature] || {}
       group       = feat_params[:group]
       name        = feat_params[:name]
@@ -99,6 +131,10 @@ module Bandiera
     end
 
     get '/groups/:group_name/features/:feature_name/delete' do |group_name, feature_name|
+      _get_delete_feature(group_name, feature_name)
+    end
+
+    def _get_delete_feature(group_name, feature_name)
       feature_service.remove_feature(group_name, feature_name)
       flash[:success] = 'Feature deleted.'
       redirect '/'
