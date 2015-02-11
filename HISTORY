@@ -1,3 +1,11 @@
+= 2.3.1 / 2015-02-11
+
+ * [Bugfix] Resolve an issue on combined user group/percentage features where the percentage calc just wasn't working
+ * [Enhancement] Remove the FeatureUser model/table and make the percentage calculation more efficient
+ * [Operations] Increase the Sequel threadpool size to 24 (as 10 was too low with expected workloads)
+ * Added a docker/fig based development environment setup
+ * Added a Guardfile for use with guard
+
 = 2.3.0 / 2015-01-27
 
  * [Feature] Add support/config for the puma application server
