@@ -1,6 +1,10 @@
 module Bandiera
   class APIv2 < WebAppBase
     get '/all' do
+      _get_all
+    end
+
+    def _get_all
       add_statsd_timer 'api.v2.all.get'
 
       group_map = {}
@@ -19,6 +23,10 @@ module Bandiera
     end
 
     get '/groups/:group_name/features' do |group_name|
+      _get_group_features(group_name)
+    end
+
+    def _get_group_features(group_name)
       add_statsd_timer 'api.v2.group_features.get'
 
       response = { response: {} }
@@ -36,6 +44,10 @@ module Bandiera
     end
 
     get '/groups/:group_name/features/:feature_name' do |group_name, feature_name|
+      _get_single_feature(group_name, feature_name)
+    end
+
+    def _get_single_feature(group_name, feature_name)
       add_statsd_timer 'api.v2.individual_feature.get'
 
       response = { response: false }
