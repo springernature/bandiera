@@ -56,7 +56,7 @@ module Bandiera
       end
     end
 
-    # Features.
+    # Features
 
     get '/new/feature' do
       _get_new_feature

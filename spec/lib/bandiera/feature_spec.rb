@@ -327,7 +327,7 @@ describe Bandiera::Feature do
 
       context 'when user_id HAS been supplied' do
         it 'returns an empty array' do
-          expect(subject.report_enabled_warnings(user_id: '12345')).to eq([])
+          expect(subject.report_enabled_warnings(user_id: '12_345')).to eq([])
         end
       end
 
@@ -344,7 +344,7 @@ describe Bandiera::Feature do
 
       context 'when user_group and user_id HAS been supplied' do
         it 'returns an empty array' do
-          expect(subject.report_enabled_warnings(user_group: 'bob', user_id: '12345')).to eq([])
+          expect(subject.report_enabled_warnings(user_group: 'bob', user_id: '12_345')).to eq([])
         end
       end
 
