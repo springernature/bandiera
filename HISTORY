@@ -1,3 +1,9 @@
+= 2.3.2 / 2015-03-16
+
+ * [Enhancement] Add in support for New Relic RPM - if a config/newrelic.yml file is present upon deployment,
+   Bandiera will start reporting metrics to New Relic.
+ * Updated font-end and gem dependencies.
+
 = 2.3.1 / 2015-02-11
 
  * [Bugfix] Resolve an issue on combined user group/percentage features where the percentage calc just wasn't working
