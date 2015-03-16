@@ -5,6 +5,8 @@ require 'macmillan/utils/logger'
 require_relative 'hash'
 require 'newrelic_rpm'
 
+GC::Profiler.enable
+
 module Bandiera
   autoload :VERSION,        'bandiera/version'
   autoload :Db,             'bandiera/db'
