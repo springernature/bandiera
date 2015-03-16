@@ -3,6 +3,7 @@ require 'dotenv'
 require 'sequel'
 require 'macmillan/utils/logger'
 require_relative 'hash'
+require 'newrelic_rpm'
 
 module Bandiera
   autoload :VERSION,        'bandiera/version'
