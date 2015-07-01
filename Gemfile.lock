@@ -216,3 +216,6 @@ DEPENDENCIES
   statsd-ruby
   unicorn
   webmock
+
+BUNDLED WITH
+   1.10.4

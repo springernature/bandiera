@@ -5,6 +5,10 @@ any existing web framework or language as all communication is via a simple
 REST API.  It also has a simple web interface for setting up and configuring
 flags.
 
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+[![Build status][shield-build]][info-build]
+[![GPLv3 licensed][shield-license]][info-license]
+
 # Bandiera Client Libraries
 
 * **Ruby** - [https://github.com/nature/bandiera-client-ruby](https://github.com/nature/bandiera-client-ruby)
@@ -141,4 +145,7 @@ Wiki](https://github.com/nature/bandiera/wiki)
 Bandiera is licensed under the [GNU General Public License 3.0][gpl].
 
 [gpl]: http://www.gnu.org/licenses/gpl-3.0.html
-
+[info-license]: LICENSE
+[info-build]: https://travis-ci.org/nature/bandiera
+[shield-license]: https://img.shields.io/badge/license-GPLv3-blue.svg
+[shield-build]: https://img.shields.io/travis/nature/bandiera/master.svg
