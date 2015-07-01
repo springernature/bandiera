@@ -1,0 +1,23 @@
+{
+  "name": "Bandiera",
+  "description": "Bandiera is a simple, langauage agnostic feature flagging tool.",
+  "keywords": [
+    "ruby",
+    "productivity"
+  ],
+  "website": "https://github.com/nature/bandiera",
+  "repository": "https://github.com/nature/bandiera",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "bundle exec rake db:migrate"
+  },
+  "env": {
+    "RACK_ENV": {
+      "description": "The ruby rack environment",
+      "value": "production"
+    }
+  },
+  "addons": {
+    "heroku-postgresql"
+  }
+}
