@@ -14,7 +14,8 @@ describe Bandiera::APIv2 do
   before do
     feature_service = Bandiera::FeatureService.new
     feature_service.add_features([
-      { group: 'pubserv', name: 'show_subjects', description: '', active: true, user_groups: { list: ['editor'], regex: '' } },
+      { group: 'pubserv', name: 'show_subjects', description: '', active: true,
+        user_groups: { list: ['editor'], regex: '' } },
       { group: 'pubserv', name: 'show_metrics', description: '', active: false },
       { group: 'pubserv', name: 'use_content_hub', description: '', active: true },
       { group: 'shunter', name: 'stats_logging', description: '', active: true },

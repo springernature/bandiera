@@ -22,8 +22,8 @@ module Bandiera
     end
 
     def _get_home
-      @groups_and_features = feature_service.get_groups.map do |group|
-        { name: group.name, features: feature_service.get_group_features(group.name) }
+      @groups_and_features = feature_service.fetch_groups.map do |group|
+        { name: group.name, features: feature_service.fetch_group_features(group.name) }
       end
 
       erb :index
@@ -63,7 +63,7 @@ module Bandiera
     end
 
     def _get_new_feature
-      @groups = feature_service.get_groups
+      @groups = feature_service.fetch_groups
 
       erb :new_feature
     end
@@ -87,8 +87,8 @@ module Bandiera
     end
 
     def _get_edit_feature(group_name, feature_name)
-      @groups  = feature_service.get_groups
-      @feature = feature_service.get_feature(group_name, feature_name)
+      @groups  = feature_service.fetch_groups
+      @feature = feature_service.fetch_feature(group_name, feature_name)
 
       erb :edit_feature
     end

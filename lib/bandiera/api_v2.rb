@@ -10,8 +10,8 @@ module Bandiera
       group_map = {}
       warnings  = { user_group: [], user_id: [] }
 
-      feature_service.get_groups.each do |group|
-        features              = feature_service.get_group_features(group.name)
+      feature_service.fetch_groups.each do |group|
+        features              = feature_service.fetch_group_features(group.name)
         flags, warnings       = build_features_hash(features, warnings)
         group_map[group.name] = flags
       end
@@ -32,7 +32,7 @@ module Bandiera
       response = { response: {} }
 
       begin
-        features            = feature_service.get_group_features(group_name)
+        features            = feature_service.fetch_group_features(group_name)
         flags, warnings     = build_features_hash(features)
         response[:response] = flags
         response[:warning]  = format_multiple_warning_messages(warnings) if warnings_found?(warnings)
@@ -53,7 +53,7 @@ module Bandiera
       response = { response: false }
 
       begin
-        feature  = feature_service.get_feature(group_name, feature_name)
+        feature  = feature_service.fetch_feature(group_name, feature_name)
         response = { response: response_for(feature) }
 
         warnings           = warnings_for(feature)
@@ -77,7 +77,8 @@ module Bandiera
 
     def build_single_warning_reponse(warnings)
       if warnings.include?(:user_group) && warnings.include?(:user_id)
-        'This feature is configured for both user groups and percentages - you must supply both `user_group` and `user_id` params'
+        'This feature is configured for both user groups and percentages - you must supply both ' \
+        '`user_group` and `user_id` params'
       elsif warnings.include?(:user_group)
         'This feature is configured for user groups - you must supply a `user_group` param'
       elsif warnings.include?(:user_id)
@@ -119,17 +120,13 @@ module Bandiera
         user_id:    'these features have user percentages configured and require a `user_id` param'
       }
 
-      error_handles.each do |type, preamble|
+      msg << error_handles.map do |type, preamble|
         next if error_map[type].empty?
 
         features_with_warnings = names_for_warnings(error_map[type], show_group)
 
-        msg << "  * #{preamble}:\n"
-        msg << features_with_warnings.map { |name| "    - #{name}\n" }.join
-        msg << "\n"
-      end
-
-      msg
+        "  * #{preamble}:\n" + features_with_warnings.map { |name| "    - #{name}\n" }.join
+      end.join("\n")
     end
 
     def json_or_jsonp(data)
