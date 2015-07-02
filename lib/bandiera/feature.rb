@@ -21,18 +21,7 @@ module Bandiera
       return false unless active?
       return true  unless user_groups_configured? || percentage_configured?
 
-      return_val = false
-
-      if user_groups_configured? && opts[:user_group]
-        user_group = opts[:user_group]
-        return_val = (user_group_within_list?(user_group) || user_group_match_regex?(user_group))
-      end
-
-      if !return_val && percentage_configured? && opts[:user_id]
-        return_val = percentage_enabled_for_user?(opts[:user_id])
-      end
-
-      return_val
+      false || enabled_for_user_groups?(opts) || enabled_for_percentage?(opts)
     end
 
     def report_enabled_warnings(opts = { user_group: nil, user_id: nil })
@@ -72,6 +61,16 @@ module Bandiera
     end
 
     private
+
+    def enabled_for_user_groups?(opts)
+      return false unless user_groups_configured? && opts[:user_group]
+      user_group_within_list?(opts[:user_group]) || user_group_match_regex?(opts[:user_group])
+    end
+
+    def enabled_for_percentage?(opts)
+      return false unless percentage_configured? && opts[:user_id]
+      percentage_enabled_for_user?(opts[:user_id])
+    end
 
     def feature_service
       @feature_service ||= FeatureService.new

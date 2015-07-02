@@ -77,7 +77,9 @@ describe Bandiera::APIv1 do
       end
 
       it 'returns an error' do
-        expected_data = { 'error' => "Invalid parameters, required params are { 'group' => { 'name' => 'YOUR GROUP NAME' }  }" }
+        expected_data = {
+          'error' => "Invalid parameters, required params are { 'group' => { 'name' => 'YOUR GROUP NAME' }  }"
+        }
 
         assert_last_response_matches(expected_data)
       end
@@ -167,7 +169,10 @@ describe Bandiera::APIv1 do
         end
 
         it 'returns an error' do
-          expected_data = { 'error' => "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }" }
+          expected_data = {
+            'error' => "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', " \
+                       "'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }"
+          }
 
           assert_last_response_matches(expected_data)
         end
@@ -280,7 +285,8 @@ describe Bandiera::APIv1 do
 
           feature = JSON.parse(last_response.body)['feature']
 
-          put '/groups/shunter/features/stats_logging', feature: feature.merge('group' => 'laserwolf', 'enabled' => 'false')
+          put '/groups/shunter/features/stats_logging',
+            feature: feature.merge('group' => 'laserwolf', 'enabled' => 'false')
 
           expect(last_response).to be_successful
 
@@ -306,7 +312,11 @@ describe Bandiera::APIv1 do
         end
 
         it 'returns an error' do
-          expected_data = { 'error' => "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }, optional params are { 'feature' => { 'group' => 'GROUP NAME' } }" }
+          expected_data = {
+            'error' => "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', " \
+                       "'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }, optional " \
+                       "params are { 'feature' => { 'group' => 'GROUP NAME' } }"
+          }
 
           assert_last_response_matches(expected_data)
         end
@@ -347,15 +357,35 @@ describe Bandiera::APIv1 do
           {
             'name'     => 'laserwolf',
             'features' => [
-              { 'group' => 'laserwolf', 'name' => 'enable_caching', 'description' => 'Enable caching', 'enabled' => false }
+              {
+                'group'       => 'laserwolf',
+                'name'        => 'enable_caching',
+                'description' => 'Enable caching',
+                'enabled'     => false
+              }
             ]
           },
           {
             'name'     => 'pubserv',
             'features' => [
-              { 'group' => 'pubserv', 'name' => 'show_search', 'description' => 'Show the search bar', 'enabled' => true },
-              { 'group' => 'pubserv', 'name' => 'show_subjects', 'description' => 'Show all subject related features', 'enabled' => false },
-              { 'group' => 'pubserv', 'name' => 'xmas_mode', 'description' => 'Xmas mode: SNOWFLAKES!', 'enabled' => false }
+              {
+                'group'       => 'pubserv',
+                'name'        => 'show_search',
+                'description' => 'Show the search bar',
+                'enabled'     => true
+              },
+              {
+                'group'       => 'pubserv',
+                'name'        => 'show_subjects',
+                'description' => 'Show all subject related features',
+                'enabled'     => false
+              },
+              {
+                'group'       => 'pubserv',
+                'name'        => 'xmas_mode',
+                'description' => 'Xmas mode: SNOWFLAKES!',
+                'enabled'     => false
+              }
             ]
           },
           {

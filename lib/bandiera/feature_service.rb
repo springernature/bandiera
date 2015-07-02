@@ -28,17 +28,17 @@ module Bandiera
       Group.find_or_create(name: group)
     end
 
-    def get_groups
+    def fetch_groups
       Group.order(Sequel.asc(:name))
     end
 
-    def get_group_features(group_name)
+    def fetch_group_features(group_name)
       find_group(group_name).features
     end
 
     # Features
 
-    def get_feature(group, name)
+    def fetch_feature(group, name)
       group_id = find_group_id(group)
       feature = Feature.first(group_id: group_id, name: name)
       fail FeatureNotFound, "Cannot find feature '#{name}'" unless feature

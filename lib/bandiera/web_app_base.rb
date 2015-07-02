@@ -41,7 +41,7 @@ module Bandiera
     end
 
     before do
-      path   = request.path.sub(/^\//, '').gsub('/', '.')
+      path   = request.path.sub(%r{^/}, '').gsub('/', '.')
       path   = 'homepage' if path.empty?
       method = request.request_method.downcase
       add_statsd_timer_and_increment "#{path}.#{method}"

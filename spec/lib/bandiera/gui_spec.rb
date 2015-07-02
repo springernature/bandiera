@@ -57,12 +57,12 @@ describe Bandiera::GUI do
       switch_class     = active ? 'switch-on' : 'switch-off'
 
       expect(toggle_container).to have_css(".#{switch_class}")
-      expect(service.get_feature(group, name).active?).to eq(active)
+      expect(service.fetch_feature(group, name).active?).to eq(active)
 
       toggle.click
 
       expect(toggle_container).to_not have_css(".#{switch_class}")
-      expect(service.get_feature(group, name).active?).to_not eq(active)
+      expect(service.fetch_feature(group, name).active?).to_not eq(active)
     end
   end
 
@@ -79,7 +79,7 @@ describe Bandiera::GUI do
         end
 
         check_success_flash('Group created')
-        expect(service.get_groups.map(&:name)).to include('TEST')
+        expect(service.fetch_groups.map(&:name)).to include('TEST')
       end
     end
 
@@ -111,7 +111,7 @@ describe Bandiera::GUI do
         end
 
         check_success_flash('Feature created')
-        expect(service.get_feature('pubserv', 'TEST-FEATURE')).to be_an_instance_of(Bandiera::Feature)
+        expect(service.fetch_feature('pubserv', 'TEST-FEATURE')).to be_an_instance_of(Bandiera::Feature)
       end
 
       context 'for a feature flag configured for user_groups' do
@@ -128,7 +128,7 @@ describe Bandiera::GUI do
 
           check_success_flash('Feature created')
 
-          feature = service.get_feature('pubserv', 'TEST-FEATURE')
+          feature = service.fetch_feature('pubserv', 'TEST-FEATURE')
 
           expect(feature).to be_an_instance_of(Bandiera::Feature)
           expect(feature.user_groups_configured?).to be_truthy
@@ -193,7 +193,7 @@ describe Bandiera::GUI do
       feature_row.find('.bandiera-delete-feature').click
 
       check_success_flash('Feature deleted')
-      expect { service.get_feature(group_name, feature_name) }.to raise_error
+      expect { service.fetch_feature(group_name, feature_name) }.to raise_error
     end
   end
 

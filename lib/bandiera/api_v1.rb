@@ -7,7 +7,7 @@ module Bandiera
     def _get_groups
       add_statsd_timer 'api.v1.groups.get'
 
-      groups = feature_service.get_groups.map { |group| { name: group.name } }
+      groups = feature_service.fetch_groups.map { |group| { name: group.name } }
       render_json(groups: groups)
     end
 
@@ -37,7 +37,7 @@ module Bandiera
     def _get_group_features(group_name)
       add_statsd_timer 'api.v1.group_features.get'
 
-      features = feature_service.get_group_features(group_name)
+      features = feature_service.fetch_group_features(group_name)
       render_json(features: features.map(&:as_v1_json))
     end
 
@@ -64,10 +64,11 @@ module Bandiera
     def _get_individial_feature(group_name, feature_name)
       add_statsd_timer 'api.v1.individual_feature.get'
 
-      data, feature  = {}, nil
+      data    = {}
+      feature = nil
 
       begin
-        feature = feature_service.get_feature(group_name, feature_name)
+        feature = feature_service.fetch_feature(group_name, feature_name)
       rescue *[Bandiera::FeatureService::GroupNotFound, Bandiera::FeatureService::FeatureNotFound] => e
         feature        = Bandiera::Feature.stub_feature(feature_name, group_name)
         data[:warning] = e.message
@@ -102,10 +103,10 @@ module Bandiera
     def _get_all
       add_statsd_timer 'api.v1.all.get'
 
-      group_data = feature_service.get_groups.map do |group|
+      group_data = feature_service.fetch_groups.map do |group|
         {
           name:     group.name,
-          features: feature_service.get_group_features(group.name).map(&:as_v1_json)
+          features: feature_service.fetch_group_features(group.name).map(&:as_v1_json)
         }
       end
 
@@ -125,17 +126,21 @@ module Bandiera
     private
 
     def render_json(data)
-      data.merge!(information: 'You are using the v1 Bandiera API - this interface is deprecated, you should switch to use the latest version (see https://github.com/nature/bandiera/wiki/API-Documentation for more information).')
+      data.merge!(
+        information: 'You are using the v1 Bandiera API - this interface is deprecated, you should switch to use ' \
+                     'the latest version (see https://github.com/nature/bandiera/wiki/API-Documentation for more ' \
+                     'information).')
       content_type :json
       JSON.generate(data)
     end
 
-    def with_valid_feature_params(feature, include_option_params_in_error_msg = false)
+    def with_valid_feature_params(feature, inc_option_params_in_error = false)
       if valid_params?(feature)
         yield
       else
-        error_msg = "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', 'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }"
-        error_msg << ", optional params are { 'feature' => { 'group' => 'GROUP NAME' } }" if include_option_params_in_error_msg
+        error_msg = "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', " \
+                    "'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }"
+        error_msg << ", optional params are { 'feature' => { 'group' => 'GROUP NAME' } }" if inc_option_params_in_error
         fail InvalidParams, error_msg
       end
     end
