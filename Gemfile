@@ -13,6 +13,7 @@ gem 'jdbc-postgres', platform: :jruby
 
 gem 'sinatra'
 gem 'rack-flash3'
+gem 'erubis'
 gem 'macmillan-utils'
 
 gem 'unicorn', require: false, platform: :ruby

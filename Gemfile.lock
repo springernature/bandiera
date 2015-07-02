@@ -26,6 +26,7 @@ GEM
     diff-lcs (1.2.5)
     docile (1.1.5)
     dotenv (2.0.0)
+    erubis (2.7.0)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.8)
@@ -193,6 +194,7 @@ DEPENDENCIES
   airbrake
   capybara
   dotenv
+  erubis
   guard-rspec
   jdbc-mysql
   jdbc-postgres

@@ -1,3 +1,8 @@
+= 2.3.3 / 2015-07-02
+
+  * [Bugfix] Escape all user generated content in the GUI.
+  * Update documentation and add setup for deploying quickly to Heroku.
+
 = 2.3.2 / 2015-03-16
 
  * [Enhancement] Add in support for New Relic RPM - if a config/newrelic.yml file is present upon deployment,
@@ -51,4 +56,3 @@
 = 1.0.0 / 2014-04-25
 
  * Initial tagging of 1.0.0 codebase
-
