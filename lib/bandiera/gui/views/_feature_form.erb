@@ -12,12 +12,12 @@
   <div class="form-group">
     <label for="feature[group]">Group</label>
     <% if method == :update %>
-      <input type="text" class="form-control" id="feature_group" name="feature[group]" value="<%= @feature.group.name %>" <%= "readonly" if method == :update %>/>
+      <input type="text" class="form-control" id="feature_group" name="feature[group]" value="<%= @feature.group.name %>" <% if method == :update %>readonly<% end %>/>
     <% else %>
       <select class="form-control" id="feature_group" name="feature[group]">
         <option></option>
         <% @groups.each do |group| %>
-          <option value="<%= group.name %>"<%= " selected" if @feature.group == group %>><%= group.name %></option>
+          <option value="<%= group.name %>"<% if @feature.group == group %> selected<% end %>><%= group.name %></option>
         <% end %>
       </select>
     <% end %>
@@ -25,7 +25,7 @@
 
   <div class="form-group">
     <label for="feature[name]">Name</label>
-    <input type="text" class="form-control" id="feature_name" name="feature[name]" value="<%= @feature.name %>" <%= "readonly" if method == :update %>/>
+    <input type="text" class="form-control" id="feature_name" name="feature[name]" value="<%= @feature.name %>" <% if method == :update %>readonly<% end %>/>
   </div>
 
   <div class="form-group">
@@ -37,13 +37,13 @@
     <label for="feature[active]">Active?</label>
     <div class="radio">
       <label>
-        <input type="radio" name="feature[active]" id="feature_active_true" value="true" <%= 'checked ' if @feature.active? %>/>
+        <input type="radio" name="feature[active]" id="feature_active_true" value="true"<% if @feature.active? %> checked<% end %>/>
         on
       </label>
     </div>
     <div class="radio">
       <label>
-        <input type="radio" name="feature[active]" id="feature_active_false" value="false" <%= 'checked ' unless @feature.active? %> />
+        <input type="radio" name="feature[active]" id="feature_active_false" value="false"<% unless @feature.active? %> checked<% end %>/>
         off
       </label>
     </div>
@@ -61,7 +61,7 @@
           <select class="form-control" id="feature_percentage" name="feature[percentage]">
             <option></option>
             <% (5..100).step(5).each do |perc| %>
-              <option value="<%= perc %>"<%= " selected" if @feature.percentage == perc %>><%= perc %>%</option>
+              <option value="<%= perc %>"<% if @feature.percentage == perc %> selected<% end %>><%= perc %>%</option>
             <% end %>
           </select>
         </div>

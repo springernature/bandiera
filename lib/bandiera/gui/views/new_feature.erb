@@ -1,4 +1,4 @@
-<%= erb :"_breadcrumb", locals: { current_title: "Create a New Feature" } %>
+<%== partial :_breadcrumb, { current_title: 'Create a New Feature' } %>
 
 <h2>Create a New Feature</h2>
 
@@ -8,5 +8,4 @@
   </div>
 </div>
 
-<%= erb :_feature_form, locals: { action: "/create/feature", method: :create } %>
-
+<%== partial :_feature_form, { action: '/create/feature', method: :create } %>

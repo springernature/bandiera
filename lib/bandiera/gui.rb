@@ -1,10 +1,18 @@
 require 'rack-flash'
+require 'erubis'
 
 module Bandiera
   class GUI < WebAppBase
     configure do
       set :root, File.join(File.dirname(__FILE__), 'gui')
+      set :erb, escape_html: true
       enable :sessions
+    end
+
+    helpers do
+      def partial(template, locals = {})
+        erb(template, layout: false, locals: locals)
+      end
     end
 
     use Rack::Flash
