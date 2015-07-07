@@ -135,8 +135,7 @@ Now you're ready to go.
 
 # Other Documentation
 
-All other documentation can be found on the [Bandiera
-Wiki](https://github.com/nature/bandiera/wiki)
+All other documentation can be found on the [Bandiera Wiki](https://github.com/nature/bandiera/wiki)
 
 # License
 
