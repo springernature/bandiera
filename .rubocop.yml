@@ -34,3 +34,6 @@ Style/CollectionMethods:
 
 Style/DotPosition:
   EnforcedStyle: leading
+
+Style/DoubleNegation:
+  Enabled: false
