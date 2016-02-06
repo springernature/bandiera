@@ -6,9 +6,9 @@ app:
   ports:
     - '5000:5000'
   environment:
-    RACK_ENV: development
+    RACK_ENV: 'development'
     DATABASE_URL: 'postgres://bandiera:bandiera@db/bandiera'
-    LOG_TO_STDOUT: true
+    LOG_TO_STDOUT: 'true'
   links:
     - db
 
@@ -18,8 +18,8 @@ test:
     - .:/usr/src/app
   command: 'bundle exec guard -i -p -l 1'
   environment:
-    RACK_ENV: test
-    LOG_TO_STDOUT: true
+    RACK_ENV: 'test'
+    LOG_TO_STDOUT: 'true'
 
 db:
   image: postgres
@@ -28,8 +28,8 @@ db:
   volumes_from:
     - data
   environment:
-    POSTGRES_USER: bandiera
-    POSTGRES_PASSWORD: bandiera
+    POSTGRES_USER: 'bandiera'
+    POSTGRES_PASSWORD: 'bandiera'
   links:
     - data
 
@@ -38,4 +38,3 @@ data:
   volumes:
     - /var/lib/postgresql/data
   command: 'true'
-
