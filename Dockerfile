@@ -1,4 +1,4 @@
-FROM ruby:2.2.0-wheezy
+FROM ruby:2.2.2-wheezy
 
 MAINTAINER Darren Oakley <darren.oakley@macmillan.com>
 
