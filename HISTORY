@@ -1,3 +1,7 @@
+= 2.3.4 / 2015-11-23
+
+  * Gem dependency updates.
+
 = 2.3.3 / 2015-07-02
 
   * [Bugfix] Escape all user generated content in the GUI.
