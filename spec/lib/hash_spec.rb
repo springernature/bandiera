@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hash do
+RSpec.describe Hash do
   describe '#symbolize_keys' do
     it 'symbolizes keys recursivley' do
       original = {

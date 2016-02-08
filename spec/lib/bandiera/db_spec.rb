@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Bandiera::Db do
+RSpec.describe Bandiera::Db do
   subject { Bandiera::Db.connect }
 
   describe 'the features table' do

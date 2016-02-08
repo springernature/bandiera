@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Bandiera::Feature do
+RSpec.describe Bandiera::Feature do
   let(:name)        { 'show-stuff' }
   let(:group)       { Bandiera::Group.create(name: 'group_name') }
   let(:description) { 'feature description' }

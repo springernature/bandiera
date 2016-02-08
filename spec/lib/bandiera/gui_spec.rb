@@ -3,7 +3,7 @@ require 'capybara/dsl'
 require 'capybara/rspec'
 require 'capybara/poltergeist'
 
-describe Bandiera::GUI do
+RSpec.describe Bandiera::GUI do
   include Capybara::DSL
 
   let(:service) { Bandiera::FeatureService.new }

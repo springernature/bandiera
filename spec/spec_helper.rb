@@ -28,4 +28,13 @@ RSpec.configure do |config|
     DB[:features].delete
     DB[:groups].delete
   end
+
+  config.disable_monkey_patching!
+
+  if config.files_to_run.one?
+    config.default_formatter = 'doc'
+  end
+
+  config.order = :random
+  Kernel.srand config.seed
 end
