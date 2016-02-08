@@ -1,13 +1,13 @@
-FROM ruby:2.2.2-wheezy
+FROM ruby:2.3.0
 
-MAINTAINER Darren Oakley <darren.oakley@macmillan.com>
+MAINTAINER Darren Oakley <daz.oakley@gmail.com>
 
 # Install PhantomJS and its dependencies - needed for the test suite
 RUN apt-get update && \
   apt-get install -y build-essential chrpath libssl-dev libxft-dev && \
   apt-get install -y libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev && \
   cd /usr/local/share && \
-  export PHANTOM_JS="phantomjs-1.9.8-linux-x86_64" && \
+  export PHANTOM_JS="phantomjs-2.1.1-linux-x86_64" && \
   wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2 && \
   tar xvjf $PHANTOM_JS.tar.bz2 && \
   ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/share/phantomjs && \
