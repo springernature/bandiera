@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rack/test'
 
-describe Bandiera::APIv2 do
+RSpec.describe Bandiera::APIv2 do
   include Rack::Test::Methods
 
   def app

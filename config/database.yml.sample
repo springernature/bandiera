@@ -1,7 +1,0 @@
-adapter: mysql2
-host: localhost
-port: 3306
-encoding: utf8
-database: bandiera_development
-username: root
-password: ""

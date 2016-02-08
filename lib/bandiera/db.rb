@@ -7,7 +7,8 @@ Sequel::Model.plugin :update_or_create
 module Bandiera
   class Db
     def self.connect
-      @db ||= Sequel.connect(connection_string)
+      fail ArgumentError, 'You must set a DATABASE_URL environment variable' unless ENV['DATABASE_URL']
+      @db ||= Sequel.connect(ENV['DATABASE_URL'])
     end
 
     def self.disconnect
@@ -22,42 +23,6 @@ module Bandiera
     def self.rollback
       version = (row = connect[:schema_info].first) ? row[:version] : nil
       Sequel::Migrator.apply(connect, migrations_dir, version - 1)
-    end
-
-    def self.configuration
-      @configuration ||= begin
-        database_conf = File.join(File.dirname(__FILE__), '../../config/database.yml')
-        fail "Cannot find '#{database_conf}' file" unless File.exist?(database_conf)
-
-        YAML.load(File.read(database_conf))
-      end
-    end
-
-    def self.params
-      {
-        host:     configuration['host'],
-        port:     configuration['port'],
-        user:     configuration['username'],
-        password: configuration['password'],
-        encoding: configuration['encoding'],
-        database: configuration['database'],
-        adapter:  configuration['adapter']
-      }
-    end
-
-    def self.connection_string
-      return ENV['DATABASE_URL'] if ENV['DATABASE_URL']
-
-      conn = params
-
-      if RUBY_PLATFORM == 'java'
-        str = "jdbc:#{conn[:adapter]}://#{conn[:host]}:#{conn[:port]}/#{conn[:database]}?user=#{conn[:user]}"
-        str << "&password=#{conn[:password]}" if conn[:password]
-        str << '&useUnicode=true&characterEncoding=utf8&max-connections=24'
-        str
-      else
-        conn.merge(max_connections: 24, reconnect: true)
-      end
     end
 
     def self.migrations_dir

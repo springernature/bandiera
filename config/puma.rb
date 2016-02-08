@@ -12,7 +12,7 @@ min_no_of_threads = Integer(ENV['MIN_THREADS'] || 8)
 max_no_of_threads = Integer(ENV['MAX_THREADS'] || 32)
 
 tag               'bandiera'
-environment       ENV['RACK_ENV']
+environment       ENV['RACK_ENV'] || 'production'
 daemonize         false
 worker_timeout    15
 

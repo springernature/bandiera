@@ -3,7 +3,7 @@ require 'capybara/dsl'
 require 'capybara/rspec'
 require 'capybara/poltergeist'
 
-describe Bandiera::GUI do
+RSpec.describe Bandiera::GUI do
   include Capybara::DSL
 
   let(:service) { Bandiera::FeatureService.new }
@@ -193,7 +193,7 @@ describe Bandiera::GUI do
       feature_row.find('.bandiera-delete-feature').click
 
       check_success_flash('Feature deleted')
-      expect { service.fetch_feature(group_name, feature_name) }.to raise_error
+      expect { service.fetch_feature(group_name, feature_name) }.to raise_error(Bandiera::FeatureService::FeatureNotFound)
     end
   end
 

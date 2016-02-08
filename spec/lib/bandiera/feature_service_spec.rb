@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Bandiera::FeatureService do
+RSpec.describe Bandiera::FeatureService do
   let(:db) { Bandiera::Db.connect }
   subject { Bandiera::FeatureService.new }
 

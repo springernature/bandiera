@@ -1,5 +1,5 @@
 require 'rack-flash'
-require 'erubis'
+require 'tilt/erubis'
 
 module Bandiera
   class GUI < WebAppBase
