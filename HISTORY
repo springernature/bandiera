@@ -1,3 +1,11 @@
+= 3.0.0 / 2016-02-08
+
+  * Removed support for a `config/database.yml` file.  Use environment variables people.
+  * Docker setup updated to use docker-machine and docker-compose. Thanks @kimptoc!
+  * Some extra explanatory text added to % and user group UI fields. Thanks @philcowans!
+  * Removed a potential thread safety issue in the way we were loading erubis.
+  * Updated default ruby version to 2.3.0, and updated gem dependencies.
+
 = 2.3.4 / 2015-11-23
 
   * Gem dependency updates.
