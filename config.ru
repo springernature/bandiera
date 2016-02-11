@@ -10,16 +10,6 @@ if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
   Airbrake.configure do |config|
     config.project_key = ENV['AIRBRAKE_API_KEY']
     config.project_id  = ENV['AIRBRAKE_PROJECT_ID']
-
-    if ENV['MACMILLAN_ENV']
-      config.ignore_environments = %(development)
-      config.environment         = case Socket.gethostname
-                                   when /test/    then 'test'
-                                   when /staging/ then 'staging'
-                                   else
-                                     'live'
-                                   end
-    end
   end
 
   Airbrake.add_filter do |notice|
