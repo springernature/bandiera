@@ -1,3 +1,7 @@
+= 3.1.0 / 2016-02-11
+
+  * Update Airbrake code to support the v5 (Airbrake) API
+
 = 3.0.0 / 2016-02-08
 
   * Removed support for a `config/database.yml` file.  Use environment variables people.
