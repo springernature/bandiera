@@ -1,37 +1,15 @@
 require 'sinatra/base'
 require 'macmillan/utils/statsd_controller_helper'
 
-if ENV['AIRBRAKE_API_KEY']
-  require 'socket'
-  require 'airbrake'
-
-  Airbrake.configure do |config|
-    config.api_key = ENV['AIRBRAKE_API_KEY']
-    config.ignore << 'Sinatra::NotFound'
-
-    if ENV['MACMILLAN_ENV']
-      config.development_environments = []
-      config.environment_name         = case Socket.gethostname
-                                        when /test/    then 'test'
-                                        when /staging/ then 'staging'
-                                        else
-                                          'live'
-                                        end
-    end
-  end
-end
-
 module Bandiera
   class WebAppBase < Sinatra::Base
     class InvalidParams < StandardError; end
 
     include Macmillan::Utils::StatsdControllerHelper
 
-    use Airbrake::Sinatra if ENV['AIRBRAKE_API_KEY']
-
     configure do
       enable :logging
-      enable :raise_errors if ENV['AIRBRAKE_API_KEY']
+      enable :raise_errors if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
     end
 
     helpers do
