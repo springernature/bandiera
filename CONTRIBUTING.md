@@ -8,7 +8,7 @@
 * New features or changes to existing features must be documented in the [readme] file or [wiki].
 * Feel free to [open an issue][newissue] first, if the change is one that you think needs some discussion.
 
-[readme]: https://github.com/nature/bandiera/blob/master/README.md
-[wiki]: https://github.com/nature/bandiera/wiki
-[newissue]: https://github.com/nature/bandiera/issues/new
-[issues]: https://github.com/nature/bandiera/issues
+[readme]: https://github.com/springernature/bandiera/blob/master/README.md
+[wiki]: https://github.com/springernature/bandiera/wiki
+[newissue]: https://github.com/springernature/bandiera/issues/new
+[issues]: https://github.com/springernature/bandiera/issues
