@@ -128,7 +128,7 @@ module Bandiera
     def render_json(data)
       data.merge!(
         information: 'You are using the v1 Bandiera API - this interface is deprecated, you should switch to use ' \
-                     'the latest version (see https://github.com/nature/bandiera/wiki/API-Documentation for more ' \
+                     'the latest version (see https://github.com/springernature/bandiera/wiki/API-Documentation for more ' \
                      'information).')
       content_type :json
       JSON.generate(data)

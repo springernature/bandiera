@@ -1,3 +1,7 @@
+= 3.1.1 / 2016-02-16
+
+  * Move the Bandiera codebase into the `springernature` organisation and update the copyright.
+
 = 3.1.0 / 2016-02-11
 
   * Update Airbrake code to support the v5 (Airbrake) API
