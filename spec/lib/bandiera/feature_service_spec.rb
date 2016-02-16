@@ -260,7 +260,7 @@ RSpec.describe Bandiera::FeatureService do
 
       it 'returns the updated feature' do
         expect(
-          subject.update_feature('group', 'feat',  description: 'updated')
+          subject.update_feature('group', 'feat', description: 'updated')
         ).to be_an_instance_of(Bandiera::Feature)
       end
     end
@@ -281,10 +281,10 @@ RSpec.describe Bandiera::FeatureService do
   describe '#fetch_group_features' do
     before do
       subject.add_features([
-        { name: 'feature1', group: 'group_name' },
-        { name: 'feature2', group: 'group_name' },
-        { name: 'wibble', group: 'something_else' }
-      ])
+                             { name: 'feature1', group: 'group_name' },
+                             { name: 'feature2', group: 'group_name' },
+                             { name: 'wibble', group: 'something_else' }
+                           ])
     end
 
     context 'when the group exists' do

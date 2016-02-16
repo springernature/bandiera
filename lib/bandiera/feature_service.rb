@@ -20,7 +20,7 @@ module Bandiera
 
     def find_group(name)
       group = Group.find(name: name)
-      fail GroupNotFound, "Cannot find group '#{name}'" unless group
+      raise GroupNotFound, "Cannot find group '#{name}'" unless group
       group
     end
 
@@ -41,7 +41,7 @@ module Bandiera
     def fetch_feature(group, name)
       group_id = find_group_id(group)
       feature = Feature.first(group_id: group_id, name: name)
-      fail FeatureNotFound, "Cannot find feature '#{name}'" unless feature
+      raise FeatureNotFound, "Cannot find feature '#{name}'" unless feature
       feature
     end
 
@@ -58,15 +58,15 @@ module Bandiera
     def remove_feature(group, name)
       group_id      = find_group_id(group)
       affected_rows = Feature.where(group_id: group_id, name: name).delete
-      fail FeatureNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
+      raise FeatureNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
     end
 
     def update_feature(group, name, params)
       group_id  = find_group_id(group)
       feature   = Feature.first(group_id: group_id, name: name)
-      fail FeatureNotFound, "Cannot find feature '#{name}'" unless feature
+      raise FeatureNotFound, "Cannot find feature '#{name}'" unless feature
 
-      fields  = {
+      fields = {
         description: params[:description],
         active:      params[:active],
         user_groups: params[:user_groups],
@@ -79,7 +79,7 @@ module Bandiera
 
     def find_group_id(name)
       group_id = Group.where(name: name).get(:id)
-      fail GroupNotFound, "Cannot find group '#{name}'" unless group_id
+      raise GroupNotFound, "Cannot find group '#{name}'" unless group_id
       group_id
     end
 

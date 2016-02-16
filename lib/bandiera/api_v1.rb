@@ -26,7 +26,7 @@ module Bandiera
         status 201
         render_json(group: { name: group_name })
       else
-        fail InvalidParams, "Invalid parameters, required params are { 'group' => { 'name' => 'YOUR GROUP NAME' }  }"
+        raise InvalidParams, "Invalid parameters, required params are { 'group' => { 'name' => 'YOUR GROUP NAME' }  }"
       end
     end
 
@@ -126,10 +126,9 @@ module Bandiera
     private
 
     def render_json(data)
-      data.merge!(
-        information: 'You are using the v1 Bandiera API - this interface is deprecated, you should switch to use ' \
+      data[:information] = 'You are using the v1 Bandiera API - this interface is deprecated, you should switch to use ' \
                      'the latest version (see https://github.com/springernature/bandiera/wiki/API-Documentation for more ' \
-                     'information).')
+                     'information).'
       content_type :json
       JSON.generate(data)
     end
@@ -141,7 +140,7 @@ module Bandiera
         error_msg = "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', " \
                     "'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }"
         error_msg << ", optional params are { 'feature' => { 'group' => 'GROUP NAME' } }" if inc_option_params_in_error
-        fail InvalidParams, error_msg
+        raise InvalidParams, error_msg
       end
     end
   end

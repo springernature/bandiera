@@ -42,26 +42,26 @@ namespace :db do
     db[:groups].delete
 
     serv.add_features([
-      {
-        group:       'pubserv',
-        name:        'show-article-metrics',
-        description: 'Show metrics on the article pages?',
-        active:      true
-      },
-      {
-        group:       'pubserv',
-        name:        'show-new-search',
-        description: 'Show the new search feature?',
-        active:      true,
-        percentage:  50
-      },
-      {
-        group:       'pubserv',
-        name:        'show-reorganised-homepage',
-        description: 'Show the new homepage layout?',
-        active:      true,
-        user_groups: { list: ['editor'], regex: '' }
-      }
-    ])
+                        {
+                          group:       'pubserv',
+                          name:        'show-article-metrics',
+                          description: 'Show metrics on the article pages?',
+                          active:      true
+                        },
+                        {
+                          group:       'pubserv',
+                          name:        'show-new-search',
+                          description: 'Show the new search feature?',
+                          active:      true,
+                          percentage:  50
+                        },
+                        {
+                          group:       'pubserv',
+                          name:        'show-reorganised-homepage',
+                          description: 'Show the new homepage layout?',
+                          active:      true,
+                          user_groups: { list: ['editor'], regex: '' }
+                        }
+                      ])
   end
 end
