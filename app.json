@@ -5,8 +5,8 @@
     "ruby",
     "productivity"
   ],
-  "website": "https://github.com/nature/bandiera",
-  "repository": "https://github.com/nature/bandiera",
+  "website": "https://github.com/springernature/bandiera",
+  "repository": "https://github.com/springernature/bandiera",
   "success_url": "/",
   "scripts": {
     "postdeploy": "bundle exec rake db:migrate"
