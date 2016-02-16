@@ -7,7 +7,7 @@ Sequel::Model.plugin :update_or_create
 module Bandiera
   class Db
     def self.connect
-      fail ArgumentError, 'You must set a DATABASE_URL environment variable' unless ENV['DATABASE_URL']
+      raise ArgumentError, 'You must set a DATABASE_URL environment variable' unless ENV['DATABASE_URL']
       @db ||= Sequel.connect(ENV['DATABASE_URL'])
     end
 

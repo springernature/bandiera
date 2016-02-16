@@ -19,7 +19,7 @@ module Bandiera
     end
 
     before do
-      path   = request.path.sub(%r{^/}, '').gsub('/', '.')
+      path   = request.path.sub(%r{^/}, '').tr('/', '.')
       path   = 'homepage' if path.empty?
       method = request.request_method.downcase
       add_statsd_timer_and_increment "#{path}.#{method}"
@@ -59,7 +59,7 @@ module Bandiera
              when String then val.split("\n")
              when Array  then val
              else
-               fail InvalidParams, 'params[user_groups][list] must be a string or array.'
+               raise InvalidParams, 'params[user_groups][list] must be a string or array.'
              end
 
       list.map(&:strip)

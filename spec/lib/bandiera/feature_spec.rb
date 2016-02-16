@@ -323,7 +323,7 @@ RSpec.describe Bandiera::Feature do
     end
 
     context 'with a percentage feature' do
-      let(:percentage)  { 20 }
+      let(:percentage) { 20 }
 
       context 'when user_id HAS been supplied' do
         it 'returns an empty array' do

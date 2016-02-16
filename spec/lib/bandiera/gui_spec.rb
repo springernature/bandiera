@@ -19,11 +19,11 @@ RSpec.describe Bandiera::GUI do
 
   before do
     service.add_features([
-      { group: 'pubserv',   name: 'show_subjects',  description: 'Show all subject related features', active: false },
-      { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
-      { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    active: false },
-      { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         active: true  }
-    ])
+                           { group: 'pubserv', name: 'show_subjects', description: 'Show all subject related features', active: false },
+                           { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
+                           { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    active: false },
+                           { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         active: true  }
+                         ])
   end
 
   describe 'the homepage' do
