@@ -65,12 +65,16 @@ module Bandiera
       list.map(&:strip)
     end
 
-    def valid_params?(feature)
-      param_present?(feature[:name]) && !feature[:name].include?(' ') && param_present?(feature[:group])
+    def valid_feature_params?(feature)
+      param_present?(feature[:name]) && !param_has_whitespace?(feature[:name]) && param_present?(feature[:group])
     end
 
     def param_present?(param)
       param && !param.empty?
+    end
+
+    def param_has_whitespace?(param)
+      param.match(/\s/)
     end
   end
 end

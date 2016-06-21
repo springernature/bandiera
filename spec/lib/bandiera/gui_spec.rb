@@ -93,6 +93,28 @@ RSpec.describe Bandiera::GUI do
         check_error_flash('You must enter a group name')
       end
     end
+
+    context 'with a space in the group name' do
+      it 'shows validation errors' do
+        within('form') do
+          fill_in 'group_name', with: ' foo'
+          click_button 'Create'
+        end
+
+        check_error_flash('You must enter a group name without spaces')
+      end
+    end
+
+    context 'with a tab in the group name' do
+      it 'shows validation errors' do
+        within('form') do
+          fill_in 'group_name', with: "foo\t"
+          click_button 'Create'
+        end
+
+        check_error_flash('You must enter a group name without spaces')
+      end
+    end
   end
 
   describe 'adding a new feature flag' do
@@ -171,6 +193,20 @@ RSpec.describe Bandiera::GUI do
         within('form') do
           select 'pubserv', from: 'feature_group'
           fill_in 'feature_name', with: 'show something'
+          fill_in 'feature_description', with: 'This is a test feature.'
+          choose 'feature_active_true'
+          click_button 'Create'
+        end
+
+        check_error_flash('You must enter a feature name without spaces')
+      end
+    end
+
+    context 'with a feature flag name containing a tab' do
+      it 'shows validation errors' do
+        within('form') do
+          select 'pubserv', from: 'feature_group'
+          fill_in 'feature_name', with: "TEST-FEATURE\t"
           fill_in 'feature_description', with: 'This is a test feature.'
           choose 'feature_active_true'
           click_button 'Create'

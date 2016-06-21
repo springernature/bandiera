@@ -54,13 +54,10 @@ module Bandiera
     def _post_create_group
       group_name = params[:group][:name]
 
-      if param_present?(group_name)
+      with_valid_group_params(group_name, '/new/group') do
         feature_service.add_group(group_name)
         flash[:success] = 'Group created.'
         redirect '/'
-      else
-        flash[:danger] = 'You must enter a group name.'
-        redirect '/new/group'
       end
     end
 
@@ -151,20 +148,28 @@ module Bandiera
     private
 
     def with_valid_feature_params(feature, on_error_url)
-      if valid_params?(feature)
+      if valid_feature_params?(feature)
         yield
       else
         errors = []
         errors << 'enter a feature name' unless param_present?(feature[:name])
-        errors << 'enter a feature name without spaces' if feature[:name].include?(' ')
+        errors << 'enter a feature name without spaces' if param_has_whitespace?(feature[:name])
         errors << 'select a group' unless param_present?(feature[:group])
         flash[:danger] = "You must #{errors.join(' and ')}."
         redirect on_error_url
       end
     end
 
-    def param_present?(param)
-      param && !param.empty?
+    def with_valid_group_params(group_name, on_error_url)
+      if param_present?(group_name) && !param_has_whitespace?(group_name)
+        yield
+      else
+        errors = []
+        errors << 'enter a group name' unless param_present?(group_name)
+        errors << 'enter a group name without spaces' if param_has_whitespace?(group_name)
+        flash[:danger] = "You must #{errors.join(' and ')}."
+        redirect on_error_url
+      end
     end
   end
 end
