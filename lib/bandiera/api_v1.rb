@@ -134,7 +134,7 @@ module Bandiera
     end
 
     def with_valid_feature_params(feature, inc_option_params_in_error = false)
-      if valid_params?(feature)
+      if valid_feature_params?(feature)
         yield
       else
         error_msg = "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', " \
