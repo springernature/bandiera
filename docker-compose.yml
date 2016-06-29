@@ -1,7 +1,7 @@
 app:
   build: .
   volumes:
-    - .:/usr/src/app
+    - .:/app
   command: 'bundle exec shotgun -p 5000 -o 0.0.0.0 -s puma'
   ports:
     - '5000:5000'
@@ -15,7 +15,7 @@ app:
 test:
   build: .
   volumes:
-    - .:/usr/src/app
+    - .:/app
   command: 'bundle exec guard -i -p -l 1'
   environment:
     RACK_ENV: 'test'
