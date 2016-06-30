@@ -1,4 +1,4 @@
-FROM ruby:2.3.0
+FROM ruby:2.3.1
 
 MAINTAINER Darren Oakley <daz.oakley@gmail.com>
 
@@ -15,15 +15,14 @@ RUN apt-get update && \
   ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/bin/phantomjs
 
 # Copy Bandiera to the container
-COPY . /usr/src/app
-WORKDIR /usr/src/app
+ENV APP_HOME /app
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+COPY . $APP_HOME
 
-# Update bundler
-RUN gem install bundler
-
-# Throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
-RUN bundle install
+# bundle
+RUN gem install bundler --no-rdoc --no-ri
+RUN bundle install --jobs 4
 
 EXPOSE 5000
 
