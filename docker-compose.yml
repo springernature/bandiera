@@ -25,16 +25,6 @@ db:
   image: postgres
   ports:
     - '5432'
-  volumes_from:
-    - data
   environment:
     POSTGRES_USER: 'bandiera'
     POSTGRES_PASSWORD: 'bandiera'
-  links:
-    - data
-
-data:
-  image: busybox
-  volumes:
-    - /var/lib/postgresql/data
-  command: 'true'
