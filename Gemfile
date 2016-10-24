@@ -14,7 +14,6 @@ gem 'rack-flash3'
 gem 'erubis'
 gem 'macmillan-utils'
 
-gem 'unicorn', require: false, platform: :ruby
 gem 'puma', require: false
 
 gem 'airbrake', require: false
