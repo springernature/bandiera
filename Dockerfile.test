@@ -26,4 +26,4 @@ RUN bundle install --jobs 4
 
 EXPOSE 5000
 
-CMD [ "bundle exec puma -C config/puma.rb config.ru" ]
+CMD [ "bundle exec guard -i -p -l 1" ]
