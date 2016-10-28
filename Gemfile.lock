@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.4.0)
-    airbrake (5.6.0)
+    airbrake (5.6.1)
       airbrake-ruby (~> 1.6)
     airbrake-ruby (1.6.0)
     ast (2.3.0)
@@ -46,7 +46,7 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
     lumberjack (1.0.10)
-    macmillan-utils (1.0.31)
+    macmillan-utils (1.0.32)
       codeclimate-test-reporter
       multi_test
       rspec
@@ -91,7 +91,7 @@ GEM
       rack (>= 1.0)
     rainbow (2.1.0)
     rake (11.3.0)
-    rb-fsevent (0.9.7)
+    rb-fsevent (0.9.8)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
     rspec (3.5.0)

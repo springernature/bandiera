@@ -22,10 +22,10 @@ gem 'newrelic_rpm'
 
 group :development do
   gem 'shotgun'
-  gem 'rubocop'
 end
 
 group :test do
+  gem 'rubocop'
   gem 'sqlite3', platform: :ruby
   gem 'jdbc-sqlite3', platform: :jruby
   gem 'rspec'
