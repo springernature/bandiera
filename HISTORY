@@ -1,3 +1,7 @@
+= 3.1.5 / 2017-04-04
+
+  * Update all dependent gems (including nokogiri security patch - https://github.com/sparklemotion/nokogiri/issues/1615).
+
 = 3.1.4 / 2016-10-28
 
   * Update all dependent gems.
