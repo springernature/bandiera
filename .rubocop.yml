@@ -2,6 +2,11 @@ Metrics/LineLength:
   Description: 'Limit lines to 120 characters.'
   Max: 120
 
+Metrics/BlockLength:
+  ExcludedMethods:
+    - describe
+    - context
+
 Style/Documentation:
   Enabled: false
 
