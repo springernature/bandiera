@@ -7,6 +7,13 @@ Metrics/BlockLength:
     - describe
     - context
 
+Metrics/MethodLength:
+  CountComments: false
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 40
+
 Style/Documentation:
   Enabled: false
 
@@ -14,6 +21,15 @@ Style/SpaceBeforeFirstArg:
   Enabled: false
 
 Style/BracesAroundHashParameters:
+  Enabled: false
+
+Style/CaseEquality:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/ConditionalAssignment:
   Enabled: false
 
 Style/IndentHash:
