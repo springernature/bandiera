@@ -1,4 +1,5 @@
-FROM ruby:alpine
+FROM ruby:2.4.1-alpine
+
 MAINTAINER Darren Oakley <daz.oakley@gmail.com>
 
 RUN apk add --update --no-cache build-base ruby-dev libxml2-dev libxslt-dev postgresql-dev mysql-dev openssl-dev
