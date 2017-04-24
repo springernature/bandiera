@@ -70,7 +70,9 @@ module Bandiera
         description: params[:description],
         active:      params[:active],
         user_groups: params[:user_groups],
-        percentage:  params[:percentage]
+        percentage:  params[:percentage],
+        start_time:  params[:start_time],
+        end_time:    params[:end_time]
       }.delete_if { |_k, v| v.nil? }
       feature.update(fields)
     end

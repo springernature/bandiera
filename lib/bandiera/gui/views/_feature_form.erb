@@ -72,7 +72,7 @@
 
   <div class="well">
     <h4>User Groups</h4>
-    <p>Use these options to have feature enabled for only a select number of users.</p>
+    <p>Use these options to have the feature enabled for only a select number of users.</p>
     <p>Note that these options will only be considered if the feature is active. Inactive features will not be enabled for any user, regardless of the settings in this section.</p>
     <div class="row">
       <div class="col-md-6">
@@ -88,6 +88,38 @@
           <label for="feature[user_groups][regex]">Regular Expression</label>
           <input type="text" class="form-control" id="feature_user_groups_regex" name="feature[user_groups][regex]" value="<%= @feature.user_groups_regex %>" />
           <p class="help-block">Enter a Ruby based regular expression - i.e. <code>.*_admin</code> will match anything that ends in <code>_admin</code>.  Please see <a href="http://rubular.com/">http://rubular.com/</a> for more information on Ruby regular expressions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="well">
+    <h4>Date Rage</h4>
+    <p>Use this option to have the feature enabled during a certain time range.</p>
+    <p>Please note that the feature must also be active before it's enabled for any users. Inactive features will be disabled for everyone, regardless of the settings in this section.</p>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="feature[start_time]">Start Time</label>
+          <div class="input-group date" id="datetimepicker-start">
+            <input type='text' class="form-control" id="feature_start_time" name="feature[start_time]" value="<%= @feature.start_time %>" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+          <p class="help-block">Enter a date/time combination in the format <code>YYYY-MM-DD HH:MM:SS</code>. For example 12:32pm on July 8th 2017 would be something like <code>2017-07-08 12:32:00</code>. <strong>Note: the machine's configured time zone is used</strong>.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="feature[end_time]">End Time</label>
+          <div class='input-group date' id='datetimepicker-end'>
+            <input type='text' class="form-control" id="feature_end_time" name="feature[end_time]" value="<%= @feature.end_time %>" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+          <p class="help-block">Enter a date/time combination in the format <code>YYYY-MM-DD HH:MM:SS</code>. For example 12:32pm on July 8th 2017 would be something like <code>2017-07-08 12:32:00</code>. <strong>Note: the machine's configured time zone is used</strong>.</p>
         </div>
       </div>
     </div>

@@ -155,6 +155,9 @@ module Bandiera
         errors << 'enter a feature name' unless param_present?(feature[:name])
         errors << 'enter a feature name without spaces' if param_has_whitespace?(feature[:name])
         errors << 'select a group' unless param_present?(feature[:group])
+        errors << 'enter an end time if you enter a start time' if param_present?(feature[:start_time]) && !param_present?(feature[:end_time])
+        errors << 'enter a start time if you enter an end time' if param_present?(feature[:end_time]) && !param_present?(feature[:start_time])
+        errors << 'enter an end time that is after your start time' if param_present?(feature[:end_time]) &&  param_present?(feature[:start_time]) && !times_in_order?(feature[:start_time], feature[:end_time])
         flash[:danger] = "You must #{errors.join(' and ')}."
         redirect on_error_url
       end

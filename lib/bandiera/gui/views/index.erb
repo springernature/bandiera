@@ -31,8 +31,9 @@
                     <th style="text-align:center">Active?</th>
                     <th style="text-align:center">User Groups?</th>
                     <th style="text-align:center">User %</th>
+                    <th style="text-align:center">Date Range</th>
                     <th width="20%">Name</th>
-                    <th width="40%">Description</th>
+                    <th width="30%">Description</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -48,6 +49,11 @@
                       <td style="text-align:center">
                         <% if feature.percentage %>
                           <span class="fa fa-check"></span>
+                        <% end %>
+                      </td>
+                      <td style="text-align:center">
+                        <% if feature.start_time && feature.end_time %>
+                            <span class="fa fa-check"></span>
                         <% end %>
                       </td>
                       <td><%= feature.name %></td>

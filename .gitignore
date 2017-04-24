@@ -3,3 +3,4 @@ coverage*
 artifacts*
 .env
 newrelic_agent.log
+.idea

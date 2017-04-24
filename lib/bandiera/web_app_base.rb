@@ -50,7 +50,9 @@ module Bandiera
         description: params['description'],
         active:      params['active'] == 'true',
         user_groups: user_groups,
-        percentage:  params['percentage']
+        percentage:  params['percentage'],
+        start_time:  params['start_time'],
+        end_time:    params['end_time']
       }
     end
 
@@ -66,7 +68,14 @@ module Bandiera
     end
 
     def valid_feature_params?(feature)
-      param_present?(feature[:name]) && !param_has_whitespace?(feature[:name]) && param_present?(feature[:group])
+      valid_name = param_present?(feature[:name]) && !param_has_whitespace?(feature[:name])
+
+      valid_times = true
+      valid_times = false if param_present?(feature[:start_time]) && !param_present?(feature[:end_time])
+      valid_times = false if param_present?(feature[:end_time]) && !param_present?(feature[:start_time])
+      valid_times = false if param_present?(feature[:start_time]) && param_present?(feature[:end_time]) && !times_in_order?(feature[:start_time], feature[:end_time])
+
+      valid_name && param_present?(feature[:group]) && valid_times
     end
 
     def param_present?(param)
@@ -75,6 +84,13 @@ module Bandiera
 
     def param_has_whitespace?(param)
       param.match(/\s/)
+    end
+
+    def times_in_order?(start_time, end_time)
+      start_time = Time.parse(start_time)
+      end_time = Time.parse(end_time)
+
+      (start_time < end_time)
     end
   end
 end
