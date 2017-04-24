@@ -7,6 +7,8 @@ RSpec.describe Bandiera::Feature do
   let(:active)      { true }
   let(:user_groups) { nil }
   let(:percentage)  { nil }
+  let(:start_time)  { nil }
+  let(:end_time)    { nil }
 
   subject do
     Bandiera::Feature.create do |feat|
@@ -15,7 +17,9 @@ RSpec.describe Bandiera::Feature do
       feat.description = description
       feat.active      = active
       feat.user_groups = user_groups if user_groups
-      feat.percentage  = percentage if percentage
+      feat.percentage  = percentage  if percentage
+      feat.start_time  = start_time  if start_time
+      feat.end_time    = end_time    if end_time
     end
   end
 
@@ -91,6 +95,26 @@ RSpec.describe Bandiera::Feature do
           it 'ignores these values when considering the user_group' do
             expect(subject.enabled?(user_group: 'admin')).to eq true
             expect(subject.enabled?(user_group: '')).to eq false
+          end
+        end
+      end
+
+      context 'with a time range is configured' do
+        context 'when within time range' do
+          let(:start_time) { Time.now - 50 }
+          let(:end_time) { Time.now + 50 }
+
+          it 'returns true' do
+            expect(subject.enabled?(user_group: user_group)).to eq true
+          end
+        end
+
+        context 'when out of time range' do
+          let(:start_time) { Time.now + 50 }
+          let(:end_time) { Time.now + 100 }
+
+          it 'returns false' do
+            expect(subject.enabled?(user_group: user_group)).to eq false
           end
         end
       end
@@ -213,6 +237,28 @@ RSpec.describe Bandiera::Feature do
           end
         end
       end
+
+      context 'with a time range is configured' do
+        let(:percentage) { 5 }
+
+        context 'when within time range' do
+          let(:start_time) { Time.now - 50 }
+          let(:end_time) { Time.now + 50 }
+
+          it 'returns true' do
+            expect(subject.enabled?).to eq true
+          end
+        end
+
+        context 'when out of time range' do
+          let(:start_time) { Time.now + 50 }
+          let(:end_time) { Time.now + 100 }
+
+          it 'returns false' do
+            expect(subject.enabled?).to eq false
+          end
+        end
+      end
     end
 
     context 'when @active is false' do
@@ -286,6 +332,73 @@ RSpec.describe Bandiera::Feature do
       describe '#enabled?' do
         it 'returns false' do
           expect(subject.enabled?(user_group: 'admin', user_id: 12_345)).to eq false
+        end
+      end
+    end
+  end
+
+  describe 'a feature for a time range' do
+    context 'when the end_time is before start_time' do
+      let(:end_time) { Time.now - 50 }
+      let(:start_time) { Time.now + 50 }
+
+      describe '#validate' do
+        it 'raises Sequel::ValidationFailed error with expected message' do
+          expect{ subject }.to raise_error(Sequel::ValidationFailed, 'end_time cannot be before start_time')
+        end
+      end
+    end
+
+    context 'when only one time is set' do
+      context 'when start_time is not set' do
+        let(:end_time) { Time.now + 50 }
+
+        describe '#time_configured?' do
+          it 'returns false' do
+            expect(subject.time_configured?).to eq false
+          end
+        end
+      end
+
+      context 'when end_time is not set' do
+        let(:start_time) { Time.now - 50 }
+
+        describe '#time_configured?' do
+          it 'returns false' do
+            expect(subject.time_configured?).to eq false
+          end
+        end
+      end
+    end
+
+    context 'when a time is set as an empty string' do
+      let(:start_time) { '' }
+      let(:end_time) { '' }
+
+      it 'sets the time as nil' do
+        expect(subject.start_time).to be_nil
+        expect(subject.end_time).to be_nil
+      end
+    end
+
+    context 'when the current time is in range' do
+      let(:start_time) { Time.now - 50 }
+      let(:end_time) { Time.now + 50 }
+
+      describe '#enabled?' do
+        it 'returns true' do
+          expect(subject.enabled?).to eq true
+        end
+      end
+    end
+
+    context 'when the current time is out of range' do
+      let(:start_time) { Time.now + 50 }
+      let(:end_time) { Time.now + 100 }
+
+      describe '#enabled?' do
+        it 'returns false' do
+          expect(subject.enabled?).to eq false
         end
       end
     end

@@ -22,7 +22,8 @@ RSpec.describe Bandiera::GUI do
                            { group: 'pubserv', name: 'show_subjects', description: 'Show all subject related features', active: false },
                            { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
                            { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    active: false },
-                           { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         active: true  }
+                           { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         active: true  },
+                           { group: 'parliament',   name: 'show_search',  description: 'Show search box',                  active: false }
                          ])
   end
 
@@ -35,7 +36,7 @@ RSpec.describe Bandiera::GUI do
       all('.bandiera-feature-group').each do |div|
         group_name = div.find('h3').text
         features   = div.all('tr.bandiera-feature').map do |tr|
-          tr.all('td')[3].text
+          tr.all('td')[4].text
         end
 
         groups[group_name] = features
@@ -158,6 +159,30 @@ RSpec.describe Bandiera::GUI do
           expect(feature.user_groups_regex).to eq('.*Admin')
         end
       end
+
+      context 'for a feature flag configured with a start and end time' do
+        it 'adds the feature flag' do
+          within('form') do
+            select 'parliament', from: 'feature_group'
+            fill_in 'feature_name', with: 'dissolution'
+            fill_in 'feature_description', with: 'We are in dissolution.'
+            choose 'feature_active_true'
+            fill_in 'feature_start_time', with: '2017-05-06 00:25:30'
+            fill_in 'feature_end_time', with: '2017-06-08 23:59:59'
+            fill_in 'feature_user_groups_regex', with: '.*Admin'
+            click_button 'Create'
+          end
+
+          check_success_flash('Feature created')
+
+          feature = service.fetch_feature('parliament', 'dissolution')
+
+          expect(feature).to be_an_instance_of(Bandiera::Feature)
+          expect(feature.user_groups_configured?).to be_truthy
+          expect(feature.start_time).to eq(Time.new(2017, 5, 6, 0, 25, 30))
+          expect(feature.end_time).to eq(Time.new(2017, 6, 8, 23, 59, 59))
+        end
+      end
     end
 
     context 'without selecting a group' do
@@ -213,6 +238,52 @@ RSpec.describe Bandiera::GUI do
         end
 
         check_error_flash('You must enter a feature name without spaces')
+      end
+    end
+
+    context 'with a feature flag that has a start time without an end time' do
+      it 'shows validation errors' do
+        within('form') do
+          select 'pubserv', from: 'feature_group'
+          fill_in 'feature_name', with: 'TEST-FEATURE'
+          fill_in 'feature_description', with: 'This is a test feature.'
+          choose 'feature_active_true'
+          fill_in 'feature_start_time', with: '2017-05-06 00:25:30'
+          click_button 'Create'
+        end
+
+        check_error_flash('You must enter an end time if you enter a start')
+      end
+    end
+
+    context 'with a feature flag that has an end time without a start time' do
+      it 'shows validation errors' do
+        within('form') do
+          select 'pubserv', from: 'feature_group'
+          fill_in 'feature_name', with: 'TEST-FEATURE'
+          fill_in 'feature_description', with: 'This is a test feature.'
+          choose 'feature_active_true'
+          fill_in 'feature_end_time', with: '2017-06-08 23:59:59'
+          click_button 'Create'
+        end
+
+        check_error_flash('You must enter a start time if you enter an end')
+      end
+    end
+
+    context 'with a feature flag that has an end time that starts before the start time' do
+      it 'shows validation errors' do
+        within('form') do
+          select 'pubserv', from: 'feature_group'
+          fill_in 'feature_name', with: 'TEST-FEATURE'
+          fill_in 'feature_description', with: 'This is a test feature.'
+          choose 'feature_active_true'
+          fill_in 'feature_start_time', with: '2017-06-08 23:59:59'
+          fill_in 'feature_end_time', with: '2017-05-06 00:25:30'
+          click_button 'Create'
+        end
+
+        check_error_flash('You must enter an end time that is after your start time')
       end
     end
   end

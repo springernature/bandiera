@@ -19,7 +19,9 @@ RSpec.describe Bandiera::APIv2 do
                                    { group: 'pubserv', name: 'show_metrics', description: '', active: false },
                                    { group: 'pubserv', name: 'use_content_hub', description: '', active: true },
                                    { group: 'shunter', name: 'stats_logging', description: '', active: true },
-                                   { group: 'shunter', name: 'use_img_serv', description: '', active: true, percentage: 50 }
+                                   { group: 'shunter', name: 'use_img_serv', description: '', active: true, percentage: 50 },
+                                   { group: 'parliament', name: 'in_dissolution', description: '', active: true, start_time: Time.now - 100, end_time: Time.now + 100 },
+                                   { group: 'parliament', name: 'show_search', description: '', active: true, start_time: Time.now + 100, end_time: Time.now + 200 }
                                  ])
   end
 
@@ -39,6 +41,10 @@ RSpec.describe Bandiera::APIv2 do
         'shunter' => {
           'stats_logging' => true,
           'use_img_serv'  => false
+        },
+        'parliament' => {
+          'in_dissolution' => true,
+          'show_search' => false,
         }
       }
 

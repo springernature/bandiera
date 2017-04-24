@@ -6,6 +6,11 @@ module Bandiera
 
     serialize_attributes :json, :user_groups
 
+    def validate
+      super
+      errors.add(:end_time, 'cannot be before start_time') if end_time && start_time && end_time < start_time
+    end
+
     def self.stub_feature(name, group)
       new(name: name, group: Group.find_or_create(name: group), description: '')
     end
@@ -19,9 +24,9 @@ module Bandiera
 
     def enabled?(opts = { user_group: nil, user_id: nil })
       return false unless active?
-      return true  unless user_groups_configured? || percentage_configured?
+      return true  unless user_groups_configured? || percentage_configured? || time_configured?
 
-      false || enabled_for_user_groups?(opts) || enabled_for_percentage?(opts)
+      false || enabled_for_user_groups?(opts) || enabled_for_percentage?(opts) || enabled_for_time?
     end
 
     def report_enabled_warnings(opts = { user_group: nil, user_id: nil })
@@ -51,6 +56,10 @@ module Bandiera
       !percentage.nil?
     end
 
+    def time_configured?
+      (!start_time.nil? and !end_time.nil?) and (start_time < end_time)
+    end
+
     def as_v1_json
       {
         group:       group.name,
@@ -64,12 +73,23 @@ module Bandiera
 
     def enabled_for_user_groups?(opts)
       return false unless user_groups_configured? && opts[:user_group]
+      return false if time_configured? && !enabled_for_time?
+
       user_group_within_list?(opts[:user_group]) || user_group_match_regex?(opts[:user_group])
     end
 
     def enabled_for_percentage?(opts)
       return false unless percentage_configured? && opts[:user_id]
+      return false if time_configured? && !enabled_for_time?
+
       percentage_enabled_for_user?(opts[:user_id])
+    end
+
+    def enabled_for_time?
+      return false unless time_configured?
+
+      now = Time.now
+      start_time < now and end_time > now
     end
 
     def feature_service
