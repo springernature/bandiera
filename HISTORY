@@ -1,3 +1,8 @@
+= 3.2.0 / 2017-04-24
+
+  * New feature - allow feature flags to be time-boxed, i.e. have a defined start and end time. Thanks @mattrayner!
+  * Update the base ruby version to 2.4.1
+
 = 3.1.5 / 2017-04-04
 
   * Update all dependent gems (including nokogiri security patch - https://github.com/sparklemotion/nokogiri/issues/1615).
