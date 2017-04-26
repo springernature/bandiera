@@ -68,11 +68,7 @@ every time you update one of the files.
 
 ### Mac OS X
 
-Install the [Docker Toolbox](https://www.docker.com/products/docker-toolbox)
-
-There, will be some environment variables you need to configure - the
-instructions for this will be printed into your terminal now.  After that,
-you're ready to go.
+Install [Docker for Mac](https://www.docker.com/docker-mac)
 
 ### Linux
 
@@ -83,7 +79,7 @@ You're now ready to go.
 
 ### Windows
 
-Install the [Docker Toolbox](https://www.docker.com/products/docker-toolbox)
+Install [Docker for Windows](https://www.docker.com/docker-windows)
 
 ## Local Setup
 
