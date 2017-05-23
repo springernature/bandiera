@@ -1,3 +1,7 @@
+= 3.2.1 / 2017-05-23
+
+  * Update all dependent gems - including a major security update for nokogiri.
+
 = 3.2.0 / 2017-04-24
 
   * New feature - allow feature flags to be time-boxed, i.e. have a defined start and end time. Thanks @mattrayner!
