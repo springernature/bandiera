@@ -10,11 +10,13 @@ module Bandiera
     configure do
       enable :logging
       enable :raise_errors if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
+
+      set :feature_service, CachingFeatureService.new(FeatureService.new)
     end
 
     helpers do
       def feature_service
-        @feature_service ||= FeatureService.new
+        settings.feature_service
       end
     end
 

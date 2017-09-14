@@ -4,12 +4,15 @@ require 'rack/test'
 RSpec.describe Bandiera::APIv1 do
   include Rack::Test::Methods
 
-  def app
+  let(:instance) {Bandiera::APIv1}
+  let(:app) {
+    app_instance = instance
     Rack::Builder.new do
       use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
       run Bandiera::APIv1
+      run app_instance
     end
-  end
+  }
 
   def assert_last_response_matches(expected_data)
     data = JSON.parse(last_response.body)
@@ -18,7 +21,7 @@ RSpec.describe Bandiera::APIv1 do
   end
 
   before do
-    service = Bandiera::FeatureService.new
+    service = instance.settings.feature_service
     service.add_features([
                            { group: 'pubserv', name: 'show_subjects', description: 'Show all subject related features', active: false },
                            { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
