@@ -1,1 +1,4 @@
-.rubocop.yml
+---
+ruby:
+  enabled: true
+  config_file: .rubocop.yml
