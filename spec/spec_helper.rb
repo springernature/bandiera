@@ -7,6 +7,7 @@ require 'macmillan/utils/test_helpers/codeclimate_helper'
 require 'macmillan/utils/test_helpers/simplecov_helper'
 require 'macmillan/utils/statsd_stub'
 
+require 'timecop'
 require 'pry'
 
 require_relative '../lib/bandiera'

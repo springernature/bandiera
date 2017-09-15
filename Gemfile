@@ -13,6 +13,7 @@ gem 'sinatra'
 gem 'rack-flash3'
 gem 'erubis'
 gem 'macmillan-utils'
+gem 'lru_redux'
 
 gem 'puma', require: false
 
@@ -35,4 +36,5 @@ group :test do
   gem 'webmock'
   gem 'pry'
   gem 'guard-rspec', require: false
+  gem 'timecop'
 end

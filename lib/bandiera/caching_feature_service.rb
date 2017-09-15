@@ -1,110 +1,71 @@
-require 'thread'
+# frozen_string_literal: true
+
+require 'lru_redux'
 
 module Bandiera
-  class CachingFeatureService
+  class CachingFeatureService < SimpleDelegator
+    CACHE_SIZE = 100
+    CACHE_TTL  = 10
 
-    def initialize(delegate, clock = Time)
-      @delegate = delegate
+    attr_reader :cache
 
-      @cached_find_group = Cache.new(clock)
-      @cached_fetch_groups = Cache.new(clock)
-      @cached_fetch_feature = Cache.new(clock)
-      @cached_fetch_group_features = Cache.new(clock)
+    def initialize(delegate)
+      @cache = LruRedux::TTL::ThreadSafeCache.new(CACHE_SIZE, CACHE_TTL)
+
+      super
     end
 
     def find_group(name)
-      @cached_find_group.get_or_update(name) {@delegate.find_group(name)}
+      cache.getset(:"find_group:#{name}") { super }
     end
 
     def fetch_groups
-      @cached_fetch_groups.get_or_update {@delegate.fetch_groups}
+      cache.getset(:fetch_groups) { super }
     end
 
     def fetch_group_features(group)
-      @cached_fetch_group_features.get_or_update(group) {@delegate.fetch_group_features(group)}
+      cache.getset(:"fetch_group_features:#{group}") { super }
     end
 
     def fetch_feature(group, feature_name)
-      @cached_fetch_feature.get_or_update([group, feature_name]) {@delegate.fetch_feature(group, feature_name)}
+      cache.getset(:"fetch_feature:#{group}:#{feature_name}") { super }
     end
 
-    def add_group(group_name)
-      new_group = @delegate.add_group(group_name)
+    def add_group(group)
+      cache.delete(:"find_group:#{group}")
+      cache.delete(:fetch_groups)
 
-      @cached_find_group.invalidate
-      @cached_fetch_groups.invalidate
-
-      new_group
+      super
     end
 
-    def add_feature(feature_data)
-      new_feature = @delegate.add_feature(feature_data)
+    def add_feature(data)
+      cache.delete(:"fetch_feature:#{data[:group]}:#{data[:name]}")
+      cache.delete(:"fetch_group_features:#{data[:group]}")
 
-      @cached_fetch_feature.invalidate
-      @cached_fetch_group_features.invalidate
-
-      new_feature
+      super
     end
 
-    def add_features(features_data)
-      new_features = @delegate.add_features(features_data)
+    def add_features(features)
+      features.each do |data|
+        cache.delete(:"fetch_feature:#{data[:group]}:#{data[:name]}")
+        cache.delete(:"fetch_group_features:#{data[:group]}")
+      end
 
-      @cached_fetch_feature.invalidate
-      @cached_fetch_group_features.invalidate
-
-      new_features
+      super
     end
 
     def remove_feature(group, feature_name)
-      affected_rows = @delegate.remove_feature(group, feature_name)
+      cache.delete(:"fetch_feature:#{group}:#{feature_name}")
+      cache.delete(:"fetch_group_features:#{group}")
 
-      @cached_fetch_feature.invalidate
-      @cached_fetch_group_features.invalidate
-
-      affected_rows
+      super
     end
 
     def update_feature(group, feature_name, feature_data)
-      updated_feature = @delegate.update_feature(group, feature_name, feature_data)
+      cache.delete(:"fetch_feature:#{group}:#{feature_name}")
+      cache.delete(:"fetch_group_features:#{group}")
 
-      @cached_fetch_feature.invalidate
-      @cached_fetch_group_features.invalidate
-
-      updated_feature
+      super
     end
-
-    private
-
-    CACHE_FOR_SECONDS = 10
-
-    class Cache
-      def initialize(clock)
-        @clock = clock
-        @lock = Mutex.new
-        @value = {}
-        @cached_times = {}
-      end
-
-      def invalidate
-        @lock.synchronize {
-          @value = {}
-          @cached_times = {}
-        }
-      end
-
-      def get_or_update(key = :value, &block)
-        @lock.synchronize {
-          now = @clock.now.to_i
-          if @value[key] && @cached_times[key] && now < (@cached_times[key] + CACHE_FOR_SECONDS)
-            @value[key]
-          else
-            @value[key] = block.call
-            @cached_times[key] = now
-            @value[key]
-          end
-        }
-      end
-    end
-
   end
 end
