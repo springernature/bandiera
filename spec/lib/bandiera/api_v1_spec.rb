@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rack/test'
 
 RSpec.describe Bandiera::APIv1 do
   include Rack::Test::Methods
 
-  let(:instance) {Bandiera::APIv1}
-  let(:app) {
+  let(:instance) { Bandiera::APIv1 }
+  let(:app) do
     app_instance = instance
     Rack::Builder.new do
       use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
       run Bandiera::APIv1
       run app_instance
     end
-  }
+  end
 
   def assert_last_response_matches(expected_data)
     data = JSON.parse(last_response.body)
@@ -23,7 +25,7 @@ RSpec.describe Bandiera::APIv1 do
   before do
     service = instance.settings.feature_service
     service.add_features([
-                           { group: 'pubserv', name: 'show_subjects', description: 'Show all subject related features', active: false },
+                           { group: 'pubserv',   name: 'show_subjects',  description: 'Show all subject related features', active: false },
                            { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
                            { group: 'pubserv',   name: 'xmas_mode',      description: 'Xmas mode: SNOWFLAKES!',            active: false },
                            { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    active: false },

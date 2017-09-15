@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'capybara/dsl'
 require 'capybara/rspec'
@@ -19,11 +21,11 @@ RSpec.describe Bandiera::GUI do
 
   before do
     @service.add_features([
-                             { group: 'pubserv', name: 'show_subjects', description: 'Show all subject related features', active: false },
-                             { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
-                             { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    active: false },
-                             { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         active: true  },
-                             { group: 'parliament',   name: 'show_search',  description: 'Show search box',                  active: false }
+                            { group: 'pubserv',    name: 'show_subjects',  description: 'Show all subject related features', active: false },
+                            { group: 'pubserv',    name: 'show_search',    description: 'Show the search bar',               active: true  },
+                            { group: 'laserwolf',  name: 'enable_caching', description: 'Enable caching',                    active: false },
+                            { group: 'shunter',    name: 'stats_logging',  description: 'Log stats',                         active: true  },
+                            { group: 'parliament', name: 'show_search',    description: 'Show search box', active: false }
                           ])
   end
 
@@ -42,7 +44,7 @@ RSpec.describe Bandiera::GUI do
         groups[group_name] = features
       end
 
-      expect(groups['pubserv']).to match_array(%w(show_subjects show_search))
+      expect(groups['pubserv']).to match_array(%w[show_subjects show_search])
       expect(groups['laserwolf']).to match_array(['enable_caching'])
       expect(groups['shunter']).to match_array(['stats_logging'])
     end
@@ -155,7 +157,7 @@ RSpec.describe Bandiera::GUI do
 
           expect(feature).to be_an_instance_of(Bandiera::Feature)
           expect(feature.user_groups_configured?).to be_truthy
-          expect(feature.user_groups_list).to eq(%w(Editor Writer))
+          expect(feature.user_groups_list).to eq(%w[Editor Writer])
           expect(feature.user_groups_regex).to eq('.*Admin')
         end
       end

@@ -92,7 +92,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
       3.times { subject.fetch_groups }
 
-      Timecop.travel(Time.local(2017, 1, 1, 12, 0 ,11))
+      Timecop.travel(Time.local(2017, 1, 1, 12, 0, 11))
 
       3.times { subject.fetch_groups }
 
@@ -151,7 +151,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
       3.times { subject.find_group('group1') }
 
-      Timecop.travel(Time.local(2017, 1, 1, 12, 0 ,11))
+      Timecop.travel(Time.local(2017, 1, 1, 12, 0, 11))
 
       3.times { subject.find_group('group1') }
 
@@ -358,7 +358,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
       3.times { subject.fetch_feature('group1', 'feature1') }
 
-      Timecop.travel(Time.local(2017, 1, 1, 12, 0 ,11))
+      Timecop.travel(Time.local(2017, 1, 1, 12, 0, 11))
 
       3.times { subject.fetch_feature('group1', 'feature1') }
 
@@ -417,7 +417,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
       3.times { subject.fetch_group_features('group1') }
 
-      Timecop.travel(Time.local(2017, 1, 1, 12, 0 ,11))
+      Timecop.travel(Time.local(2017, 1, 1, 12, 0, 11))
 
       3.times { subject.fetch_group_features('group1') }
 
