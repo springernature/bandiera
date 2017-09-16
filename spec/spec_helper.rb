@@ -13,6 +13,10 @@ require 'pry'
 require_relative '../lib/bandiera'
 load File.expand_path('../../Rakefile', __FILE__)
 
+# load shared_examples
+shared_example_files = File.expand_path('shared_examples/**/*.rb', __dir__)
+Dir[shared_example_files].each(&method(:require))
+
 # Suppress logging
 Bandiera.logger = Macmillan::Utils::Logger::Factory.build_logger(:null)
 Bandiera.statsd = Macmillan::Utils::StatsdStub.new

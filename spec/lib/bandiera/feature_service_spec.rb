@@ -4,6 +4,8 @@ RSpec.describe Bandiera::FeatureService do
   let(:db) { Bandiera::Db.connect }
   subject { Bandiera::FeatureService.new }
 
+  it_behaves_like 'a feature service'
+
   describe '#add_group' do
     it 'adds a new group' do
       expect(db[:groups]).to be_empty

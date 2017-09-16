@@ -11,6 +11,8 @@ RSpec.describe Bandiera::CachingFeatureService do
 
   subject { Bandiera::CachingFeatureService.new(delegate) }
 
+  it_behaves_like 'a feature service'
+
   describe '#add_group' do
     it 'adds the group to the delegate' do
       expect(delegate).to receive(:add_group).with('burgers').and_return(group)

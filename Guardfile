@@ -1,4 +1,4 @@
-guard :rspec, cmd: 'bundle exec rspec' do
+guard :rspec, cmd: 'bundle exec rspec', all_after_pass: true do
   require 'guard/rspec/dsl'
   dsl = Guard::RSpec::Dsl.new(self)
 
@@ -15,4 +15,5 @@ guard :rspec, cmd: 'bundle exec rspec' do
   # Bandiera Specific
   watch('lib/bandiera.rb') { 'spec' }
   watch('lib/hash.rb') { 'spec' }
+  watch('spec/shared_examples/services.rb') { 'spec' }
 end
