@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Bandiera::CachingFeatureService do
-  let(:delegate) { instance_double(Bandiera::FeatureService) }
+  let(:delegate) { Bandiera::FeatureService.new }
   let(:group)    { Bandiera::Group.new(name: 'group1') }
   let(:groups)   { [Bandiera::Group.new(name: 'group1')] }
   let(:feature)  { Bandiera::Feature.new(name: 'feature1') }
