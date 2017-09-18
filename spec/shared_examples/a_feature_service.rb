@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'a feature service' do
   let(:db) { Bandiera::Db.connect }
 
@@ -148,7 +150,7 @@ shared_examples_for 'a feature service' do
 
     context 'creating features configured for specific user groups' do
       let(:user_groups) do
-        { list: %w(admin editor), regex: '.*admin.*' }
+        { list: %w[admin editor], regex: '.*admin.*' }
       end
 
       let(:features) do
@@ -293,7 +295,7 @@ shared_examples_for 'a feature service' do
         expect(features.first).to be_an_instance_of(Bandiera::Feature)
 
         names = features.map(&:name)
-        expect(names).to eq(%w(feature1 feature2))
+        expect(names).to eq(%w[feature1 feature2])
       end
     end
 
