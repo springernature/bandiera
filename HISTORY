@@ -1,3 +1,8 @@
+= 3.3.0 / 2017-09-18
+
+  * Introduce an in-process cache for feature service requests.  Thanks @jshiell for the contribution and @baob for the contributions to the specs! :)
+  * Update the base ruby version to 2.4.2
+
 = 3.2.1 / 2017-05-23
 
   * Update all dependent gems - including a major security update for nokogiri.
