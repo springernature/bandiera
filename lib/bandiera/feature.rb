@@ -92,10 +92,6 @@ module Bandiera
       start_time < now and end_time > now
     end
 
-    def feature_service
-      @feature_service ||= FeatureService.new
-    end
-
     def percentage_enabled_for_user?(user_id)
       Zlib.crc32("#{name}-1_000_000-#{user_id}") % 100 < percentage
     end

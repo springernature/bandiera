@@ -8,15 +8,16 @@ require 'newrelic_rpm'
 GC::Profiler.enable
 
 module Bandiera
-  autoload :VERSION,        'bandiera/version'
-  autoload :Db,             'bandiera/db'
-  autoload :Group,          'bandiera/group'
-  autoload :Feature,        'bandiera/feature'
-  autoload :FeatureService, 'bandiera/feature_service'
-  autoload :WebAppBase,     'bandiera/web_app_base'
-  autoload :APIv1,          'bandiera/api_v1'
-  autoload :APIv2,          'bandiera/api_v2'
-  autoload :GUI,            'bandiera/gui'
+  autoload :VERSION,                'bandiera/version'
+  autoload :Db,                     'bandiera/db'
+  autoload :Group,                  'bandiera/group'
+  autoload :Feature,                'bandiera/feature'
+  autoload :FeatureService,         'bandiera/feature_service'
+  autoload :CachingFeatureService,  'bandiera/caching_feature_service'
+  autoload :WebAppBase,             'bandiera/web_app_base'
+  autoload :APIv1,                  'bandiera/api_v1'
+  autoload :APIv2,                  'bandiera/api_v2'
+  autoload :GUI,                    'bandiera/gui'
 
   class << self
     def init(environment)

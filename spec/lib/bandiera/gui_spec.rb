@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'capybara/dsl'
 require 'capybara/rspec'
@@ -6,25 +8,25 @@ require 'capybara/poltergeist'
 RSpec.describe Bandiera::GUI do
   include Capybara::DSL
 
-  let(:service) { Bandiera::FeatureService.new }
-
   before(:all) do
+    app = Bandiera::GUI.new
     Capybara.app = Rack::Builder.new do
       use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
-      run Bandiera::GUI.new
+      run app
     end
+    @service = app.settings.feature_service
     Capybara.default_driver    = :rack_test
     Capybara.javascript_driver = :poltergeist
   end
 
   before do
-    service.add_features([
-                           { group: 'pubserv', name: 'show_subjects', description: 'Show all subject related features', active: false },
-                           { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
-                           { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    active: false },
-                           { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         active: true  },
-                           { group: 'parliament',   name: 'show_search',  description: 'Show search box',                  active: false }
-                         ])
+    @service.add_features([
+                            { group: 'pubserv',    name: 'show_subjects',  description: 'Show all subject related features', active: false },
+                            { group: 'pubserv',    name: 'show_search',    description: 'Show the search bar',               active: true  },
+                            { group: 'laserwolf',  name: 'enable_caching', description: 'Enable caching',                    active: false },
+                            { group: 'shunter',    name: 'stats_logging',  description: 'Log stats',                         active: true  },
+                            { group: 'parliament', name: 'show_search',    description: 'Show search box', active: false }
+                          ])
   end
 
   describe 'the homepage' do
@@ -42,7 +44,7 @@ RSpec.describe Bandiera::GUI do
         groups[group_name] = features
       end
 
-      expect(groups['pubserv']).to match_array(%w(show_subjects show_search))
+      expect(groups['pubserv']).to match_array(%w[show_subjects show_search])
       expect(groups['laserwolf']).to match_array(['enable_caching'])
       expect(groups['shunter']).to match_array(['stats_logging'])
     end
@@ -58,12 +60,12 @@ RSpec.describe Bandiera::GUI do
       switch_class     = active ? 'switch-on' : 'switch-off'
 
       expect(toggle_container).to have_css(".#{switch_class}")
-      expect(service.fetch_feature(group, name).active?).to eq(active)
+      expect(@service.fetch_feature(group, name).active?).to eq(active)
 
       toggle.click
 
       expect(toggle_container).to_not have_css(".#{switch_class}")
-      expect(service.fetch_feature(group, name).active?).to_not eq(active)
+      expect(@service.fetch_feature(group, name).active?).to_not eq(active)
     end
   end
 
@@ -80,7 +82,7 @@ RSpec.describe Bandiera::GUI do
         end
 
         check_success_flash('Group created')
-        expect(service.fetch_groups.map(&:name)).to include('TEST')
+        expect(@service.fetch_groups.map(&:name)).to include('TEST')
       end
     end
 
@@ -134,7 +136,7 @@ RSpec.describe Bandiera::GUI do
         end
 
         check_success_flash('Feature created')
-        expect(service.fetch_feature('pubserv', 'TEST-FEATURE')).to be_an_instance_of(Bandiera::Feature)
+        expect(@service.fetch_feature('pubserv', 'TEST-FEATURE')).to be_an_instance_of(Bandiera::Feature)
       end
 
       context 'for a feature flag configured for user_groups' do
@@ -151,11 +153,11 @@ RSpec.describe Bandiera::GUI do
 
           check_success_flash('Feature created')
 
-          feature = service.fetch_feature('pubserv', 'TEST-FEATURE')
+          feature = @service.fetch_feature('pubserv', 'TEST-FEATURE')
 
           expect(feature).to be_an_instance_of(Bandiera::Feature)
           expect(feature.user_groups_configured?).to be_truthy
-          expect(feature.user_groups_list).to eq(%w(Editor Writer))
+          expect(feature.user_groups_list).to eq(%w[Editor Writer])
           expect(feature.user_groups_regex).to eq('.*Admin')
         end
       end
@@ -175,7 +177,7 @@ RSpec.describe Bandiera::GUI do
 
           check_success_flash('Feature created')
 
-          feature = service.fetch_feature('parliament', 'dissolution')
+          feature = @service.fetch_feature('parliament', 'dissolution')
 
           expect(feature).to be_an_instance_of(Bandiera::Feature)
           expect(feature.user_groups_configured?).to be_truthy
@@ -300,7 +302,7 @@ RSpec.describe Bandiera::GUI do
       feature_row.find('.bandiera-delete-feature').click
 
       check_success_flash('Feature deleted')
-      expect { service.fetch_feature(group_name, feature_name) }.to raise_error(Bandiera::FeatureService::FeatureNotFound)
+      expect { @service.fetch_feature(group_name, feature_name) }.to raise_error(Bandiera::FeatureService::FeatureNotFound)
     end
   end
 

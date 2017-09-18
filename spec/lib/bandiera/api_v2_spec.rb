@@ -1,8 +1,20 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rack/test'
 
 RSpec.describe Bandiera::APIv2 do
   include Rack::Test::Methods
+
+  let(:instance) { Bandiera::APIv2 }
+  let(:app) do
+    app_instance = instance
+    Rack::Builder.new do
+      use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
+      run Bandiera::APIv2
+      run app_instance
+    end
+  end
 
   def app
     Rack::Builder.new do
@@ -12,17 +24,16 @@ RSpec.describe Bandiera::APIv2 do
   end
 
   before do
-    feature_service = Bandiera::FeatureService.new
-    feature_service.add_features([
-                                   { group: 'pubserv', name: 'show_subjects', description: '', active: true,
-                                     user_groups: { list: ['editor'], regex: '' } },
-                                   { group: 'pubserv', name: 'show_metrics', description: '', active: false },
-                                   { group: 'pubserv', name: 'use_content_hub', description: '', active: true },
-                                   { group: 'shunter', name: 'stats_logging', description: '', active: true },
-                                   { group: 'shunter', name: 'use_img_serv', description: '', active: true, percentage: 50 },
-                                   { group: 'parliament', name: 'in_dissolution', description: '', active: true, start_time: Time.now - 100, end_time: Time.now + 100 },
-                                   { group: 'parliament', name: 'show_search', description: '', active: true, start_time: Time.now + 100, end_time: Time.now + 200 }
-                                 ])
+    service = instance.settings.feature_service
+    service.add_features([
+                           { group: 'pubserv',    name: 'show_subjects',   description: '', active: true, user_groups: { list: ['editor'], regex: '' } },
+                           { group: 'pubserv',    name: 'show_metrics',    description: '', active: false },
+                           { group: 'pubserv',    name: 'use_content_hub', description: '', active: true },
+                           { group: 'shunter',    name: 'stats_logging',   description: '', active: true },
+                           { group: 'shunter',    name: 'use_img_serv',    description: '', active: true, percentage: 50 },
+                           { group: 'parliament', name: 'in_dissolution',  description: '', active: true, start_time: Time.now - 100, end_time: Time.now + 100 },
+                           { group: 'parliament', name: 'show_search',     description: '', active: true, start_time: Time.now + 100, end_time: Time.now + 200 }
+                         ])
   end
 
   describe 'GET /all' do
@@ -33,18 +44,18 @@ RSpec.describe Bandiera::APIv2 do
 
     it 'returns a hash of groups, containing a hashes of features / enabled pairs' do
       expected_response = {
-        'pubserv' => {
+        'pubserv'    => {
           'show_subjects'   => false,
           'show_metrics'    => false,
           'use_content_hub' => true
         },
-        'shunter' => {
+        'shunter'    => {
           'stats_logging' => true,
           'use_img_serv'  => false
         },
         'parliament' => {
           'in_dissolution' => true,
-          'show_search' => false,
+          'show_search'    => false
         }
       }
 
