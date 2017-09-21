@@ -1,23 +1,30 @@
+AllCops:
+  StyleGuideCopsOnly: true
+
 Metrics/LineLength:
   Description: 'Limit lines to 120 characters.'
   Max: 120
+  Enabled: true
 
 Metrics/BlockLength:
   ExcludedMethods:
     - describe
     - context
+  Enabled: true
 
 Metrics/MethodLength:
   CountComments: false
   Max: 20
+  Enabled: true
 
 Metrics/AbcSize:
   Max: 40
+  Enabled: true
 
 Style/Documentation:
   Enabled: false
 
-Style/SpaceBeforeFirstArg:
+Layout/SpaceBeforeFirstArg:
   Enabled: false
 
 Style/BracesAroundHashParameters:
@@ -32,20 +39,23 @@ Style/GuardClause:
 Style/ConditionalAssignment:
   Enabled: false
 
-Style/IndentHash:
+Layout/IndentHash:
   EnforcedStyle: consistent
+  Enabled: true
 
-Style/AlignHash:
+Layout/AlignHash:
   Severity: fatal
   Enabled: true
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 
-Style/AlignParameters:
+Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
+  Enabled: true
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
+  Enabled: true
 
 Style/CollectionMethods:
   PreferredMethods:
@@ -54,15 +64,41 @@ Style/CollectionMethods:
     inject: 'reduce'
     detect: 'find'
     find_all: 'select'
+  Enabled: true
 
-Style/DotPosition:
+Layout/DotPosition:
   EnforcedStyle: leading
+  Enabled: true
 
 Style/DoubleNegation:
   Enabled: false
 
-Style/SpaceAroundOperators:
+Style/Alias:
+  # I like alias_method with symbol parameters
+  Enabled: false
+
+Layout/SpaceAroundOperators:
   # When true, allows most uses of extra spacing if the intent is to align
   # with an operator on the previous or next line, not counting empty lines
   # or comment lines.
   AllowForAlignment: true
+  Enabled: true
+
+Style/SymbolArray:
+  # Turned off because the associated auto-correct makes a real mess
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  # An 'every file in the repo' recommendation.
+  Enabled: false
+  Severity: warning
+
+Layout/EmptyLineAfterMagicComment:
+  # Nooo not another 'every file in the repo' recommendation.
+  Enabled: false
+  Severity: warning
+
+Style/GlobalVars:
+  # Doesn't justify a critical
+  Enabled: true
+  Severity: warning
