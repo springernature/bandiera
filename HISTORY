@@ -1,3 +1,7 @@
+= 3.3.1 / 2017-09-21
+
+  * Update all dependent gems (inlcuding nokogiri security patch - https://github.com/sparklemotion/nokogiri/issues/1673)
+
 = 3.3.0 / 2017-09-18
 
   * Introduce an in-process cache for feature service requests.  Thanks @jshiell for the contribution and @baob for the contributions to the specs! :)
