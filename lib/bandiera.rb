@@ -3,7 +3,6 @@ require 'dotenv'
 require 'sequel'
 require 'macmillan/utils/logger'
 require_relative 'hash'
-require 'newrelic_rpm'
 
 GC::Profiler.enable
 

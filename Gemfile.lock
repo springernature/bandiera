@@ -81,7 +81,6 @@ GEM
     mustermann (1.0.1)
     mysql2 (0.4.9)
     nenv (0.3.0)
-    newrelic_rpm (4.4.0.336)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
     nokogiri (1.8.1-java)
@@ -108,6 +107,7 @@ GEM
     puma (3.10.0)
     puma (3.10.0-java)
     rack (2.0.3)
+    rack-cors (1.0.1)
     rack-flash3 (1.0.5)
       rack
     rack-protection (2.0.0)
@@ -200,11 +200,11 @@ DEPENDENCIES
   lru_redux
   macmillan-utils
   mysql2
-  newrelic_rpm
   pg
   poltergeist
   pry
   puma
+  rack-cors
   rack-flash3
   rack-test
   rake

@@ -11,6 +11,7 @@ services:
       RACK_ENV: 'development'
       DATABASE_URL: 'postgres://bandiera:bandiera@db/bandiera'
       LOG_TO_STDOUT: 'true'
+      RACK_CORS_ORIGINS: '*'
     links:
       - db
 
