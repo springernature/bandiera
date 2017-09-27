@@ -19,9 +19,20 @@ if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
   end
 end
 
-require 'macmillan/utils/statsd_middleware'
+if ENV['RACK_CORS_ORIGINS']
+  require 'rack/cors'
 
+  use Rack::Cors do
+    allow do
+      origins ENV['RACK_CORS_ORIGINS']
+      resource '/api/v2/*', headers: :any, methods: [:get, :options]
+    end
+  end
+end
+
+require 'macmillan/utils/statsd_middleware'
 use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
+
 use Rack::CommonLogger, Bandiera.logger
 use Airbrake::Rack::Middleware if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
 

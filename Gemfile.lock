@@ -107,6 +107,7 @@ GEM
     puma (3.10.0)
     puma (3.10.0-java)
     rack (2.0.3)
+    rack-cors (1.0.1)
     rack-flash3 (1.0.5)
       rack
     rack-protection (2.0.0)
@@ -203,6 +204,7 @@ DEPENDENCIES
   poltergeist
   pry
   puma
+  rack-cors
   rack-flash3
   rack-test
   rake

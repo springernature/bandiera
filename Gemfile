@@ -19,6 +19,7 @@ gem 'puma', require: false
 
 gem 'airbrake', require: false
 gem 'statsd-ruby', require: false
+gem 'rack-cors'
 
 group :development do
   gem 'shotgun'
