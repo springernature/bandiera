@@ -81,7 +81,6 @@ GEM
     mustermann (1.0.1)
     mysql2 (0.4.9)
     nenv (0.3.0)
-    newrelic_rpm (4.4.0.336)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
     nokogiri (1.8.1-java)
@@ -200,7 +199,6 @@ DEPENDENCIES
   lru_redux
   macmillan-utils
   mysql2
-  newrelic_rpm
   pg
   poltergeist
   pry

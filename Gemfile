@@ -19,7 +19,6 @@ gem 'puma', require: false
 
 gem 'airbrake', require: false
 gem 'statsd-ruby', require: false
-gem 'newrelic_rpm'
 
 group :development do
   gem 'shotgun'
