@@ -1,3 +1,7 @@
+= 3.3.2 / 2017-09-27
+
+  * Add the ability to enable CORS headers for the v2 API (via an ENV variable)
+
 = 3.3.1 / 2017-09-21
 
   * Update all dependent gems (inlcuding nokogiri security patch - https://github.com/sparklemotion/nokogiri/issues/1673)
