@@ -12,8 +12,8 @@ module Bandiera
       enable :raise_errors if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
 
       set :feature_service, CachingFeatureService.new(FeatureService.new,
-                                                      cache_size: ENV['CACHE_SIZE']&.to_i,
-                                                      cache_ttl: ENV['CACHE_TTL']&.to_i)
+        cache_size: ENV['CACHE_SIZE']&.to_i,
+        cache_ttl: ENV['CACHE_TTL']&.to_i)
     end
 
     helpers do
