@@ -100,6 +100,48 @@ RSpec.describe Bandiera::CachingFeatureService do
 
       Timecop.return
     end
+
+    describe 'with a custom cache time' do
+      describe 'of a number' do
+        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: 5) }
+
+        it 'expires the cache after the cache time' do
+          expect(delegate).to receive(:fetch_groups).twice.and_return(groups)
+
+          Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+          3.times { subject.fetch_groups }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 6))
+
+          3.times { subject.fetch_groups }
+
+          Timecop.return
+        end
+      end
+
+      describe 'of nil' do
+        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: nil) }
+
+        it 'expires the cache after the default cache time' do
+          expect(delegate).to receive(:fetch_groups).twice.and_return(groups)
+
+          Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+          3.times { subject.fetch_groups }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 6))
+
+          3.times { subject.fetch_groups }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 11))
+
+          3.times { subject.fetch_groups }
+
+          Timecop.return
+        end
+      end
+    end
   end
 
   describe '#find_group' do
@@ -158,6 +200,48 @@ RSpec.describe Bandiera::CachingFeatureService do
       3.times { subject.find_group('group1') }
 
       Timecop.return
+    end
+
+    describe 'with a custom cache time' do
+      describe 'of a number' do
+        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: 5) }
+
+        it 'expires the cache after the cache time' do
+          expect(delegate).to receive(:find_group).with('group1').twice.and_return(group)
+
+          Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+          3.times { subject.find_group('group1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 6))
+
+          3.times { subject.find_group('group1') }
+
+          Timecop.return
+        end
+      end
+
+      describe 'of nil' do
+        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: nil) }
+
+        it 'expires the cache after the default cache time' do
+          expect(delegate).to receive(:find_group).with('group1').twice.and_return(group)
+
+          Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+          3.times { subject.find_group('group1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 6))
+
+          3.times { subject.find_group('group1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 11))
+
+          3.times { subject.find_group('group1') }
+
+          Timecop.return
+        end
+      end
     end
   end
 
@@ -366,6 +450,48 @@ RSpec.describe Bandiera::CachingFeatureService do
 
       Timecop.return
     end
+
+    describe 'with a custom cache time' do
+      describe 'of a number' do
+        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: 5) }
+
+        it 'expires the cache after the cache time' do
+          expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(feature)
+
+          Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+          3.times { subject.fetch_feature('group1', 'feature1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 6))
+
+          3.times { subject.fetch_feature('group1', 'feature1') }
+
+          Timecop.return
+        end
+      end
+
+      describe 'of nil' do
+        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: nil) }
+
+        it 'expires the cache after the default cache time' do
+          expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(feature)
+
+          Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+          3.times { subject.fetch_feature('group1', 'feature1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 6))
+
+          3.times { subject.fetch_feature('group1', 'feature1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 11))
+
+          3.times { subject.fetch_feature('group1', 'feature1') }
+
+          Timecop.return
+        end
+      end
+    end
   end
 
   describe '#fetch_group_features' do
@@ -424,6 +550,101 @@ RSpec.describe Bandiera::CachingFeatureService do
       3.times { subject.fetch_group_features('group1') }
 
       Timecop.return
+    end
+
+    describe 'with a custom cache time' do
+      describe 'of a number' do
+        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: 5) }
+
+        it 'expires the cache after the cache time' do
+          expect(delegate).to receive(:fetch_group_features).with('group1').twice.and_return(features)
+
+          Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+          3.times { subject.fetch_group_features('group1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 6))
+
+          3.times { subject.fetch_group_features('group1') }
+
+          Timecop.return
+        end
+      end
+
+      describe 'of nil' do
+        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: nil) }
+
+        it 'expires the cache after the default cache time' do
+          expect(delegate).to receive(:fetch_group_features).with('group1').twice.and_return(features)
+
+          Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+          3.times { subject.fetch_group_features('group1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 6))
+
+          3.times { subject.fetch_group_features('group1') }
+
+          Timecop.travel(Time.local(2017, 1, 1, 12, 0, 11))
+
+          3.times { subject.fetch_group_features('group1') }
+
+          Timecop.return
+        end
+      end
+    end
+  end
+
+  describe 'cache' do
+    let(:another_feature) { Bandiera::Feature.new(name: 'a_feature') }
+
+    describe 'with an unspecified cache size' do
+      it 'evicts the lru item from the cache after the default cache size is exceeded' do
+        expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(another_feature)
+        (2..101).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}").once.and_return(another_feature)}
+
+        Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+        (1..101).each {|i| subject.fetch_feature('group1', "feature#{i}")}
+
+        subject.fetch_feature('group1', 'feature1')
+
+        Timecop.return
+      end
+    end
+
+    describe 'with a custom cache size' do
+      subject { Bandiera::CachingFeatureService.new(delegate, cache_size: 10) }
+
+      it 'evicts the lru item from the cache after the specified cache size is exceeded' do
+        expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(another_feature)
+        (2..11).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}").once.and_return(another_feature)}
+
+        Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+        (1..11).each {|i| subject.fetch_feature('group1', "feature#{i}")}
+
+        subject.fetch_feature('group1', 'feature1')
+
+        Timecop.return
+      end
+    end
+
+    describe 'with a nil cache size' do
+      subject { Bandiera::CachingFeatureService.new(delegate, cache_size: nil) }
+
+      it 'evicts the lru item from the cache after the default cache size is exceeded' do
+        expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(another_feature)
+        (2..101).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}").once.and_return(another_feature)}
+
+        Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
+
+        (1..101).each {|i| subject.fetch_feature('group1', "feature#{i}")}
+
+        subject.fetch_feature('group1', 'feature1')
+
+        Timecop.return
+      end
     end
   end
 end

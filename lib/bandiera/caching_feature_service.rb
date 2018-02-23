@@ -9,10 +9,10 @@ module Bandiera
 
     attr_reader :cache
 
-    def initialize(delegate)
-      @cache = LruRedux::TTL::ThreadSafeCache.new(CACHE_SIZE, CACHE_TTL)
+    def initialize(delegate, cache_size: 100, cache_ttl: 10)
+      @cache = LruRedux::TTL::ThreadSafeCache.new(cache_size || 100, cache_ttl || 10)
 
-      super
+      super(delegate)
     end
 
     def find_group(name)
