@@ -601,7 +601,8 @@ RSpec.describe Bandiera::CachingFeatureService do
     describe 'with an unspecified cache size' do
       it 'evicts the lru item from the cache after the default cache size is exceeded' do
         expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(another_feature)
-        (2..101).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}").once.and_return(another_feature)}
+        (2..101).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}")
+            .once.and_return(another_feature)}
 
         Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
 
@@ -618,7 +619,8 @@ RSpec.describe Bandiera::CachingFeatureService do
 
       it 'evicts the lru item from the cache after the specified cache size is exceeded' do
         expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(another_feature)
-        (2..11).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}").once.and_return(another_feature)}
+        (2..11).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}")
+            .once.and_return(another_feature)}
 
         Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
 
@@ -635,7 +637,8 @@ RSpec.describe Bandiera::CachingFeatureService do
 
       it 'evicts the lru item from the cache after the default cache size is exceeded' do
         expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(another_feature)
-        (2..101).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}").once.and_return(another_feature)}
+        (2..101).each {|i| expect(delegate).to receive(:fetch_feature).with('group1', "feature#{i}")
+            .once.and_return(another_feature)}
 
         Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
 
