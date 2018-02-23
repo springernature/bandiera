@@ -4,7 +4,6 @@ require 'lru_redux'
 
 module Bandiera
   class CachingFeatureService < SimpleDelegator
-
     DEFAULT_CACHE_SIZE = 100
     DEFAULT_CACHE_TTL  = 10
 
