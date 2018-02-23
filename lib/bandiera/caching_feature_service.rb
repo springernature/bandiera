@@ -4,13 +4,11 @@ require 'lru_redux'
 
 module Bandiera
   class CachingFeatureService < SimpleDelegator
-    CACHE_SIZE = 100
-    CACHE_TTL  = 10
 
     attr_reader :cache
 
-    def initialize(delegate, cache_size: 100, cache_ttl: 10)
-      @cache = LruRedux::TTL::ThreadSafeCache.new(cache_size || 100, cache_ttl || 10)
+    def initialize(delegate, cache_size: DEFAULT_CACHE_SIZE, cache_ttl: DEFAULT_CACHE_TTL)
+      @cache = LruRedux::TTL::ThreadSafeCache.new(cache_size || DEFAULT_CACHE_SIZE, cache_ttl || DEFAULT_CACHE_TTL)
 
       super(delegate)
     end
@@ -67,5 +65,10 @@ module Bandiera
 
       super
     end
+
+    private 
+
+    DEFAULT_CACHE_SIZE = 100
+    DEFAULT_CACHE_TTL  = 10
   end
 end
