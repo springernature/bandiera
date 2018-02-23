@@ -66,7 +66,7 @@ module Bandiera
       super
     end
 
-    private 
+    private
 
     DEFAULT_CACHE_SIZE = 100
     DEFAULT_CACHE_TTL  = 10
