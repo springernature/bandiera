@@ -1,3 +1,7 @@
+= 3.4.0 / 2018-02-23
+
+  * New feature - the in-memory feture cache is now configureable via `CACHE_SIZE` and `CACHE_TTL` environment variables. Thanks @jshiell!
+
 = 3.3.3 / 2018-02-20
 
   * Update all dependent gems (inc. nokogiri security patches)
