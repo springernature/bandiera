@@ -24,4 +24,25 @@ RSpec.describe Bandiera::Db do
       expect(subject[:features].count).to eq(2)
     end
   end
+
+  describe '#ready?' do
+    context 'when the database is up and ready' do
+      it 'returns true' do
+        expect(Bandiera::Db.ready?).to be true
+      end
+    end
+
+    context 'when the database is not available' do
+      let(:connection_double) { double(:connection) }
+
+      before do
+        allow(Bandiera::Db).to receive(:connect).and_return(connection_double)
+        allow(connection_double).to receive(:execute).and_raise(Sequel::DatabaseDisconnectError, 'Boom')
+      end
+
+      it 'returns false' do
+        expect(Bandiera::Db.ready?).to be false
+      end
+    end
+  end
 end
