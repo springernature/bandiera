@@ -1,6 +1,5 @@
 module Bandiera
   class LoggingAuditLog
-
     def initialize(logger)
       @logger = logger
     end
@@ -20,6 +19,5 @@ module Bandiera
         ''
       end
     end
-
   end
 end

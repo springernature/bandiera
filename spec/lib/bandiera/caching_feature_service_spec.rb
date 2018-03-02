@@ -362,7 +362,8 @@ RSpec.describe Bandiera::CachingFeatureService do
     let(:updated_feature) { { description: 'updated', active: true } }
 
     it 'updates the feature on the delegate' do
-      expect(delegate).to receive(:update_feature).with(audit_context, 'group1', 'feature1', updated_feature).and_return(feature)
+      expect(delegate).to receive(:update_feature).with(audit_context, 'group1', 'feature1', updated_feature)
+        .and_return(feature)
 
       result = subject.update_feature(audit_context, 'group1', 'feature1', updated_feature)
       expect(result).to eq(feature)

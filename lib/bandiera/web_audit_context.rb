@@ -1,6 +1,5 @@
 module Bandiera
   class WebAuditContext
-
     def initialize(request)
       @request = request
     end
@@ -8,6 +7,5 @@ module Bandiera
     def user_id
       @request.ip
     end
-
   end
 end
