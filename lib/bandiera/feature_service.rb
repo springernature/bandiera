@@ -12,7 +12,8 @@ module Bandiera
       end
     end
 
-    def initialize(db = Db.connect)
+    def initialize(audit_log = BlackholeAuditLog.new, db = Db.connect)
+      @audit_log = audit_log
       @db = db
     end
 
@@ -24,8 +25,10 @@ module Bandiera
       group
     end
 
-    def add_group(group)
-      Group.find_or_create(name: group)
+    def add_group(audit_context, group)
+      result = Group.find_or_create(name: group)
+      @audit_log.record(audit_context, :add, :group, name: group)
+      result
     end
 
     def fetch_groups
@@ -45,23 +48,27 @@ module Bandiera
       feature
     end
 
-    def add_feature(data)
+    def add_feature(audit_context, data)
       data[:group] = Group.find_or_create(name: data[:group])
       lookup       = { name: data[:name], group: data[:group] }
-      Feature.update_or_create(lookup, data)
+      result = Feature.update_or_create(lookup, data)
+      @audit_log.record(audit_context, :add, :feature,
+        name: data[:name], group: data[:group][:name], active: data[:active])
+      result
     end
 
-    def add_features(features)
-      features.map { |feature| add_feature(feature) }
+    def add_features(audit_context, features)
+      features.map { |feature| add_feature(audit_context, feature) }
     end
 
-    def remove_feature(group, name)
+    def remove_feature(audit_context, group, name)
       group_id      = find_group_id(group)
       affected_rows = Feature.where(group_id: group_id, name: name).delete
       raise FeatureNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
+      @audit_log.record(audit_context, :remove, :feature, name: name, group: group)
     end
 
-    def update_feature(group, name, params)
+    def update_feature(audit_context, group, name, params)
       group_id  = find_group_id(group)
       feature   = Feature.first(group_id: group_id, name: name)
       raise FeatureNotFound, "Cannot find feature '#{name}'" unless feature
@@ -74,7 +81,9 @@ module Bandiera
         start_time:  params[:start_time],
         end_time:    params[:end_time]
       }.delete_if { |_k, v| v.nil? }
-      feature.update(fields)
+      result = feature.update(fields)
+      @audit_log.record(audit_context, :update, :feature, name: name, group: group, fields: fields)
+      result
     end
 
     private

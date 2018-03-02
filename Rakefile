@@ -2,6 +2,7 @@
 
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/lib')
 require 'bandiera'
+require 'bandiera/anonymous_audit_context'
 
 begin
   require 'rspec/core/rake_task'
@@ -37,11 +38,11 @@ namespace :db do
 
   task demo_reset: :environment do |_cmd, _args|
     db   = Bandiera::Db.connect
-    serv = Bandiera::FeatureService.new(db)
+    serv = Bandiera::FeatureService.new(db: db)
 
     db[:groups].delete
 
-    serv.add_features([
+    serv.add_features(Bandiera::AnonymousAuditContext.new, [
                         {
                           group:       'pubserv',
                           name:        'show-article-metrics',

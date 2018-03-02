@@ -11,6 +11,7 @@ require 'timecop'
 require 'pry'
 
 require_relative '../lib/bandiera'
+require_relative '../lib/bandiera/anonymous_audit_context'
 load File.expand_path('../../Rakefile', __FILE__)
 
 # load shared_examples
