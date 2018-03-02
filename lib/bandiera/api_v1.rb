@@ -22,7 +22,7 @@ module Bandiera
       group_name   = group_params.fetch('name', nil)
 
       if group_name
-        feature_service.add_group(group_name)
+        feature_service.add_group(audit_context, group_name)
         status 201
         render_json(group: { name: group_name })
       else
@@ -51,7 +51,7 @@ module Bandiera
       feature_params = process_v1_feature_params(params.fetch('feature', {}).merge('group' => group_name))
 
       with_valid_feature_params(feature_params) do
-        feature = feature_service.add_feature(feature_params)
+        feature = feature_service.add_feature(audit_context, feature_params)
         status 201
         render_json(feature: feature.as_v1_json)
       end
@@ -90,7 +90,7 @@ module Bandiera
       feature_params[:group] = group_name unless feature_params[:group]
 
       with_valid_feature_params(feature_params, true) do
-        feature = feature_service.update_feature(group_name, feature_name, feature_params)
+        feature = feature_service.update_feature(audit_context, group_name, feature_name, feature_params)
         status 200
         render_json(feature: feature.as_v1_json)
       end

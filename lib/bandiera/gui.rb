@@ -55,7 +55,7 @@ module Bandiera
       group_name = params[:group][:name]
 
       with_valid_group_params(group_name, '/new/group') do
-        feature_service.add_group(group_name)
+        feature_service.add_group(audit_context, group_name)
         flash[:success] = 'Group created.'
         redirect '/'
       end
@@ -81,7 +81,7 @@ module Bandiera
       feature = process_v2_feature_params(params[:feature])
 
       with_valid_feature_params(feature, '/new/feature') do
-        feature_service.add_feature(feature)
+        feature_service.add_feature(audit_context, feature)
         flash[:success] = 'Feature created.'
         redirect '/'
       end
@@ -108,7 +108,7 @@ module Bandiera
       new_feature = process_v2_feature_params(params[:feature])
 
       with_valid_feature_params(new_feature, "/groups/#{prev_group}/features/#{prev_name}/edit") do
-        feature_service.update_feature(prev_group, prev_name, new_feature)
+        feature_service.update_feature(audit_context, prev_group, prev_name, new_feature)
         flash[:success] = 'Feature updated.'
         redirect '/'
       end
@@ -125,7 +125,7 @@ module Bandiera
       active      = feat_params[:active] == 'true'
 
       if group && name && !active.nil?
-        feature_service.update_feature(group, name, { active: active })
+        feature_service.update_feature(audit_context, group, name, { active: active })
         status 200
         content_type :json
         '{}'
@@ -140,7 +140,7 @@ module Bandiera
     end
 
     def _get_delete_feature(group_name, feature_name)
-      feature_service.remove_feature(group_name, feature_name)
+      feature_service.remove_feature(audit_context, group_name, feature_name)
       flash[:success] = 'Feature deleted.'
       redirect '/'
     end

@@ -31,21 +31,21 @@ module Bandiera
       cache.getset(:"fetch_feature:#{group}:#{feature_name}") { super }
     end
 
-    def add_group(group)
+    def add_group(audit_context, group)
       cache.delete(:"find_group:#{group}")
       cache.delete(:fetch_groups)
 
       super
     end
 
-    def add_feature(data)
+    def add_feature(audit_context, data)
       cache.delete(:"fetch_feature:#{data[:group]}:#{data[:name]}")
       cache.delete(:"fetch_group_features:#{data[:group]}")
 
       super
     end
 
-    def add_features(features)
+    def add_features(audit_context, features)
       features.each do |data|
         cache.delete(:"fetch_feature:#{data[:group]}:#{data[:name]}")
         cache.delete(:"fetch_group_features:#{data[:group]}")
@@ -54,14 +54,14 @@ module Bandiera
       super
     end
 
-    def remove_feature(group, feature_name)
+    def remove_feature(audit_context, group, feature_name)
       cache.delete(:"fetch_feature:#{group}:#{feature_name}")
       cache.delete(:"fetch_group_features:#{group}")
 
       super
     end
 
-    def update_feature(group, feature_name, feature_data)
+    def update_feature(audit_context, group, feature_name, feature_data)
       cache.delete(:"fetch_feature:#{group}:#{feature_name}")
       cache.delete(:"fetch_group_features:#{group}")
 

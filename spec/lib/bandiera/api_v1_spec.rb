@@ -7,6 +7,7 @@ RSpec.describe Bandiera::APIv1 do
   include Rack::Test::Methods
 
   let(:instance) { Bandiera::APIv1 }
+  let(:audit_context) { Bandiera::AnonymousAuditContext.new }
   let(:app) do
     app_instance = instance
     Rack::Builder.new do
@@ -24,7 +25,7 @@ RSpec.describe Bandiera::APIv1 do
 
   before do
     service = instance.settings.feature_service
-    service.add_features([
+    service.add_features(audit_context, [
                            { group: 'pubserv',   name: 'show_subjects',  description: 'Show all subject related features', active: false },
                            { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
                            { group: 'pubserv',   name: 'xmas_mode',      description: 'Xmas mode: SNOWFLAKES!',            active: false },

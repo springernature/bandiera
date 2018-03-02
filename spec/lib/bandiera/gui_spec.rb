@@ -8,6 +8,8 @@ require 'capybara/poltergeist'
 RSpec.describe Bandiera::GUI do
   include Capybara::DSL
 
+  let(:audit_context) { Bandiera::AnonymousAuditContext.new }
+
   before(:all) do
     app = Bandiera::GUI.new
     Capybara.app = Rack::Builder.new do
@@ -20,7 +22,7 @@ RSpec.describe Bandiera::GUI do
   end
 
   before do
-    @service.add_features([
+    @service.add_features(audit_context, [
                             { group: 'pubserv',    name: 'show_subjects',  description: 'Show all subject related features', active: false },
                             { group: 'pubserv',    name: 'show_search',    description: 'Show the search bar',               active: true  },
                             { group: 'laserwolf',  name: 'enable_caching', description: 'Enable caching',                    active: false },

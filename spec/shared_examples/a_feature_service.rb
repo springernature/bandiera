@@ -2,11 +2,12 @@
 
 shared_examples_for 'a feature service' do
   let(:db) { Bandiera::Db.connect }
+  let(:audit_context) { Bandiera::AnonymousAuditContext.new }
 
   describe '#add_group' do
     it 'adds a new group' do
       expect(db[:groups]).to be_empty
-      subject.add_group('burgers')
+      subject.add_group(audit_context, 'burgers')
       expect(db[:groups].select_map(:name)).to eq(['burgers'])
     end
   end
@@ -20,18 +21,18 @@ shared_examples_for 'a feature service' do
       end
 
       it 'creates the feature' do
-        expect { subject.add_feature(feat_data) }
+        expect { subject.add_feature(audit_context, feat_data) }
           .to change { db[:features].count }
           .by(1)
       end
 
       it 'does not create a new group' do
-        expect { subject.add_feature(feat_data) }
+        expect { subject.add_feature(audit_context, feat_data) }
           .to_not change { db[:groups].count }
       end
 
       it 'returns the created feature' do
-        target = subject.add_feature(feat_data)
+        target = subject.add_feature(audit_context, feat_data)
         expect(target).to be_an_instance_of(Bandiera::Feature)
         expect(target.name).to eq('feat_name')
         expect(target.group.name).to eq('group_name')
@@ -48,7 +49,7 @@ shared_examples_for 'a feature service' do
         end
 
         it 'updates the existing feature' do
-          expect { subject.add_feature(feat_data) }
+          expect { subject.add_feature(audit_context, feat_data) }
             .to change { subject.fetch_feature('group_name', 'feat_name').enabled? }
             .from(false)
             .to(true)
@@ -58,13 +59,13 @@ shared_examples_for 'a feature service' do
 
     context 'when a group does not exist' do
       it 'creates the group' do
-        expect { subject.add_feature(feat_data) }
+        expect { subject.add_feature(audit_context, feat_data) }
           .to change { db[:groups].count }
           .by(1)
       end
 
       it 'creates the feature' do
-        target = subject.add_feature(feat_data)
+        target = subject.add_feature(audit_context, feat_data)
         expect(target).to be_an_instance_of(Bandiera::Feature)
         expect(target.name).to eq('feat_name')
         expect(target.group.name).to eq('group_name')
@@ -83,7 +84,7 @@ shared_examples_for 'a feature service' do
       end
 
       it 'creates the feature' do
-        target = subject.add_feature(feat_data)
+        target = subject.add_feature(audit_context, feat_data)
         expect(target).to be_an_instance_of(Bandiera::Feature)
         expect(target.name).to eq('feat_name')
         expect(target.group.name).to eq('group_name')
@@ -91,7 +92,7 @@ shared_examples_for 'a feature service' do
 
       it 'populates the user_groups_data field correctly' do
         expected = { list: ['info@example.com'], regex: '' }
-        target = subject.add_feature(feat_data)
+        target = subject.add_feature(audit_context, feat_data)
         expect(target.user_groups).to eq expected
       end
     end
@@ -124,7 +125,7 @@ shared_examples_for 'a feature service' do
         end
 
         it 'updates the existing features' do
-          expect { subject.add_features(features) }
+          expect { subject.add_features(audit_context, features) }
             .to change { subject.fetch_feature('feature_group', 'feature_name').enabled? }
             .from(false)
             .to(true)
@@ -134,14 +135,14 @@ shared_examples_for 'a feature service' do
 
     context "when a group doesn't exist" do
       it 'creates the group' do
-        expect { subject.add_features(features) }
+        expect { subject.add_features(audit_context, features) }
           .to change { db[:groups].count }
           .from(0)
           .to(1)
       end
 
       it 'creates the features' do
-        expect { subject.add_features(features) }
+        expect { subject.add_features(audit_context, features) }
           .to change { db[:features].count }
           .from(0)
           .to(2)
@@ -164,14 +165,14 @@ shared_examples_for 'a feature service' do
       end
 
       it 'creates features' do
-        expect { subject.add_features(features) }
+        expect { subject.add_features(audit_context, features) }
           .to change { db[:features].count }
           .from(0)
           .to(1)
       end
 
       it 'populates the user_groups_data field correctly' do
-        subject.add_features(features)
+        subject.add_features(audit_context, features)
 
         expected = JSON.generate(user_groups)
         target   = db[:features].first
@@ -180,7 +181,7 @@ shared_examples_for 'a feature service' do
       end
 
       it 'returns correctly constructed features' do
-        target = subject.add_features(features).first
+        target = subject.add_features(audit_context, features).first
 
         expect(target.user_groups).to_not be_empty
         expect(target.user_groups).to eq(user_groups)
@@ -191,7 +192,7 @@ shared_examples_for 'a feature service' do
   describe '#remove_feature' do
     context "when the group doesn't exist" do
       it 'raises a GroupNotFound error' do
-        expect { subject.remove_feature('burgers', 'foo') }
+        expect { subject.remove_feature(audit_context, 'burgers', 'foo') }
           .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
@@ -202,25 +203,25 @@ shared_examples_for 'a feature service' do
       end
 
       it 'raises a FeatureNotFound error' do
-        expect { subject.remove_feature('group1', 'foo') }
+        expect { subject.remove_feature(audit_context, 'group1', 'foo') }
           .to raise_error(Bandiera::FeatureService::FeatureNotFound)
       end
     end
 
     context 'when both the group and the feature exist' do
       before do
-        subject.add_feature({ name: 'feat', group: 'group', description: '', active: false })
+        subject.add_feature(audit_context, { name: 'feat', group: 'group', description: '', active: false })
       end
 
       it 'removes a feature record' do
-        expect { subject.remove_feature('group', 'feat') }
+        expect { subject.remove_feature(audit_context, 'group', 'feat') }
           .to change { db[:features].count }
           .from(1)
           .to(0)
       end
 
       it 'does not remove the group' do
-        expect { subject.remove_feature('group', 'feat') }
+        expect { subject.remove_feature(audit_context, 'group', 'feat') }
           .to_not change { db[:groups].count }
       end
     end
@@ -229,7 +230,7 @@ shared_examples_for 'a feature service' do
   describe '#update_feature' do
     context "when the group doesn't exist" do
       it 'raises a GroupNotFound error' do
-        expect { subject.update_feature('my_group', 'my_feature', {}) }
+        expect { subject.update_feature(audit_context, 'my_group', 'my_feature', {}) }
           .to raise_error(Bandiera::FeatureService::GroupNotFound)
       end
     end
@@ -240,18 +241,18 @@ shared_examples_for 'a feature service' do
       end
 
       it 'raises a FeatureNotFound error' do
-        expect { subject.update_feature('my_group', 'my_feature', {}) }
+        expect { subject.update_feature(audit_context, 'my_group', 'my_feature', {}) }
           .to raise_error(Bandiera::FeatureService::FeatureNotFound)
       end
     end
 
     context 'when the group/feature does exist' do
       before do
-        subject.add_feature({ name: 'feat', group: 'group', description: '', active: false })
+        subject.add_feature(audit_context, { name: 'feat', group: 'group', description: '', active: false })
       end
 
       it 'updates the feature' do
-        expect { subject.update_feature('group', 'feat', description: 'updated', active: true) }
+        expect { subject.update_feature(audit_context, 'group', 'feat', description: 'updated', active: true) }
           .to change { db[:features].first[:description] }
           .from('')
           .to('updated')
@@ -259,7 +260,7 @@ shared_examples_for 'a feature service' do
 
       it 'returns the updated feature' do
         expect(
-          subject.update_feature('group', 'feat', description: 'updated')
+          subject.update_feature(audit_context, 'group', 'feat', description: 'updated')
         ).to be_an_instance_of(Bandiera::Feature)
       end
     end
@@ -279,7 +280,7 @@ shared_examples_for 'a feature service' do
 
   describe '#fetch_group_features' do
     before do
-      subject.add_features([
+      subject.add_features(audit_context, [
                              { name: 'feature1', group: 'group_name' },
                              { name: 'feature2', group: 'group_name' },
                              { name: 'wibble', group: 'something_else' }
@@ -310,7 +311,7 @@ shared_examples_for 'a feature service' do
   describe '#fetch_feature' do
     context 'when both the group and the feature exists' do
       before do
-        subject.add_feature(group: 'group1', name: 'feature1')
+        subject.add_feature(audit_context, group: 'group1', name: 'feature1')
       end
 
       it 'returns the feature' do
