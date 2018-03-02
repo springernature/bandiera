@@ -28,5 +28,12 @@ module Bandiera
     def self.migrations_dir
       File.join(File.dirname(__FILE__), '../../db/migrations')
     end
+
+    def self.ready?
+      connect.execute('SELECT 1')
+      true
+    rescue Sequel::Error
+      false
+    end
   end
 end

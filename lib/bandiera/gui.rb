@@ -145,6 +145,39 @@ module Bandiera
       redirect '/'
     end
 
+    ##
+    ## Healthcheck endpoints
+    ##
+
+    # general health endpoint - required by some services such as the google cloud
+    # platform kubernetes default load-balancer
+    get '/healthz' do
+      _readiness_probe
+    end
+
+    get '/status/live' do
+      _liveness_probe
+    end
+
+    get '/status/ready' do
+      _readiness_probe
+    end
+
+    def _liveness_probe
+      status 200
+      'OK'
+    end
+
+    def _readiness_probe
+      if Bandiera::Db.ready?
+        status 200
+        'OK'
+      else
+        status 500
+        'NOT OK'
+      end
+    end
+
     private
 
     def with_valid_feature_params(feature, on_error_url)

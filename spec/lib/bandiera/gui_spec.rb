@@ -31,6 +31,40 @@ RSpec.describe Bandiera::GUI do
                           ])
   end
 
+  describe 'health checks' do
+    context '/status/live' do
+      it 'returns 200, OK' do
+        visit('/status/live')
+        expect(page.status_code).to eq(200)
+        expect(page.body).to eq('OK')
+      end
+    end
+
+    ['/healthz', '/status/ready'].each do |path|
+      context path do
+        context 'when all is ok' do
+          it 'returns 200, OK' do
+            visit(path)
+            expect(page.status_code).to eq(200)
+            expect(page.body).to eq('OK')
+          end
+        end
+
+        context 'when there is a problem' do
+          before do
+            allow(Bandiera::Db).to receive(:ready?).and_return(false)
+          end
+
+          it 'returns 500, NOT OK' do
+            visit(path)
+            expect(page.status_code).to eq(500)
+            expect(page.body).to eq('NOT OK')
+          end
+        end
+      end
+    end
+  end
+
   describe 'the homepage' do
     it 'shows all feature flags organised by group' do
       visit('/')
