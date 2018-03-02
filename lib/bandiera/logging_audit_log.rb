@@ -19,5 +19,6 @@ module Bandiera
         ''
       end
     end
+
   end
 end
