@@ -12,6 +12,7 @@ module Bandiera
   autoload :WebAuditContext,        'bandiera/web_audit_context'
   autoload :BlackholeAuditLog,      'bandiera/blackhole_audit_log'
   autoload :LoggingAuditLog,        'bandiera/logging_audit_log'
+  autoload :AuditRecord,            'bandiera/audit_record'
   autoload :Group,                  'bandiera/group'
   autoload :Feature,                'bandiera/feature'
   autoload :FeatureService,         'bandiera/feature_service'
