@@ -23,14 +23,15 @@ RSpec.describe Bandiera::LoggingAuditLog do
 
     it 'sets the timestamp to the current time' do
       expect(db[:audit_records]).to be_empty
+      expected_time = Time.local(2017, 1, 1, 12, 0, 0)
 
-      start_time = Time.now
-      subject.record(audit_context, :add, :foodstuff, name: 'burger')
-      end_time = Time.now
+      Timecop.freeze(expected_time) do
+        subject.record(audit_context, :add, :foodstuff, name: 'burger')
+      end
 
       audit_record = db[:audit_records].first
       expect(audit_record).to_not be_nil
-      expect(audit_record[:timestamp]).to be_between(start_time, end_time)
+      expect(audit_record[:timestamp]).to eq(expected_time)
     end
 
     it 'handles no parameters' do
