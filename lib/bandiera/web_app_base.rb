@@ -11,7 +11,12 @@ module Bandiera
       enable :logging
       enable :raise_errors if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
 
-      audit_log = LoggingAuditLog.new(Bandiera.logger)
+      audit_log = if ENV['RECORD_AUDIT_RECORDS'] && ENV['RECORD_AUDIT_RECORDS'].downcase == 'true'
+                    LoggingAuditLog.new(recording = record_audit_records)
+                  else
+                    BlackholeAuditLog.new
+                  end
+
       set :feature_service, CachingFeatureService.new(FeatureService.new(audit_log),
         cache_size: ENV['CACHE_SIZE']&.to_i,
         cache_ttl: ENV['CACHE_TTL']&.to_i)

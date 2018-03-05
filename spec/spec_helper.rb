@@ -33,6 +33,7 @@ RSpec.configure do |config|
   config.after(:each) do
     DB[:features].delete
     DB[:groups].delete
+    DB[:audit_records].delete
   end
 
   config.disable_monkey_patching!

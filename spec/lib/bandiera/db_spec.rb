@@ -25,6 +25,24 @@ RSpec.describe Bandiera::Db do
     end
   end
 
+  describe 'the audit records table' do
+    it 'should be present' do
+      expect(subject.tables).to include(:audit_records)
+    end
+
+    it 'should be empty' do
+      expect(subject[:audit_records]).to be_empty
+    end
+
+    it 'should allow us to enter data' do
+      subject[:audit_records] <<
+        { timestamp: Time.now, user: 'test1', action: 'add', object: 'feature', params: 'name: feature1' }
+      subject[:audit_records] <<
+        { timestamp: Time.now, user: 'test2', action: 'delete', object: 'feature', params: 'name: feature1' }
+      expect(subject[:audit_records].count).to eq(2)
+    end
+  end
+
   describe '#ready?' do
     context 'when the database is up and ready' do
       it 'returns true' do

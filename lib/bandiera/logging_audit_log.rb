@@ -1,22 +1,28 @@
 module Bandiera
   class LoggingAuditLog
-    def initialize(logger)
-      @logger = logger
+    def initialize(db = Db.connect)
+      @db = db
     end
 
     def record(audit_context, action, object_name, params = {})
-      @logger.log("AUDIT [#{audit_context.user_id}] #{action} #{object_name}#{format(params)}")
-    rescue
-      # ignored
+      audit_record = AuditRecord.new(
+        user: audit_context.user_id,
+        action: action,
+        object: object_name.to_s,
+        params: format(params)
+      )
+      audit_record.save
+    rescue => e
+      Bandiera.logger.error("Audit logging failed: #{e.message}")
     end
 
     private
 
     def format(params)
       if params && !params.empty?
-        ' (' + params.map {|key, value| "#{key}: #{value}"}.join(', ') + ')'
+        params.to_json
       else
-        ''
+        nil
       end
     end
 
