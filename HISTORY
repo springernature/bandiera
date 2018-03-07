@@ -1,6 +1,17 @@
+= 3.4.1 / 2018-03-07
+
+New feature - audit logs.  Whenever a feature is created, changed or removed
+the activity is output to the logs; if an environment variable of
+`RECORD_AUDIT_RECORDS` is set to `true`, these log messages will be persisted
+in the database.  Thanks @jshiell!
+
+New feature - healthcheck endpoints.  `/healthz`, `/status/live` and
+`/status/ready` can now be probed by external healthcheck applications.
+
 = 3.4.0 / 2018-02-23
 
-  * New feature - the in-memory feture cache is now configureable via `CACHE_SIZE` and `CACHE_TTL` environment variables. Thanks @jshiell!
+New feature - the in-memory feture cache is now configureable via `CACHE_SIZE`
+and `CACHE_TTL` environment variables. Thanks @jshiell!
 
 = 3.3.3 / 2018-02-20
 
