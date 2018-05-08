@@ -21,6 +21,8 @@ gem 'airbrake', require: false
 gem 'statsd-ruby', require: false
 gem 'rack-cors'
 
+gem 'nokogiri', '~> 1.8.2'
+
 group :development do
   gem 'shotgun'
 end
