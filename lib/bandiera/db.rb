@@ -7,8 +7,14 @@ Sequel::Model.plugin :update_or_create
 module Bandiera
   class Db
     def self.connect
-      raise ArgumentError, 'You must set a DATABASE_URL environment variable' unless ENV['DATABASE_URL']
-      @db ||= Sequel.connect(ENV['DATABASE_URL'])
+      database_url = ENV['DATABASE_URL']
+      if database_url.nil?
+        if ENV['PG_DB_USER'].nil? || ENV['PG_DB_PASSWORD'].nil? || ENV['PG_DB_HOST'].nil?
+          raise ArgumentError, 'You must set a DATABASE_URL environment variable or PG_DB_USER, PG_DB_PASSWORD and PG_DB_HOST' 
+        end
+        database_url = "postgres://#{ENV['PG_DB_USER']}:#{ENV['PG_DB_PASSWORD']}@#{ENV['PG_DB_HOST']}/bandiera"
+      end
+      @db ||= Sequel.connect(database_url)
     end
 
     def self.disconnect
