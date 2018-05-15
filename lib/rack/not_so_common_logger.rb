@@ -79,7 +79,15 @@ module Rack
     end
 
     def query_string(env)
-      env[QUERY_STRING].empty? ? '' : "?#{env[QUERY_STRING]}"
+      return '' if env[QUERY_STRING].empty?
+
+      params = Rack::Utils.parse_nested_query(env[QUERY_STRING])
+
+      if ENV['SHOW_USER_GROUP_IN_LOGS'] != 'true' && params['user_group']
+        params['user_group'] = 'XXXXX'
+      end
+
+      "?#{Rack::Utils.build_nested_query(params)}"
     end
 
     def log_time
