@@ -200,6 +200,7 @@ DEPENDENCIES
   lru_redux
   macmillan-utils
   mysql2
+  nokogiri (~> 1.8.2)
   pg
   poltergeist
   pry
