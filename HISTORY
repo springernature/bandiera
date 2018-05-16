@@ -1,3 +1,11 @@
+= 3.4.2 / 2018-05-16
+
+Update logging to remove user identifiable data in preparation for the GDPR
+laws to come into effect.  Bandiera no longer logs ip addresses or user
+identities (if ran under basic auth), and will not log the `user_group` URL
+param by default.  This can be re-enabled by setting the environment variable
+"SHOW_USER_GROUP_IN_LOGS" to "true" if it is desired.
+
 = 3.4.1 / 2018-03-07
 
 New feature - audit logs.  Whenever a feature is created, changed or removed
@@ -15,122 +23,158 @@ and `CACHE_TTL` environment variables. Thanks @jshiell!
 
 = 3.3.3 / 2018-02-20
 
-  * Update all dependent gems (inc. nokogiri security patches)
+Update all dependent gems (inc. nokogiri security patches)
 
 = 3.3.2 / 2017-09-27
 
-  * Add the ability to enable CORS headers for the v2 API (via an ENV variable)
+Add the ability to enable CORS headers for the v2 API (via an ENV variable)
 
 = 3.3.1 / 2017-09-21
 
-  * Update all dependent gems (inlcuding nokogiri security patch - https://github.com/sparklemotion/nokogiri/issues/1673)
+Update all dependent gems (inlcuding nokogiri security patch - https://github.com/sparklemotion/nokogiri/issues/1673)
 
 = 3.3.0 / 2017-09-18
 
-  * Introduce an in-process cache for feature service requests.  Thanks @jshiell for the contribution and @baob for the contributions to the specs! :)
-  * Update the base ruby version to 2.4.2
+Introduce an in-process cache for feature service requests.  Thanks @jshiell
+for the contribution and @baob for the contributions to the specs! :)
+
+Update the base ruby version to 2.4.2
 
 = 3.2.1 / 2017-05-23
 
-  * Update all dependent gems - including a major security update for nokogiri.
+Update all dependent gems - including a major security update for nokogiri.
 
 = 3.2.0 / 2017-04-24
 
-  * New feature - allow feature flags to be time-boxed, i.e. have a defined start and end time. Thanks @mattrayner!
-  * Update the base ruby version to 2.4.1
+New feature - allow feature flags to be time-boxed, i.e. have a defined start
+and end time. Thanks @mattrayner!
+
+Update the base ruby version to 2.4.1
 
 = 3.1.5 / 2017-04-04
 
-  * Update all dependent gems (including nokogiri security patch - https://github.com/sparklemotion/nokogiri/issues/1615).
+Update all dependent gems (including nokogiri security patch -
+https://github.com/sparklemotion/nokogiri/issues/1615).
 
 = 3.1.4 / 2016-10-28
 
-  * Update all dependent gems.
-  * Switch docker container image to be based off alpine linux - this makes the resulting image much smaller.
+Update all dependent gems.  Switch docker container image to be based off
+alpine linux - this makes the resulting image much smaller.
 
 = 3.1.3 / 2016-06-29
 
-  * Update all dependent gems - including a major security update for nokogiri.
+Update all dependent gems - including a major security update for nokogiri.
 
 = 3.1.2 / 2016-06-21
 
-  * Add stricter validation on group and feature names to prevent whitespace being entered.
+Add stricter validation on group and feature names to prevent whitespace being
+entered.
 
 = 3.1.1 / 2016-02-16
 
-  * Move the Bandiera codebase into the `springernature` organisation and update the copyright.
+Move the Bandiera codebase into the `springernature` organisation and update
+the copyright.
 
 = 3.1.0 / 2016-02-11
 
-  * Update Airbrake code to support the v5 (Airbrake) API
+Update Airbrake code to support the v5 (Airbrake) API
 
 = 3.0.0 / 2016-02-08
 
-  * Removed support for a `config/database.yml` file.  Use environment variables people.
-  * Docker setup updated to use docker-machine and docker-compose. Thanks @kimptoc!
-  * Some extra explanatory text added to % and user group UI fields. Thanks @philcowans!
-  * Removed a potential thread safety issue in the way we were loading erubis.
-  * Updated default ruby version to 2.3.0, and updated gem dependencies.
+Removed support for a `config/database.yml` file.  Use environment variables
+people.
+
+Docker setup updated to use docker-machine and docker-compose. Thanks @kimptoc!
+
+Some extra explanatory text added to % and user group UI fields. Thanks
+@philcowans!
+
+Removed a potential thread safety issue in the way we were loading erubis.
+
+Updated default ruby version to 2.3.0, and updated gem dependencies.
 
 = 2.3.4 / 2015-11-23
 
-  * Gem dependency updates.
+Gem dependency updates.
 
 = 2.3.3 / 2015-07-02
 
-  * [Bugfix] Escape all user generated content in the GUI.
-  * Update documentation and add setup for deploying quickly to Heroku.
+[Bugfix] Escape all user generated content in the GUI.
+
+Update documentation and add setup for deploying quickly to Heroku.
 
 = 2.3.2 / 2015-03-16
 
- * [Enhancement] Add in support for New Relic RPM - if a config/newrelic.yml file is present upon deployment,
-   Bandiera will start reporting metrics to New Relic.
- * Updated font-end and gem dependencies.
+[Enhancement] Add in support for New Relic RPM - if a config/newrelic.yml file
+is present upon deployment, Bandiera will start reporting metrics to New Relic.
+
+Updated font-end and gem dependencies.
 
 = 2.3.1 / 2015-02-11
 
- * [Bugfix] Resolve an issue on combined user group/percentage features where the percentage calc just wasn't working
- * [Enhancement] Remove the FeatureUser model/table and make the percentage calculation more efficient
- * [Operations] Increase the Sequel threadpool size to 24 (as 10 was too low with expected workloads)
- * Added a docker/fig based development environment setup
- * Added a Guardfile for use with guard
+[Bugfix] Resolve an issue on combined user group/percentage features where the
+percentage calc just wasn't working
+
+[Enhancement] Remove the FeatureUser model/table and make the percentage
+calculation more efficient
+
+[Operations] Increase the Sequel threadpool size to 24 (as 10 was too low with
+expected workloads)
+
+Added a docker/fig based development environment setup
+
+Added a Guardfile for use with guard
 
 = 2.3.0 / 2015-01-27
 
- * [Feature] Add support/config for the puma application server
- * [Feature] Add metric reporting via StatsD
+[Feature] Add support/config for the puma application server
+
+[Feature] Add metric reporting via StatsD
 
 = 2.2.2 / 2015-01-27
 
- * [Feature] GUI update - sort the feature flags by name rather than ID
- * [Operations] Switch to using Airbrake::Sinatra for better error reporting
- * [Bugfix] Remove the use of Sequels .find_or_create method as we were seeing 'Sequel::UniqueConstraintViolation' errors
+[Feature] GUI update - sort the feature flags by name rather than ID
+
+[Operations] Switch to using Airbrake::Sinatra for better error reporting
+
+[Bugfix] Remove the use of Sequels .find_or_create method as we were seeing
+'Sequel::UniqueConstraintViolation' errors
 
 = 2.2.1 / 2014-10-16
 
- * Make "User Group" matches case in-sensitive
+Make "User Group" matches case in-sensitive
 
 = 2.2.0 / 2014-10-07
 
- * [Feature] Bandiera *should* now support all RDBMs supported by Sequel (note: we ONLY test on MySQL at present)
- * Test suite now runs using an in-memory SQLite database
+[Feature] Bandiera *should* now support all RDBMs supported by Sequel (note: we
+ONLY test on MySQL at present)
+
+Test suite now runs using an in-memory SQLite database
 
 = 2.1.0 / 2014-07-03
 
- * [Feature] added capability to enable features for a percentage of users, this can
-   also be mixed in with 'user groups' so that selected approved users ALWAYS see the
-   feature, but for the rest of the user base, it is based on a percentage
- * Model layer switched to use Sequel::Model
+[Feature] added capability to enable features for a percentage of users, this
+can also be mixed in with 'user groups' so that selected approved users ALWAYS
+see the feature, but for the rest of the user base, it is based on a percentage
+
+Model layer switched to use Sequel::Model
 
 = 2.0.0 / 2014-05-09
 
- * [Feature] added capability to selectivley enable features for specific users/groups
- * [Feature] new v2 API (read-only) with support for new user groups features
- * [Feature] enable database configuration via a `DATABASE_URL` environment variable
- * [Operations] allow error/exception reporting via Airbrake
- * [Bugfix] more stable database connections
- * [Deprecation] v1 API is now deprecated
+[Feature] added capability to selectivley enable features for specific
+users/groups
+
+[Feature] new v2 API (read-only) with support for new user groups features
+
+[Feature] enable database configuration via a `DATABASE_URL` environment
+variable
+
+[Operations] allow error/exception reporting via Airbrake
+
+[Bugfix] more stable database connections
+
+[Deprecation] v1 API is now deprecated
 
 = 1.0.0 / 2014-04-25
 
- * Initial tagging of 1.0.0 codebase
+Initial tagging of 1.0.0 codebase
