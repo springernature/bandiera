@@ -8,7 +8,6 @@ module Bandiera
     include Macmillan::Utils::StatsdControllerHelper
 
     configure do
-      enable :logging
       enable :raise_errors if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
 
       audit_log = if ENV['RECORD_AUDIT_RECORDS'] && ENV['RECORD_AUDIT_RECORDS'].downcase == 'true'

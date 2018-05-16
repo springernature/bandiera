@@ -33,7 +33,8 @@ end
 require 'macmillan/utils/statsd_middleware'
 use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
 
-use Rack::CommonLogger, Bandiera.logger
+require 'rack/not_so_common_logger'
+use Rack::NotSoCommonLogger, Bandiera.logger
 use Airbrake::Rack::Middleware if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
 
 run Rack::URLMap.new(
