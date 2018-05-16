@@ -1,7 +1,7 @@
 <%
   @feature ||= Bandiera::Feature.new(
     name:         '',
-    group:        nil,
+    group:        defined?(group).nil? ? nil : group,
     description:  '',
     active:       false,
     user_groups:  { list: [], regex: '' }
@@ -11,8 +11,8 @@
 <form role="form" action="<%= action %>" method="post">
   <div class="form-group">
     <label for="feature[group]">Group</label>
-    <% if method == :update %>
-      <input type="text" class="form-control" id="feature_group" name="feature[group]" value="<%= @feature.group.name %>" <% if method == :update %>readonly<% end %>/>
+    <% if @feature.group %>
+      <input type="text" class="form-control" id="feature_group" name="feature[group]" value="<%= @feature.group.name %>" readonly/>
     <% else %>
       <select class="form-control" id="feature_group" name="feature[group]">
         <option></option>
@@ -129,6 +129,7 @@
 
   <input type="hidden" name="feature[previous_group]" value="<%= @feature.group ? @feature.group.name : nil %>" />
   <input type="hidden" name="feature[previous_name]" value="<%= @feature.name %>" />
+  <input type="hidden" name="back_to_group" value="<%= defined?(back_to_group) && back_to_group == true %>" />
 
   <button type="submit" class="btn btn-primary"><%= method.to_s.capitalize %></button>
 </form>

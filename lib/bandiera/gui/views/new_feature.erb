@@ -2,10 +2,12 @@
 
 <h2>Create a New Feature</h2>
 
-<div class="container" style="padding-bottom:15px">
-  <div class="pull-right">
-    <a class="btn btn-default" href="/new/group" role="button"><span class="fa fa-plus"></span> add a group</a>
+<% if @group.nil? %>
+  <div class="container" style="padding-bottom:15px">
+    <div class="pull-right">
+      <a class="btn btn-default" href="/new/group" role="button"><span class="fa fa-plus"></span> add a group</a>
+    </div>
   </div>
-</div>
+<% end %>
 
-<%== partial :_feature_form, { action: '/create/feature', method: :create } %>
+<%== partial :_feature_form, { action: '/create/feature', method: :create, group: @group, back_to_group: @back_to_group } %>

@@ -198,6 +198,7 @@ RSpec.describe Bandiera::GUI do
 
         check_success_flash('Feature created')
         expect(@service.fetch_feature('pubserv', 'TEST-FEATURE')).to be_an_instance_of(Bandiera::Feature)
+        expect(page).to have_current_path('/')
       end
 
       context 'for a feature flag configured for user_groups' do
@@ -347,6 +348,41 @@ RSpec.describe Bandiera::GUI do
         end
 
         check_error_flash('You must enter an end time that is after your start time')
+      end
+    end
+  end
+
+  describe 'adding a new feature flag with group query param' do
+    before do
+      visit('/new/feature?group=shunter')
+    end
+
+    context 'with valid details' do
+      it 'adds a new feature flag and returns to group page' do
+        within('form') do
+          fill_in 'feature_name', with: 'TEST-FEATURE'
+          fill_in 'feature_description', with: 'This is a test feature.'
+          choose 'feature_active_true'
+          click_button 'Create'
+        end
+
+        check_success_flash('Feature created')
+        expect(@service.fetch_feature('shunter', 'TEST-FEATURE')).to be_an_instance_of(Bandiera::Feature)
+        expect(page).to have_current_path('/groups/shunter')
+      end
+    end
+
+    context 'with a blank feature flag name' do
+      it 'shows validation errors' do
+        within('form') do
+          fill_in 'feature_name', with: ''
+          fill_in 'feature_description', with: 'This is a test feature.'
+          choose 'feature_active_true'
+          click_button 'Create'
+        end
+
+        check_error_flash('You must enter a feature name')
+        expect(page).to have_current_path('/new/feature?group=shunter')
       end
     end
   end
