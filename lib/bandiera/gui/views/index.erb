@@ -19,53 +19,13 @@
       <% @groups_and_features.each do |group| %>
         <div class="panel panel-info bandiera-feature-group">
           <div class="panel-heading">
-            <h3 class="panel-title"><%= group[:name] %></h3>
+            <h3 class="panel-title"><a href="/groups/<%= group[:name] %>"><%= group[:name] %></a></h3>
           </div>
           <div class="panel-body">
-            <% if group[:features].empty? %>
+            <% if group.features.empty? %>
               <p class="no-features">There are no features setup...</p>
             <% else %>
-              <table class="table table-striped table-hover">
-                <thead>
-                  <tr>
-                    <th style="text-align:center">Active?</th>
-                    <th style="text-align:center">User Groups?</th>
-                    <th style="text-align:center">User %</th>
-                    <th style="text-align:center">Date Range</th>
-                    <th width="20%">Name</th>
-                    <th width="30%">Description</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% group[:features].each do |feature| %>
-                    <tr class="bandiera-feature">
-                      <td class="feature-toggle" data-group="<%= group[:name] %>" data-feature="<%= feature.name %>" data-description="<%= feature.description %>" data-active="<%= feature.active? %>"><%= feature.active? %></td>
-                      <td style="text-align:center">
-                        <% if feature.user_groups_configured? %>
-                          <span class="fa fa-check"></span>
-                        <% end %>
-                      </td>
-                      <td style="text-align:center">
-                        <% if feature.percentage %>
-                          <span class="fa fa-check"></span>
-                        <% end %>
-                      </td>
-                      <td style="text-align:center">
-                        <% if feature.start_time && feature.end_time %>
-                            <span class="fa fa-check"></span>
-                        <% end %>
-                      </td>
-                      <td><%= feature.name %></td>
-                      <td><%= feature.description %></td>
-                      <td style="text-align:right">
-                        <a class="btn btn-warning btn-sm bandiera-edit-feature" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/edit"><i class="fa fa-edit"></i> edit</a>
-                        <a class="btn btn-danger btn-sm bandiera-delete-feature" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/delete" data-method="delete"><i class="fa fa-trash-o"></i> delete</a>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
+              <%== partial :_features_table, { group: group } %>
             <% end %>
           </div>
         </div>

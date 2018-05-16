@@ -30,10 +30,7 @@ module Bandiera
     end
 
     def _get_home
-      @groups_and_features = feature_service.fetch_groups.map do |group|
-        { name: group.name, features: feature_service.fetch_group_features(group.name) }
-      end
-
+      @groups_and_features = feature_service.fetch_groups
       erb :index
     end
 
@@ -45,6 +42,11 @@ module Bandiera
 
     def _get_new_group
       erb :new_group
+    end
+
+    get '/groups/:group_name' do |group_name|
+      @group = feature_service.find_group(group_name)
+      erb :group
     end
 
     post '/create/group' do

@@ -22,6 +22,7 @@ RSpec.describe Bandiera::GUI do
   end
 
   before do
+    @service.add_group(audit_context, 'nofeatures_group')
     @service.add_features(audit_context, [
                             { group: 'pubserv',    name: 'show_subjects',  description: 'Show all subject related features', active: false },
                             { group: 'pubserv',    name: 'show_search',    description: 'Show the search bar',               active: true  },
@@ -69,17 +70,9 @@ RSpec.describe Bandiera::GUI do
     it 'shows all feature flags organised by group' do
       visit('/')
 
-      groups = {}
+      groups = get_groups_with_features()
 
-      all('.bandiera-feature-group').each do |div|
-        group_name = div.find('h3').text
-        features   = div.all('tr.bandiera-feature').map do |tr|
-          tr.all('td')[4].text
-        end
-
-        groups[group_name] = features
-      end
-
+      expect(groups['nofeatures_group']).to match_array([])
       expect(groups['pubserv']).to match_array(%w[show_subjects show_search])
       expect(groups['laserwolf']).to match_array(['enable_caching'])
       expect(groups['shunter']).to match_array(['stats_logging'])
@@ -102,6 +95,38 @@ RSpec.describe Bandiera::GUI do
 
       expect(toggle_container).to_not have_css(".#{switch_class}")
       expect(@service.fetch_feature(group, name).active?).to_not eq(active)
+    end
+  end
+
+  describe 'visiting a group page' do
+    context 'when the group does not exist' do
+      it 'returns a 404' do
+        visit('/groups/nogrouphere')
+        expect(page.status_code).to eq(404)
+      end
+    end
+
+    context 'when the group exists' do
+      context 'and has features' do
+        it 'shows features of group' do
+          visit('/groups/pubserv')
+          groups = get_groups_with_features()
+
+          expect(groups['pubserv']).to match_array(%w[show_subjects show_search])
+          expect(groups.size).to eq(1)
+        end
+      end
+
+      context 'and doesnt have features' do
+        it 'no features are showed' do
+          visit('/groups/nofeatures_group')
+          groups = get_groups_with_features()
+
+          expect(groups.size).to eq(1)
+          expect(groups['nofeatures_group']).to match_array([])
+          expect(first('p.no-features')).to have_content('There are no features setup...')
+        end
+      end
     end
   end
 
@@ -368,5 +393,20 @@ RSpec.describe Bandiera::GUI do
   def check_error_flash(expected_text)
     expect(page).to have_selector('.alert-danger')
     expect(page.find('.alert-danger')).to have_content(expected_text)
+  end
+
+  def get_groups_with_features()
+    groups = {}
+
+    all('.bandiera-feature-group').each do |div|
+      group_name = div.find('h3').text
+      features   = div.all('tr.bandiera-feature').map do |tr|
+        tr.all('td')[4].text
+      end
+
+      groups[group_name] = features
+    end
+
+    groups
   end
 end
