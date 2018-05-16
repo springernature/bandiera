@@ -70,7 +70,7 @@ RSpec.describe Bandiera::GUI do
     it 'shows all feature flags organised by group' do
       visit('/')
 
-      groups = get_groups_with_features()
+      groups = get_groups_with_features
 
       expect(groups['nofeatures_group']).to match_array([])
       expect(groups['pubserv']).to match_array(%w[show_subjects show_search])
@@ -110,7 +110,7 @@ RSpec.describe Bandiera::GUI do
       context 'and has features' do
         it 'shows features of group' do
           visit('/groups/pubserv')
-          groups = get_groups_with_features()
+          groups = get_groups_with_features
 
           expect(groups['pubserv']).to match_array(%w[show_subjects show_search])
           expect(groups.size).to eq(1)
@@ -120,7 +120,7 @@ RSpec.describe Bandiera::GUI do
       context 'and doesnt have features' do
         it 'no features are showed' do
           visit('/groups/nofeatures_group')
-          groups = get_groups_with_features()
+          groups = get_groups_with_features
 
           expect(groups.size).to eq(1)
           expect(groups['nofeatures_group']).to match_array([])
@@ -431,7 +431,7 @@ RSpec.describe Bandiera::GUI do
     expect(page.find('.alert-danger')).to have_content(expected_text)
   end
 
-  def get_groups_with_features()
+  def get_groups_with_features
     groups = {}
 
     all('.bandiera-feature-group').each do |div|

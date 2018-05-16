@@ -83,7 +83,7 @@ module Bandiera
     def _post_create_feature
       feature = process_v2_feature_params(params[:feature])
       back_to_group = params[:back_to_group] == 'true'
-      on_err_url = back_to_group ? "/new/feature?group=#{feature[:group]}": '/new/feature'
+      on_err_url = back_to_group ? "/new/feature?group=#{feature[:group]}" : '/new/feature'
 
       with_valid_feature_params(feature, on_err_url) do
         feature_service.add_feature(audit_context, feature)
