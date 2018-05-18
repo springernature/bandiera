@@ -1,7 +1,7 @@
 <%
   @feature ||= Bandiera::Feature.new(
     name:         '',
-    group:        defined?(group).nil? ? nil : group,
+    group:        defined?(group) ? group : nil,
     description:  '',
     active:       false,
     user_groups:  { list: [], regex: '' }
