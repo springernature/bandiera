@@ -1,0 +1,24 @@
+<div class="row" style="padding-bottom:15px">
+  <div class="col-md-12 pull-right">
+    <div class="pull-right">
+      <a class="btn btn-default" href="/new/feature?group=<%= @group[:name] %>" role="button"><span class="fa fa-plus"></span> add a feature</a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-info bandiera-feature-group">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= @group[:name] %></h3>
+      </div>
+      <div class="panel-body">
+        <% if @group.features.empty? %>
+          <p class="no-features">There are no features setup...</p>
+        <% else %>
+          <%== partial :_features_table, { group: @group } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

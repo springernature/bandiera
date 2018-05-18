@@ -30,10 +30,7 @@ module Bandiera
     end
 
     def _get_home
-      @groups_and_features = feature_service.fetch_groups.map do |group|
-        { name: group.name, features: feature_service.fetch_group_features(group.name) }
-      end
-
+      @groups_and_features = feature_service.fetch_groups
       erb :index
     end
 
@@ -45,6 +42,11 @@ module Bandiera
 
     def _get_new_group
       erb :new_group
+    end
+
+    get '/groups/:group_name' do |group_name|
+      @group = feature_service.find_group(group_name)
+      erb :group
     end
 
     post '/create/group' do
@@ -64,12 +66,13 @@ module Bandiera
     # Features
 
     get '/new/feature' do
-      _get_new_feature
-    end
-
-    def _get_new_feature
-      @groups = feature_service.fetch_groups
-
+      group_name = params[:group]
+      if group_name
+        @group = feature_service.find_group(group_name)
+        @back_to_group = true
+      else
+        @groups = feature_service.fetch_groups
+      end
       erb :new_feature
     end
 
@@ -79,11 +82,17 @@ module Bandiera
 
     def _post_create_feature
       feature = process_v2_feature_params(params[:feature])
+      back_to_group = params[:back_to_group] == 'true'
+      on_err_url = back_to_group ? "/new/feature?group=#{feature[:group]}" : '/new/feature'
 
-      with_valid_feature_params(feature, '/new/feature') do
+      with_valid_feature_params(feature, on_err_url) do
         feature_service.add_feature(audit_context, feature)
         flash[:success] = 'Feature created.'
-        redirect '/'
+        if back_to_group
+          redirect "/groups/#{feature[:group].name}"
+        else
+          redirect '/'
+        end
       end
     end
 
