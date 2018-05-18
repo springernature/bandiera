@@ -1,3 +1,7 @@
+= 3.5.0 / 2018-05-18
+
+Addition of a new groups page on the bandiera UI. Thanks @samzilverberg!
+
 = 3.4.2 / 2018-05-16
 
 Update logging to remove user identifiable data in preparation for the GDPR
