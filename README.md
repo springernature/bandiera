@@ -14,6 +14,7 @@ flags.
 
 * **Ruby** - [https://github.com/springernature/bandiera-client-ruby](https://github.com/springernature/bandiera-client-ruby)
 * **Node** - [https://github.com/springernature/bandiera-client-node](https://github.com/springernature/bandiera-client-node)
+* **Scala** - [https://github.com/springernature/bandiera-client-scala](https://github.com/springernature/bandiera-client-scala)
 * **PHP** - [https://github.com/springernature/bandiera-client-php](https://github.com/springernature/bandiera-client-php)
 
 # Getting Started (Developers)
