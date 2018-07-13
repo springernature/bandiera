@@ -1,7 +1,8 @@
-require 'json'
 require 'dotenv'
+require 'json'
+require 'logger'
 require 'sequel'
-require 'macmillan/utils/logger'
+require 'syslog-logger'
 require_relative 'hash'
 
 GC::Profiler.enable
@@ -30,13 +31,20 @@ module Bandiera
     end
 
     def logger
-      @logger ||= begin
-                    if ENV['LOG_TO_STDOUT']
-                      Macmillan::Utils::Logger::Factory.build_logger
-                    else
-                      Macmillan::Utils::Logger::Factory.build_logger(:syslog, tag: 'bandiera')
-                    end
-                  end
+      return @logger if @logger
+
+      @logger = if ENV['LOG_TO_STDOUT']
+                  Logger.new($stdout)
+                else
+                  Logger::Syslog.new('bandiera', Syslog::LOG_LOCAL0)
+                end
+
+      if ENV['STACKDRIVER_JSON_LOGGER']
+        require 'logger/stackdriver_json_formatter'
+        @logger.formatter = Logger::StackdriverJsonFormatter.new
+      end
+
+      @logger
     end
     attr_writer :logger
 

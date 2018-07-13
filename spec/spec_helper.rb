@@ -19,7 +19,7 @@ shared_example_files = File.expand_path('shared_examples/**/*.rb', __dir__)
 Dir[shared_example_files].each(&method(:require))
 
 # Suppress logging
-Bandiera.logger = Macmillan::Utils::Logger::Factory.build_logger(:null)
+Bandiera.logger = Logger.new('/dev/null')
 Bandiera.statsd = Macmillan::Utils::StatsdStub.new
 
 # use an in-memory sqlite database for testing
