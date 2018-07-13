@@ -58,6 +58,8 @@ module Rack
 
       if logger.respond_to?(:info)
         logger.info(msg)
+      elsif logger.respond_to?(:write)
+        logger.write(msg)
       else
         logger << msg
       end
