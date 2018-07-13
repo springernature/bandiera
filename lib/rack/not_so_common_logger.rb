@@ -55,10 +55,9 @@ module Rack
     def log(env, status, header, began_at)
       msg    = log_message(env, status, header, began_at)
       logger = @logger || env[RACK_ERRORS]
-      # Standard library logger doesn't support write but it supports << which actually
-      # calls to write on the log device without formatting
-      if logger.respond_to?(:write)
-        logger.write(msg)
+
+      if logger.respond_to?(:info)
+        logger.info(msg)
       else
         logger << msg
       end
