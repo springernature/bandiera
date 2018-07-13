@@ -1,3 +1,12 @@
+= 3.5.1 / 2018-07-13
+
+Addition of a new ENV variable `STACKDRIVER_JSON_LOGGER` - if this is present at
+runtime, the logs will be output in JSON that is suitable for being consumed by
+Google Cloud's Stackdriver logging.
+
+Addition of a new ENV variable `SENTRY_DSN` - if this is present at runtime
+errors will be reported to the configured project on [sentry.io](https://sentry.io).
+
 = 3.5.0 / 2018-05-18
 
 Addition of a new groups page on the bandiera UI. Thanks @samzilverberg!
