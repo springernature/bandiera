@@ -19,6 +19,19 @@ if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
   end
 end
 
+if ENV['SENTRY_DSN']
+  require 'raven'
+
+  Raven.configure do |config|
+    config.dsn                 = ENV['SENTRY_DSN']
+    config.current_environment = ENV.fetch('RACK_ENV', 'development')
+    config.environments        = ['production']
+    config.logger              = Bandiera.logger
+  end
+
+  use Raven::Rack
+end
+
 if ENV['RACK_CORS_ORIGINS']
   require 'rack/cors'
 

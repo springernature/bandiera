@@ -1,27 +1,23 @@
 source 'https://rubygems.org'
 
-gem 'rake'
+gem 'airbrake', require: false
 gem 'dotenv'
-
-gem 'sequel'
-gem 'mysql2', platform: :ruby
-gem 'pg', platform: :ruby
+gem 'erubis'
 gem 'jdbc-mysql', platform: :jruby
 gem 'jdbc-postgres', platform: :jruby
-
-gem 'sinatra'
-gem 'rack-flash3'
-gem 'erubis'
-gem 'macmillan-utils'
 gem 'lru_redux'
-
-gem 'puma', require: false
-
-gem 'airbrake', require: false
-gem 'statsd-ruby', require: false
-gem 'rack-cors'
-
+gem 'macmillan-utils'
+gem 'mysql2', platform: :ruby
 gem 'nokogiri', '~> 1.8.2'
+gem 'pg', platform: :ruby
+gem 'puma', require: false
+gem 'rack-cors'
+gem 'rack-flash3'
+gem 'rake'
+gem 'sentry-raven', require: false
+gem 'sequel'
+gem 'sinatra'
+gem 'statsd-ruby', require: false
 
 group :development do
   gem 'shotgun'
