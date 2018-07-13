@@ -38,6 +38,13 @@ module Bandiera
                 else
                   Logger::Syslog.new('bandiera', Syslog::LOG_LOCAL0)
                 end
+
+      if ENV['STACKDRIVER_JSON_LOGGER']
+        require 'logger/stackdriver_json_formatter'
+        @logger.formatter = Logger::StackdriverJsonFormatter.new
+      end
+
+      @logger
     end
     attr_writer :logger
 
