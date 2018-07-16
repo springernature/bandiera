@@ -1,3 +1,14 @@
+= 3.5.2 / 2018-07-16
+
+Addition of a new ENV variable `LOG_LEVEL`.  By default Bandiera will log at `DEBUG` upwards,
+if this is not your preference, you can now change this using this variable.  Accepted inputs
+are the constants in [Logger::Severity](https://ruby-doc.org/stdlib-2.5.1/libdoc/logger/rdoc/Logger/Severity.html)
+i.e. `DEBUG`, `INFO` etc.
+
+Added some DEBUG logging outputting the response from Bandiera to a v2 API request.  This
+doesn't contain any user identifying data, but can be useful for users/admins when debugging
+flag/api issues.
+
 = 3.5.1 / 2018-07-13
 
 Addition of a new ENV variable `STACKDRIVER_JSON_LOGGER` - if this is present at
