@@ -133,6 +133,8 @@ module Bandiera
       callback = params.delete('callback')
       json     = JSON.generate(data)
 
+      Bandiera.logger.debug("RESPONSE: #{json}")
+
       if callback
         content_type :js
         "#{callback}(#{json})"
