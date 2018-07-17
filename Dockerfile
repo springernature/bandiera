@@ -2,7 +2,8 @@ FROM ruby:2.4.2-alpine
 
 MAINTAINER Darren Oakley <daz.oakley@gmail.com>
 
-RUN apk add --update --no-cache build-base ruby-dev libxml2-dev libxslt-dev postgresql-dev mysql-dev openssl-dev
+RUN apk add --update --no-cache build-base ruby-dev libxml2-dev libxslt-dev postgresql-dev mysql-dev openssl openssl-dev ca-certificates && \
+  update-ca-certificates
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
@@ -16,4 +17,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD "puma"
+CMD ["puma"]
