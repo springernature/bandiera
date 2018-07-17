@@ -44,7 +44,7 @@ module Bandiera
         @logger.formatter = Logger::StackdriverJsonFormatter.new
       end
 
-      @logger.level = Logger.const_get(ENV.fetch('LOG_LEVEL', 'DEBUG').upcase)
+      @logger.level = Logger.const_get(ENV.fetch('LOG_LEVEL', 'INFO').upcase)
 
       @logger
     end
