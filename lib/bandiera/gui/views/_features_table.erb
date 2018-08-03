@@ -21,12 +21,12 @@
       </td>
       <td style="text-align:center">
         <% if feature.percentage %>
-          <span class="fa fa-check"></span>
+          <span class="fa fa-check" title="<%= feature.percentage %> %"></span>
         <% end %>
       </td>
       <td style="text-align:center">
         <% if feature.start_time && feature.end_time %>
-          <span class="fa fa-check"></span>
+          <span class="fa fa-check" title="<%= feature.start_time.utc.strftime('%F %T') %> to <%= feature.end_time.utc.strftime('%F %T') %>"></span>
         <% end %>
       </td>
       <td><%= feature.name %></td>
