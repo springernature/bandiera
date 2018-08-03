@@ -1,3 +1,7 @@
+require 'faye/websocket'
+require 'eventmachine'
+require 'bandiera/websockets'
+
 module Bandiera
   class FeatureService
     class GroupNotFound < StandardError
@@ -54,6 +58,9 @@ module Bandiera
       result = Feature.update_or_create(lookup, data)
       @audit_log.record(audit_context, :add, :feature,
         name: data[:name], group: data[:group][:name], active: data[:active])
+
+      Bandiera::Websockets.publish(data[:group][:name], data[:name])
+
       result
     end
 
