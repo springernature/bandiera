@@ -7,6 +7,7 @@
     <th style="text-align:center">Date Range</th>
     <th width="20%">Name</th>
     <th width="30%">Description</th>
+    <th>Updated At(UTC)</th>
     <th></th>
   </tr>
   </thead>
@@ -31,9 +32,10 @@
       </td>
       <td><%= feature.name %></td>
       <td><%= feature.description %></td>
+      <td><%= (d = (feature.updated_at || feature.created_at)) && ((d && d.utc.strftime('%F %T')) || "N/A") %></td>
       <td style="text-align:right">
-        <a class="btn btn-warning btn-sm bandiera-edit-feature" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/edit"><i class="fa fa-edit"></i> edit</a>
-        <a class="btn btn-danger btn-sm bandiera-delete-feature" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/delete" data-method="delete"><i class="fa fa-trash-o"></i> delete</a>
+        <a class="btn btn-warning btn-sm bandiera-edit-feature" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/edit"><i class="fa fa-edit" title="edit"></i></a>
+        <a class="btn btn-danger btn-sm bandiera-delete-feature" href="/groups/<%= group[:name] %>/features/<%= feature.name %>/delete" data-method="delete"><i class="fa fa-trash-o" title="delete"></i></a>
       </td>
     </tr>
   <% end %>
