@@ -18,6 +18,7 @@ gem 'sentry-raven', require: false
 gem 'sequel'
 gem 'sinatra'
 gem 'statsd-ruby', require: false
+gem 'faye-websocket'
 
 group :development do
   gem 'shotgun'
