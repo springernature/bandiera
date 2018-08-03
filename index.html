@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Websocket Client</title>
+  </head>
+  <body>
+    <ul id="features"></ul>
+
+    <script>
+     const socket = new WebSocket('ws://localhost:5000');
+
+      socket.addEventListener('open', function (event) {
+        let url = new URL(location);
+        let searchParams = new URLSearchParams(url.search);
+
+        let group = searchParams.get('group')
+        socket.send(JSON.stringify({ command: "subscribe", group: group }));
+      });
+
+     socket.addEventListener('message', function (event) {
+       var node = document.createElement("li");
+       var textnode = document.createTextNode(event.data);
+       node.appendChild(textnode);
+       document.getElementById("features").appendChild(node);
+     });
+    </script>
+  </body>
+</html>
