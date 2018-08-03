@@ -1,3 +1,13 @@
+= 3.5.4 / 2018-08-03
+
+Added create/update timestamps to the features.
+
+Fixed the date-pickers on the edit pages.
+
+Some stylistic changes to the features table.
+
+Thanks @samzilverberg for the updates. :)
+
 = 3.5.3 / 2018-07-17
 
 Dockerfile update to include additional packages:
