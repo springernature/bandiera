@@ -25,3 +25,20 @@
 .bandiera-feature-group .panel-body .no-features {
   margin: 15px;
 }
+
+/*bootstarp overrides*/
+@media (min-width:768px){
+  .container {
+    width: 100%;
+  }
+}
+@media (min-width:1200px){
+  .container {
+    width: 90%;
+  }
+}
+@media (min-width:1600px){
+  .container {
+    width: 80%;
+  }
+}
