@@ -1,3 +1,9 @@
+= 3.5.5 / 2018-09-27
+
+Update gem dependencies including a security patch on sinatra.
+
+Add in a /metrics endpoint for prometheus to give basic http request metrics
+
 = 3.5.4 / 2018-08-03
 
 Added create/update timestamps to the features.
