@@ -43,6 +43,13 @@ if ENV['RACK_CORS_ORIGINS']
   end
 end
 
+require 'rack'
+require 'prometheus/middleware/collector'
+require 'prometheus/middleware/exporter'
+use Rack::Deflater
+use Prometheus::Middleware::Collector
+use Prometheus::Middleware::Exporter
+
 require 'macmillan/utils/statsd_middleware'
 use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
 
