@@ -25,7 +25,6 @@ module Bandiera
 
   class << self
     def init(environment)
-      Bundler.setup(:default, environment)
       Dotenv.load
       Db.connect
     end

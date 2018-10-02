@@ -1,5 +1,4 @@
 ENV['RACK_ENV'] = 'test'
-Bundler.setup(:default, ENV['RACK_ENV'])
 
 require 'macmillan/utils/rspec/rspec_defaults'
 require 'macmillan/utils/rspec/webmock_helper'
