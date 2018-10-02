@@ -2,10 +2,7 @@ sudo: false
 cache: bundler
 language: ruby
 
-# Ruby build matrix
 rvm:
-  - 2.3.1
-  - 2.4.1
   - 2.5.1
 
 # Ensure we don't build for *every* commit (doesn't apply to PR builds)
