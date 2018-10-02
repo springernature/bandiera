@@ -1,3 +1,9 @@
+= 3.5.6 / 2018-10-02
+
+Update the docker image to run as an unprivileged user.
+
+Update the target ruby version to 2.5.1.
+
 = 3.5.5 / 2018-09-27
 
 Update gem dependencies including a security patch on sinatra.
