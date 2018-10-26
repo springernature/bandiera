@@ -146,12 +146,18 @@ module Bandiera
 
     get '/groups/:group_name/features/:feature_name/delete' do |group_name, feature_name|
       _get_delete_feature(group_name, feature_name)
+
+      group_page_path = "/groups/#{group_name}"
+      if request.referrer[group_page_path]
+        redirect group_page_path
+      else
+        redirect '/'
+      end
     end
 
     def _get_delete_feature(group_name, feature_name)
       feature_service.remove_feature(audit_context, group_name, feature_name)
       flash[:success] = 'Feature deleted.'
-      redirect '/'
     end
 
     ##
