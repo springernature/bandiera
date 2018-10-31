@@ -388,9 +388,7 @@ RSpec.describe Bandiera::GUI do
   end
 
   describe 'removing a feature flag' do
-    it 'deletes a flag' do
-      visit('/')
-
+    def click_delete_button
       group_div    = first('.bandiera-feature-group')
       group_name   = group_div.find('h3').text
       feature_row  = group_div.first('tr.bandiera-feature')
@@ -398,8 +396,33 @@ RSpec.describe Bandiera::GUI do
 
       feature_row.find('.bandiera-delete-feature').click
 
+      [group_name, feature_name]
+    end
+
+    it 'deletes a flag' do
+      visit('/')
+      group_name, feature_name = click_delete_button
+
       check_success_flash('Feature deleted')
       expect { @service.fetch_feature(group_name, feature_name) }.to raise_error(Bandiera::FeatureService::FeatureNotFound)
+    end
+
+    context 'when on a group page' do
+      before do
+        @service.add_features(audit_context,
+          [{ group: 'acidburn', name: 'force_push', description: 'Enable force push', active: false }]
+        )
+
+        page.driver.browser.header('Referer', 'http://example.com/groups/acidburn')
+      end
+
+      it 'leaves you on a group page after deletion' do
+        visit('/groups/acidburn')
+        click_delete_button
+
+        check_success_flash('Feature deleted')
+        expect(page).to have_current_path('/groups/acidburn')
+      end
     end
   end
 
