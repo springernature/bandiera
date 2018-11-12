@@ -10,7 +10,7 @@ gem 'macmillan-utils'
 gem 'mysql2', platform: :ruby
 gem 'nokogiri', '~> 1.8.2'
 gem 'pg', platform: :ruby
-gem 'prometheus-client'
+gem 'prometheus-client-mmap'
 gem 'puma', require: false
 gem 'rack-cors'
 gem 'rack-flash3'
