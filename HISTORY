@@ -1,3 +1,7 @@
+= 3.5.8 / 2018-11-12
+
+Bugfix - use the prometheus-client-mmap gem for consistent server metrics when using a multi-process web server.
+
 = 3.5.7 / 2018-10-31
 
 Bugfix, when a user deletes a feature on a group page, redirect back to that group page. Thanks @maxprokopiev!
