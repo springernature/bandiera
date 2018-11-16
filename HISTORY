@@ -1,3 +1,7 @@
+= 3.5.9 / 2018-11-16
+
+Update dependencies including a security patch for rack.
+
 = 3.5.8 / 2018-11-12
 
 Bugfix - use the prometheus-client-mmap gem for consistent server metrics when using a multi-process web server.
