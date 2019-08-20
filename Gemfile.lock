@@ -80,16 +80,16 @@ GEM
       webmock
     method_source (0.9.2)
     mini_mime (1.0.1)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     minitest (5.11.3)
     multi_test (0.1.2)
     multipart-post (2.0.0)
     mustermann (1.0.3)
     mysql2 (0.5.2)
     nenv (0.3.0)
-    nokogiri (1.8.5)
-      mini_portile2 (~> 2.3.0)
-    nokogiri (1.8.5-java)
+    nokogiri (1.10.4)
+      mini_portile2 (~> 2.4.0)
+    nokogiri (1.10.4-java)
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -210,7 +210,7 @@ DEPENDENCIES
   lru_redux
   macmillan-utils
   mysql2
-  nokogiri (~> 1.8.2)
+  nokogiri (~> 1.10.4)
   pg
   poltergeist
   prometheus-client-mmap
