@@ -16,6 +16,7 @@ flags.
 * **Node** - [https://github.com/springernature/bandiera-client-node](https://github.com/springernature/bandiera-client-node)
 * **Scala** - [https://github.com/springernature/bandiera-client-scala](https://github.com/springernature/bandiera-client-scala)
 * **PHP** - [https://github.com/springernature/bandiera-client-php](https://github.com/springernature/bandiera-client-php)
+* **Golang** - [https://github.com/springernature/bandiera-client-go](https://github.com/springernature/bandiera-client-go)
 
 # Getting Started (Developers)
 
