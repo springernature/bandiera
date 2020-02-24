@@ -8,7 +8,7 @@ gem 'jdbc-postgres', platform: :jruby
 gem 'lru_redux'
 gem 'macmillan-utils'
 gem 'mysql2', platform: :ruby
-gem 'nokogiri', '~> 1.8.2'
+gem 'nokogiri', '~> 1.10.8'
 gem 'pg', platform: :ruby
 gem 'prometheus-client-mmap'
 gem 'puma', require: false
