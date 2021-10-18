@@ -1,3 +1,5 @@
+## **NOTE: This repository is no longer maintaned, for the maintained version please see https://github.com/dazoakley/bandiera**
+
 # Bandiera
 
 Bandiera is a simple, stand-alone feature flagging service that is not tied to
