@@ -1,6 +1,6 @@
 ## **NOTE: This repository is no longer maintaned, for the maintained version please see https://github.com/dazoakley/bandiera**
 
-## For internal use, please seet [oscar-bandiera](https://github.com/springernature/oscar/tree/main/oscar-bandiera)
+## For internal use, please see [oscar-bandiera](https://github.com/springernature/oscar/tree/main/oscar-bandiera)
 
 # Bandiera
 
