@@ -1,5 +1,7 @@
 ## **NOTE: This repository is no longer maintaned, for the maintained version please see https://github.com/dazoakley/bandiera**
 
+## For internal use, please seet [oscar-bandiera](https://github.com/springernature/oscar/tree/main/oscar-bandiera)
+
 # Bandiera
 
 Bandiera is a simple, stand-alone feature flagging service that is not tied to
